@@ -1,19 +1,18 @@
 <h1>Draw a cat here:</h1>
 
-<dac-canvas line-collection="lineCollection" part-collection="partCollection"></dac-canvas>
+<dac-canvas line-collection="lineCollection" cat="cat"></dac-canvas>
 
 <div class="draw-controls">
     <button ng-disabled="lineCollection.count() == 0" ng-click="undo()">Undo</button>
     <button ng-disabled="lineCollection.count() == 0" ng-click="addNewPart()">Save Part</button>
+    <button ng-disabled="!completed" ng-click="">Save Cat</button>
+
 </div>
 
 <div class="alert alert-info">
     Number of lines in current lineCollection: {{ lineCollection.count() }}
 </div>
-<div class="alert alert-info">
-    Number of parts in partCollection: {{ partCollection.count() }}
-</div>
-<h2>Currently drawing: {{ currentPart }}</h2>
+<h2>Currently drawing: {{ currentPartLabel }}</h2>
 <div class="cat-parts-list">
         <h3>Cat Parts:</h3>
         <ul>
