@@ -74,10 +74,7 @@ angular.module('drawACat.common.services.primitives', [])
          * @constructor
          */
         var Part = function() {
-            var id = this.generateId();
-            var parentPart;
             var name;
-            var behaviour;
             var x; // x coordinate of top left corner of part
             var y; // y coordinate of top left corner of part
             var xOffset = 0; // used to move the part around the canvas
@@ -97,7 +94,6 @@ angular.module('drawACat.common.services.primitives', [])
 
             var centrePoint;
             var path;
-            var visible = true;
 
 
             /**
@@ -142,10 +138,6 @@ angular.module('drawACat.common.services.primitives', [])
                 return id;
             };
 
-            this.setParent = function(part) {
-                parentPart = part;
-            };
-
             this.setXOffset = function(newXOffset) {
                 xOffset = parseInt(newXOffset, 10);
             };
@@ -162,25 +154,7 @@ angular.module('drawACat.common.services.primitives', [])
                 ySkew = parseInt(newYSkew, 10);
             };
 
-            /**
-             * Set whether this part is visible or not. Visible parts will be rendered and vice versa.
-             * @param val
-             */
-            this.setVisibility = function(val) {
-                visible = val;
-            };
 
-            this.isVisible = function() {
-                return visible;
-            };
-
-            this.setBehaviour = function(newBehaviour) {
-                behaviour = newBehaviour;
-            };
-
-            this.getBehaviour = function() {
-                return behaviour;
-            };
 
             this.getTransformationData = function() {
                 if (parentPart) {
@@ -220,24 +194,6 @@ angular.module('drawACat.common.services.primitives', [])
                 maskHeight = height;
             };
         };
-        /**
-         * Method for giving each part a unique id.
-         * @returns {Function}
-         */
-        (function uniquePartIdClosure() {
-            var id = 0;
-            Part.prototype.generateId = function() {
-                if (id === 0) {
-                    id = 1;
-                } else {
-                    id += 1;
-                }
-                return id;
-            };
-            Part.prototype.resetId = function() {
-                id = 0;
-            };
-        })();
 
         /**
          * A Line is an object representing one continuous stroke of the brush, ie starting with a
