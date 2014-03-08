@@ -6,8 +6,10 @@ angular.module( 'drawACat', [
         'drawACat.draw',
         'drawACat.common.services.primitives',
         'drawACat.common.services.renderer',
-        'drawACat.common.services.cat',
-        'drawACat.common.services.behaviour'
+        'drawACat.common.services.catFactory',
+        'drawACat.common.services.behaviourFactory',
+        'drawACat.common.services.serializer',
+        'drawACat.common.services.datastore'
     ])
 
     .config( function myAppConfig ( $stateProvider, $urlRouterProvider ) {
