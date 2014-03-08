@@ -1,7 +1,10 @@
 <h1>Draw a cat here:</h1>
 
-<dac-canvas line-collection="lineCollection"></dac-canvas>
-<dac-draw-controls line-collection="lineCollection"></dac-draw-controls>
+<dac-canvas line-collection="lineCollection" part-collection="partCollection"></dac-canvas>
+<dac-draw-controls line-collection="lineCollection" add-method="addNewPart()"></dac-draw-controls>
 <div class="alert alert-info">
-    Number of lines in current collection: {{ lineCollection.count() }}
+    Number of lines in current lineCollection: {{ lineCollection.count() }}
+</div>
+<div class="alert alert-info">
+    Number of parts in partCollection: {{ partCollection.count() }}
 </div>

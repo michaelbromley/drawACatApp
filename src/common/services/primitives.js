@@ -53,6 +53,19 @@ angular.module('drawACat.common.services.primitives', [])
                     return false;
                 }
             };
+
+            this.count = function() {
+                return parts.length;
+            };
+
+            this.getPath = function() {
+                var path = [];
+                for (var part = 0; part < parts.length; part ++) {
+                    var partPath = parts[part].getPath();
+                    path = path.concat(partPath);
+                }
+                return path;
+            };
         };
 
         /**

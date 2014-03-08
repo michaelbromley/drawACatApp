@@ -1,1 +1,5 @@
-<button ng-click="undo()">Undo</button>
+<div class="draw-controls">
+    <button ng-click="undo()">Undo</button>
+    <input ng-model="partName" placeholder="Part Name">
+    <button ng-show="partName" ng-click="save()">Save Part</button>
+</div>

@@ -10,11 +10,16 @@ angular.module('drawACat.draw.directives')
             templateUrl: 'draw/directives/drawControls.tpl.html',
             replace: true,
             scope: {
-                lineCollection: '='
+                lineCollection: '=',
+                addMethod: '&'
             },
             link: function(scope, element) {
                 scope.undo = function() {
                     scope.lineCollection.removeLine();
+                };
+                scope.save = function() {
+                    scope.addMethod();
+                    scope.partName = "";
                 };
             }
         };

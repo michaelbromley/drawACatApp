@@ -20,7 +20,8 @@ angular.module('drawACat.draw.directives', [])
             templateUrl: 'draw/directives/canvas.tpl.html',
             replace: true,
             scope: {
-                lineCollection: '='
+                lineCollection: '=',
+                partCollection: '='
             },
             link: function(scope, element) {
 
@@ -30,9 +31,20 @@ angular.module('drawACat.draw.directives', [])
 
                 scope.$watch(function(scope) {
                     return scope.lineCollection.count();
+                }, function(newVal, oldVal) {
+                    if (newVal < oldVal) {
+                        // a line has been removed (undo) so we need to clear the canvas and re-draw everything.
+                         _renderer.clearCanvas();
+                        _renderer.renderPath(scope.lineCollection.getPath());
+                        _renderer.renderPath(scope.partCollection.getPath());
+                    }
+                });
+
+                scope.$watch(function(scope) {
+                    return scope.partCollection.count();
                 }, function() {
                     _renderer.clearCanvas();
-                    _renderer.renderPath(scope.lineCollection.getPath());
+                    _renderer.renderPath(scope.partCollection.getPath());
                 });
 
                 scope.mouseDownHandler = function(event) {
