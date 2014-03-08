@@ -20,12 +20,18 @@ angular.module('drawACat.draw', [
       });
     })
 
-    .controller('drawController', function($scope, primitives, renderer) {
+    .controller('drawController', function($scope, primitives, drawHelper) {
+
+        $scope.catParts = drawHelper.catParts;
+        $scope.currentPart = drawHelper.getCurrentPart();
 
         $scope.lineCollection = primitives.LineCollection();
 
         $scope.partCollection = primitives.PartCollection();
 
+        $scope.undo = function() {
+            $scope.lineCollection.removeLine();
+        };
         $scope.addNewPart = function(name) {
             var newPart = primitives.Part();
             newPart.createFromPath(name, $scope.lineCollection.getPath());
@@ -35,6 +41,40 @@ angular.module('drawACat.draw', [
             $scope.lineCollection = primitives.LineCollection();
         };
 
+    })
+
+.factory('drawHelper', function() {
+
+        var catParts = {
+            head: {
+                label: 'Head'
+            },
+            eyesOpen: {
+                label: 'Eyes Open'
+            },
+            eyesClosed: {
+                label: 'Eyes Closed'
+            },
+            body: {
+                label: 'Body'
+            },
+            leftLeg: {
+                label: 'Left Leg'
+            },
+            rightLeg: {
+                label: 'Right Leg'
+            }
+        };
+        var partKeys = Object.keys(catParts);
+        var currentPartIndex = 0;
+
+        return {
+            catParts: catParts,
+            getCurrentPart: function() {
+                var currentPartKey = partKeys[currentPartIndex];
+                return catParts[currentPartKey].label;
+            }
+        };
     })
 
 
