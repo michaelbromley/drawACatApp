@@ -1,9 +1,9 @@
 /**
  * Created by Michael on 08/03/14.
  */
-angular.module('drawACat.common.services.behaviour', [])
+angular.module('drawACat.common.services.behaviourFactory', [])
 
-    .factory('behaviour', function() {
+    .factory('behaviourFactory', function() {
         /**
          * A Behaviour object defines how a part will respond to user input.
          *
@@ -17,7 +17,7 @@ angular.module('drawACat.common.services.behaviour', [])
         var Behaviour = function() {
 
             // the following values should range between -1 ... 1. Default is 0.
-            var sensitivity = {
+            this.sensitivity = {
                 xOffset: 0,
                 yOffset: 0,
                 xSkew: 0,
@@ -25,26 +25,15 @@ angular.module('drawACat.common.services.behaviour', [])
                 rotation: 0
             };
 
-            // Range is the radius of the zone is which the behaviour will activate.
-            // Measured in pixels from the centre point of the part.
-            var range = 100;
+            this.range = 100;
+        };
 
-            this.setSensitivity = function(newSensitivity) {
-                sensitivity = newSensitivity;
-            };
-
-            this.getSensitivity = function() {
-                return sensitivity;
-            };
-
-            this.setRange = function(newRange) {
-                range = newRange;
-            };
-
-            this.getRange = function() {
-                return range;
-            };
-
+        Behaviour.prototype.setSensitivity = function(sensitivityObject) {
+            for(var key in sensitivityObject) {
+                if (sensitivityObject.hasOwnProperty(key)) {
+                    this.sensitivity[key] = sensitivityObject[key];
+                }
+            }
         };
 
         return {
