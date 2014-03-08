@@ -2,7 +2,7 @@
  * Created by Michael on 07/03/14.
  */
 
-angular.module('drawACat.draw.directives', [])
+angular.module('drawACat.draw.canvas', [])
 
     .directive('dacCanvas', function(primitives, renderer) {
 
@@ -21,7 +21,7 @@ angular.module('drawACat.draw.directives', [])
             replace: true,
             scope: {
                 lineCollection: '=',
-                partCollection: '='
+                cat: '='
             },
             link: function(scope, element) {
 
@@ -33,18 +33,12 @@ angular.module('drawACat.draw.directives', [])
                     return scope.lineCollection.count();
                 }, function(newVal, oldVal) {
                     if (newVal < oldVal) {
-                        // a line has been removed (undo) so we need to clear the canvas and re-draw everything.
+                        // either a line has been removed (undo), or the lineCollection has been save to a part and reset,
+                        // so we need to clear the canvas and re-draw everything.
                          _renderer.clearCanvas();
                         _renderer.renderPath(scope.lineCollection.getPath());
-                        _renderer.renderPath(scope.partCollection.getPath());
+                        _renderer.renderPath(scope.cat.getPath());
                     }
-                });
-
-                scope.$watch(function(scope) {
-                    return scope.partCollection.count();
-                }, function() {
-                    _renderer.clearCanvas();
-                    _renderer.renderPath(scope.partCollection.getPath());
                 });
 
                 scope.mouseDownHandler = function(event) {
