@@ -1,7 +1,7 @@
 /**
  * Created by Michael on 08/03/14.
  */
-angular.module('drawACat.common.services.catFactory', [])
+angular.module('drawACat.common.services')
 
 /**
  * This is the service that creates Cat objects. A Cat is a collections of specific Parts, such as head, body, rightLeg, leftLeg etc. Each part has an
@@ -21,6 +21,10 @@ angular.module('drawACat.common.services.catFactory', [])
             this.bodyParts = bodyParts;
         };
 
+        /**
+         * Get a path array for the whole cat, which concatenates each bodyPart path into one big array.
+         * @returns {Array}
+         */
         Cat.prototype.getPath = function() {
             var path = [];
             for (var key in this.bodyParts) {

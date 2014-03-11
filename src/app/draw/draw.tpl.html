@@ -5,7 +5,11 @@
 <div class="draw-controls">
     <button ng-disabled="lineCollection.count() == 0" ng-click="undo()">Undo</button>
     <button ng-disabled="lineCollection.count() == 0" ng-click="addNewPart()">Save Part</button>
-    <button ng-disabled="!completed" ng-click="">Save Cat</button>
+    <div class="save-controls" ng-show="completed">
+        <label for="name">Name: </label><input id="name" ng-model="name">
+        <label for="description">Description: </label><textarea id="description" ng-model="description"></textarea>
+        <button ng-click="saveCat()">Save Cat</button>
+    </div>
 
 </div>
 

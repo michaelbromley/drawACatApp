@@ -20,7 +20,7 @@ angular.module('drawACat.draw', [
       });
     })
 
-    .controller('drawController', function($scope, primitives, catFactory, behaviourFactory, drawHelper, serializer) {
+    .controller('drawController', function($scope, primitives, catFactory, behaviourFactory, drawHelper, serializer, datastore) {
 
         /**
          * Private methods and variables
@@ -72,7 +72,9 @@ angular.module('drawACat.draw', [
         };
 
         $scope.saveCat = function() {
+            var serializedCat = serializer.serializeCat($scope.cat);
 
+            datastore.saveCat($scope.name, $scope.description, serializedCat);
         };
 
     })
