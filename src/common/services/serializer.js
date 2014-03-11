@@ -14,17 +14,24 @@ angular.module('drawACat.common.services')
              */
             serializeCat: function(cat) {
                 var serializable = {};
-                for (var key in cat.bodyParts) {
-                    if (cat.bodyParts.hasOwnProperty(key)) {
-                        serializable[key] = {};
-                        if (cat.bodyParts[key].part) {
-                            serializable[key].part = cat.bodyParts[key].part.getPath();
-                        }
-                        if (cat.bodyParts[key].behaviour) {
-                            serializable[key].behaviour = cat.bodyParts[key].behaviour.toSerializable();
+
+                angular.forEach(cat.bodyParts, function(bodyPart, key) {
+                    serializable[key] = {
+                        part: {},
+                        behaviour: {}
+                    };
+                    if (bodyPart.part) {
+                        serializable[key].part.path = bodyPart.part.getPath();
+                        serializable[key].part.name = bodyPart.part.getName();
+                        if (bodyPart.part.getParent()) {
+                            serializable[key].part.parentName = bodyPart.part.getParent().getName();
                         }
                     }
-                }
+                    if (bodyPart.behaviour) {
+                        serializable[key].behaviour = bodyPart.behaviour.toSerializable();
+                    }
+                });
+
                 return serializable;
             },
 
@@ -35,24 +42,34 @@ angular.module('drawACat.common.services')
              * @returns {*}
              */
             unserializeCat: function(dataObject) {
-                cat = catFactory.newCat();
+                var cat = catFactory.newCat();
 
-                for (var key in dataObject) {
-                    if (dataObject.hasOwnProperty(key)) {
-                        if (dataObject[key].part) {
-                            var newPart = primitives.Part();
-                            newPart.createFromPath(key, dataObject[key].part);
-                            cat.bodyParts[key].part = newPart;
+                angular.forEach(dataObject, function(bodyPart, key) {
+                    if (bodyPart.part) {
+                        var newPart = primitives.Part();
 
+                        if (bodyPart.part.path) {
+                            newPart.createFromPath(bodyPart.part.name, bodyPart.part.path);
                         }
-                        if (dataObject[key].behaviour) {
-                            var newBehaviour = behaviourFactory.newBehaviour();
-                            newBehaviour.sensitivity = dataObject[key].behaviour.sensitivity;
-                            newBehaviour.range = dataObject[key].behaviour.range;
-                            cat.bodyParts[key].behaviour = newBehaviour;
+                        cat.bodyParts[key].part = newPart;
+                    }
+                    if (bodyPart.behaviour) {
+                        var newBehaviour = behaviourFactory.newBehaviour();
+                        newBehaviour.sensitivity = bodyPart.behaviour.sensitivity;
+                        newBehaviour.range = bodyPart.behaviour.range;
+                        cat.bodyParts[key].behaviour = newBehaviour;
+                    }
+                });
+
+                // now we need to loop through the bodyParts once more to resolve the parent/child relationships
+                angular.forEach(dataObject, function(bodyPart, key) {
+                    if (bodyPart.part) {
+                        if(bodyPart.part.parentName) {
+                            var parentName = bodyPart.part.parentName;
+                            cat.bodyParts[key].part.setParent(cat.bodyParts[parentName].part);
                         }
                     }
-                }
+                });
 
                 return cat;
             }
