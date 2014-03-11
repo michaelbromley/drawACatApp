@@ -3,17 +3,18 @@ angular.module( 'drawACat', [
         'templates-common',
         'ui.state',
         'ui.route',
+        'drawACat.home',
+        'drawACat.cat',
         'drawACat.draw',
-        'drawACat.common.services.primitives',
-        'drawACat.common.services.renderer',
-        'drawACat.common.services.catFactory',
-        'drawACat.common.services.behaviourFactory',
-        'drawACat.common.services.serializer',
-        'drawACat.common.services.datastore'
+        'drawACat.common.services'
     ])
 
+    .value('CONFIG', {
+        API_URL: 'http://localhost/GitHub/drawACatApp/api/'
+    })
+
     .config( function myAppConfig ( $stateProvider, $urlRouterProvider ) {
-        $urlRouterProvider.otherwise( '/cat/new' );
+        $urlRouterProvider.otherwise( '/home' );
     })
 
     .run( function run () {
