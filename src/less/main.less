@@ -10,18 +10,23 @@
  * project should be imported as the rest are just wasting space.
  */
 
-@import '../../vendor/bootstrap/less/mixins.less';
-@import '../../vendor/bootstrap/less/reset.less';
-@import '../../vendor/bootstrap/less/utilities.less';
-@import '../../vendor/bootstrap/less/scaffolding.less';
-@import '../../vendor/bootstrap/less/type.less';
+//@import '../../vendor/bootstrap/less/mixins.less';
+//@import '../../vendor/bootstrap/less/reset.less';
+//@import '../../vendor/bootstrap/less/utilities.less';
+//@import '../../vendor/bootstrap/less/scaffolding.less';
+//@import '../../vendor/bootstrap/less/type.less';
+//@import '../../vendor/bootstrap/less/grid.less';
+//@import '../../vendor/bootstrap/less/layouts.less';
+//@import '../../vendor/bootstrap/less/navs.less';
+//@import '../../vendor/bootstrap/less/navbar.less';
+//@import '../../vendor/bootstrap/less/buttons.less';
+//@import '../../vendor/bootstrap/less/button-groups.less';
+//@import '../../vendor/bootstrap/less/dropdowns.less';
+@import '../../vendor/bootstrap/less/theme.less';
 @import '../../vendor/bootstrap/less/grid.less';
-@import '../../vendor/bootstrap/less/layouts.less';
-@import '../../vendor/bootstrap/less/navs.less';
-@import '../../vendor/bootstrap/less/navbar.less';
-@import '../../vendor/bootstrap/less/buttons.less';
-@import '../../vendor/bootstrap/less/button-groups.less';
-@import '../../vendor/bootstrap/less/dropdowns.less';
+@import '../../vendor/bootstrap/less/bootstrap.less';
+@import '../../vendor/bootstrap/less/normalize.less';
+@import '../../vendor/bootstrap/less/scaffolding.less';
 
 
 /**
@@ -49,7 +54,6 @@ code, pre, .pre {
   margin: 10px 0;
   background-color: #EFEFEF;
   border: 1px solid #DADADA;
-  .border-radius(3px);
 }
 
 code {
@@ -137,7 +141,6 @@ h2 {
       margin-left: 20px;
 
       a, a:visited {
-        color: @grayLight;
         text-decoration: none;
         font-size: 40px;
         .transition( 250ms ease-in-out );
@@ -158,4 +161,5 @@ h2 {
 
 @import '../app/home/home.less';
 @import '../app/draw/draw.less';
+@import '../app/cat/cat.less';
 
