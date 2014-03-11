@@ -1,7 +1,7 @@
 /**
  * Created by Michael on 08/03/14.
  */
-angular.module('drawACat.common.services.behaviourFactory', [])
+angular.module('drawACat.common.services')
 
     .factory('behaviourFactory', function() {
         /**
@@ -28,12 +28,27 @@ angular.module('drawACat.common.services.behaviourFactory', [])
             this.range = 100;
         };
 
+        /**
+         * Takes an object containing one or more properties of the `sensitivity` member, and sets the
+         * value of that property for the object instance.
+         * @param sensitivityObject
+         */
         Behaviour.prototype.setSensitivity = function(sensitivityObject) {
             for(var key in sensitivityObject) {
                 if (sensitivityObject.hasOwnProperty(key)) {
                     this.sensitivity[key] = sensitivityObject[key];
                 }
             }
+        };
+
+        /**
+         * Returns a plain object that can be serialized into JSON.
+         */
+        Behaviour.prototype.toSerializable = function() {
+            var serializable = {};
+            serializable.sensitivity = this.sensitivity;
+            serializable.range = this.range;
+            return serializable;
         };
 
         return {
