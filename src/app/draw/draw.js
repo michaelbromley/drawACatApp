@@ -72,6 +72,13 @@ angular.module('drawACat.draw', [
         };
 
         $scope.saveCat = function() {
+            // now we need to loop through the bodyParts once more to resolve the parent/child relationships
+            angular.forEach(drawHelper.catParts, function(value, name) {
+                if(value.parentPart) {
+                    $scope.cat.bodyParts[name].part.setParent($scope.cat.bodyParts[value.parentPart].part);
+                }
+            });
+
             var serializedCat = serializer.serializeCat($scope.cat);
 
             datastore.saveCat($scope.name, $scope.description, serializedCat);

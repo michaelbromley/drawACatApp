@@ -2,7 +2,7 @@
  * Created by Michael on 07/03/14.
  */
 
-angular.module('drawACat.common.services.primitives', [])
+angular.module('drawACat.common.services')
 
 
     .factory('primitives', function() {
@@ -94,6 +94,7 @@ angular.module('drawACat.common.services.primitives', [])
 
             var centrePoint;
             var path;
+            var parentPart;
 
 
             /**
@@ -134,8 +135,19 @@ angular.module('drawACat.common.services.primitives', [])
                 return name;
             };
 
-            this.getId = function() {
-                return id;
+            /**
+             * Set a reference to another Path that is the parent of this part.
+             * A part that has a parent will defer its transformation data to its parent.
+             * This is used, for example with eyes. The 'head' part is the parent of the 'eyes' part.
+             * This ensures that the parent and all its children are transformed uniformly and appear as one object on the stage.
+             * @param part
+             */
+            this.setParent = function(part) {
+                parentPart = part;
+            };
+
+            this.getParent = function() {
+                return parentPart ? parentPart : null;
             };
 
             this.setXOffset = function(newXOffset) {
