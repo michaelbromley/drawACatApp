@@ -1,18 +1,25 @@
 /**
  * Created by Michael on 08/03/14.
  */
-angular.module('drawACat.common.services.datastore', [])
+angular.module('drawACat.common.services')
 
-    .factory('datastore', function() {
+    .factory('datastore', function($http, CONFIG) {
 
-        var cats = $mongolabResourceHttp('cats');
+        var apiUrl = CONFIG.API_URL;
 
         return {
-            save: function(cat) {
-                cats.$save(cat)
+            saveCat: function(name, description, cat) {
+                return $http.post(apiUrl + 'cat/', {
+                    name: name,
+                    description: description,
+                    cat: cat
+                });
             },
-            load: function(cat) {
-
+            listCats: function() {
+                return $http.get(apiUrl + 'cat/');
+            },
+            loadCat: function(id) {
+                return $http.get(apiUrl + 'cat/' + id);
             }
         };
     }
