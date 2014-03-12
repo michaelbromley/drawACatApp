@@ -3,7 +3,9 @@
  */
 
 angular.module('drawACat.common.services')
-
+/**
+ * The renderer service is responsible for all drawing to the canvas element.
+ */
     .factory('renderer', function() {
 
         var context;
@@ -44,11 +46,11 @@ angular.module('drawACat.common.services')
         };
 
         Renderer.prototype.renderCat = function(cat) {
-            for (var key in cat.bodyParts) {
-                if (cat.bodyParts.hasOwnProperty(key)) {
-                    renderPartWithTransformations(cat.bodyParts[key].part);
+            angular.forEach(cat.bodyParts, function(bodyPart) {
+                if (bodyPart.behaviour.visible !== false) {
+                    renderPartWithTransformations(bodyPart.part);
                 }
-            }
+            });
         };
 
         var renderPartWithTransformations = function(part) {
@@ -66,18 +68,19 @@ angular.module('drawACat.common.services')
             for (var line = 0; line < path.length; line ++) {
 
                 context.beginPath();
-                coords = applyTransformations(path[line], transformationData);
+                coords = applyTransformations(path[line][0], transformationData);
                 context.moveTo(coords[0], coords[1]);
 
-                for(var point = 0; point < path[line].length; point ++) {
+                for(var point = 1; point < path[line].length; point ++) {
 
-                    // TODO: looking into how to make the line smoother - needs more work
-                    //context.lineTo(points[i][0], points[i][1]);
-                    //context.moveTo(points[i-2][0], points[i-2][1]);
-                    /* var midX = (points[i][0] + points[i+1][0]) / 2;
-                     var midY = (points[i][1] + points[i+1][1]) / 2;
-                     context.quadraticCurveTo(points[i][0], points[i][1], midX, midY);*/
+                    // reduce the number of points that get rendered. This greatly speeds up the rendering,
+                    // with no perceptible loss in quality.
+                    if (point % 2 === 0 || point % 5 === 0) {
+                        continue;
+                    }
+
                     coords = applyTransformations(path[line][point], transformationData);
+
                     context.lineTo(coords[0], coords[1]);
                     context.stroke();
 
@@ -120,16 +123,16 @@ angular.module('drawACat.common.services')
             var ppy = td.pivotPointY + td.yOffset;
 
             // apply the skew
-            var CANVAS_WIDTH = 500; // TODO: calculate dynamically
-            var CANVAS_HEIGHT = 500; // TODO: calculate dynamically
+            var canvasWidth = context.canvas.width;
+            var canvasHeight = context.canvas.height;
             var skewPointX = ppx + td.xSkew;
             var skewPointY = ppy + td.ySkew;
             var xFromSkew = x - skewPointX;
             var yFromSkew = y - skewPointY;
             var distanceToSkewPoint = Math.sqrt(Math.pow(xFromSkew, 2) + Math.pow(yFromSkew, 2));
 
-            var deltaY =  Math.sin((td.ySkew/CANVAS_HEIGHT) * Math.PI/2) * 20;
-            var deltaX =  Math.sin((td.xSkew/CANVAS_WIDTH) * Math.PI/2) * 20;
+            var deltaY =  Math.sin((td.ySkew/canvasHeight) * Math.PI/2) * 20;
+            var deltaX =  Math.sin((td.xSkew/canvasWidth) * Math.PI/2) * 20;
             y += deltaY + distanceToSkewPoint/td.height*deltaY*5 - td.ySkew * td.height/500;
             x += deltaX + distanceToSkewPoint/td.width*deltaX*5 - td.xSkew * td.width/500;
 
