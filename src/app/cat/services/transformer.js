@@ -3,7 +3,10 @@
  */
 
 angular.module('drawACat.cat.transformer', [])
-
+/**
+ * The transformer takes the x & y coordinates of the stimulus (mouse pointer, ball or whatever) and transforms the
+ * Parts of the cat to react to it, as defined by that part's behaviour object.
+ */
     .factory('transformer', function() {
 
         var currentPart;
@@ -16,18 +19,18 @@ angular.module('drawACat.cat.transformer', [])
          * be applied. The range is a circle around the centre point of the part, inside which the behaviour will
          * be applied (rangeFactor will = 1). Towards the edge of the circle, the value should drop off to 0.
          *
-         *
-         * @param x
-         * @param y
+         * @param pointerX
+         * @param pointerY
          */
         var calculateRangeFactor = function(pointerX, pointerY) {
             var relativeXOffset = pointerX - currentPart.getTransformationData().centreX;
             var relativeYOffset = pointerY - currentPart.getTransformationData().centreY;
             var distanceFromCentre = Math.sqrt(Math.pow(relativeXOffset, 2) + Math.pow(relativeYOffset, 2));
 
-            // TODO: rather than a binary 0/1, this should gradually change from 1 to 0 at the edge of the range
             if (distanceFromCentre > range) {
-                rangeFactor = 0;
+                var distanceBeyondRange = distanceFromCentre - range;
+                var featherRegion = 100;
+                rangeFactor = Math.max(featherRegion - distanceBeyondRange, 0) / featherRegion;
             } else {
                 rangeFactor = 1;
             }
