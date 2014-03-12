@@ -57,6 +57,7 @@ angular.module('drawACat.common.services')
                         var newBehaviour = behaviourFactory.newBehaviour();
                         newBehaviour.sensitivity = bodyPart.behaviour.sensitivity;
                         newBehaviour.range = bodyPart.behaviour.range;
+                        newBehaviour.visible = bodyPart.behaviour.visible;
                         cat.bodyParts[key].behaviour = newBehaviour;
                     }
                 });
