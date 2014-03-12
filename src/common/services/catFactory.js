@@ -38,32 +38,6 @@ angular.module('drawACat.common.services')
             return path;
         };
 
-        Cat.prototype.blink = function(interval) {
-            this.closeEyes();
-            var self = this;
-            setInterval(function() {
-                self.openEyes.apply(self);
-            }, interval);
-        };
-
-        Cat.prototype.closeEyes = function() {
-            this.bodyParts.eyesOpen.behaviour.visible = false;
-            this.bodyParts.eyesClosed.behaviour.visible = true;
-        };
-        Cat.prototype.openEyes = function() {
-            this.bodyParts.eyesOpen.behaviour.visible = true;
-            this.bodyParts.eyesClosed.behaviour.visible = false;
-        };
-
-        Cat.prototype.closeMouth = function(){
-            this.bodyParts.mouthOpen.behaviour.visible = false;
-            this.bodyParts.mouthClosed.behaviour.visible = true;
-        };
-        Cat.prototype.openMouth = function(){
-            this.bodyParts.mouthOpen.behaviour.visible = true;
-            this.bodyParts.mouthClosed.behaviour.visible = false;
-        };
-
         return {
             newCat: function() {
                 return new Cat();
