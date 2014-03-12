@@ -4,18 +4,7 @@
 
 angular.module('drawACat.cat.stage', [])
 
-    .directive('dacStage', function($window, $document, $timeout, renderer, transformer) {
-
-        var requestAnimFrame = (function(){
-            return  $window.requestAnimationFrame       ||
-                $window.webkitRequestAnimationFrame ||
-                $window.mozRequestAnimationFrame    ||
-                $window.oRequestAnimationFrame      ||
-                $window.msRequestAnimationFrame     ||
-                function(/* function */ callback, /* DOMElement */ element){
-                    $timeout(callback, 1000 / 60);
-                };
-        })();
+    .directive('dacStage', function($window, $document, $timeout, renderer, transformer, rafPolyfill) {
 
         return {
             restrict: 'E',
@@ -25,18 +14,33 @@ angular.module('drawACat.cat.stage', [])
                 cat: '='
             },
             link: function(scope, element) {
-                var renderFrame = function() {
-                    _renderer.renderCat(scope.cat);
-                    //requestAnimFrame(renderFrame);
-                };
 
-                $document.on('mousemove', function(e) {
-                    console.log('moved');
-                    scope.x = e.pageX;
-                    scope.y = e.pageY;
+                var rafId;
+                rafPolyfill.run(); // polyfill the $window.requestAnimationFrame method
+
+                var renderFrame = function() {
+                    // test some random blinking
+                    var isBlinking = scope.cat.bodyParts.eyesClosed.behaviour.visible === true;
+                    if (Math.random() < 0.01 && !isBlinking) {
+                        scope.cat.blink(500);
+                    }
+
+
                     _renderer.clearCanvas();
                     transformer.transform(scope.cat, scope.x, scope.y);
                     _renderer.renderCat(scope.cat);
+                    rafId = $window.requestAnimationFrame(renderFrame);
+                    //setTimeout(renderFrame, 16);
+                };
+
+                scope.cat.openEyes();
+                scope.cat.closeMouth();
+                //setInterval(renderFrame, 16);
+
+                $document.on('mousemove', function(e) {
+                    var stageRect = element[0].getBoundingClientRect();
+                    scope.x = e.clientX - stageRect.left;
+                    scope.y = e.clientY - stageRect.top;
                 });
 
                 var _renderer = renderer.Init(element.children()[0]);
@@ -44,6 +48,12 @@ angular.module('drawACat.cat.stage', [])
                 scope.y = 0;
 
                 renderFrame();
+
+                scope.$on("$destroy", function() {
+                    if (rafId) {
+                        $window.cancelAnimationFrame(rafId);
+                    }
+                });
 
             }
         };
