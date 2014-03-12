@@ -26,6 +26,7 @@ angular.module('drawACat.common.services')
             };
 
             this.range = 100;
+            this.visible = true;
         };
 
         /**

@@ -58,8 +58,17 @@ angular.module('drawACat.draw', [
             newPart.createFromPath(partName, $scope.lineCollection.getPath());
 
             var newBehaviour = behaviourFactory.newBehaviour();
-            if (drawHelper.catParts[drawHelper.getCurrentPartKey()].behaviour) {
-                newBehaviour.setSensitivity(drawHelper.catParts[drawHelper.getCurrentPartKey()].behaviour.sensitivity);
+            var templateBehaviour = drawHelper.catParts[drawHelper.getCurrentPartKey()].behaviour;
+            if (templateBehaviour) {
+                if (templateBehaviour.sensitivity) {
+                    newBehaviour.setSensitivity(templateBehaviour.sensitivity);
+                }
+                if (templateBehaviour.range) {
+                    newBehaviour.range = templateBehaviour.range;
+                }
+                if (templateBehaviour.visible) {
+                    newBehaviour.visible = templateBehaviour.visible;
+                }
             }
 
             $scope.cat.bodyParts[partName].part = newPart;
@@ -100,7 +109,8 @@ angular.module('drawACat.draw', [
                         xSkew: 0.2,
                         ySkew: 0.2,
                         rotation: 0.1
-                    }
+                    },
+                    range: 350
                 }
             },
             eyesOpen: {
@@ -122,13 +132,43 @@ angular.module('drawACat.draw', [
                 parentPart: 'head'
             },
             body: {
-                label: 'Body'
+                label: 'Body',
+                behaviour:{
+                    sensitivity: {
+                        xSkew: 0.06,
+                        ySkew: 0.15,
+                        xOffset: -0.05,
+                        yOffset: -0.03,
+                        rotation: 0
+                    },
+                    range: 300
+                }
             },
             leftLeg: {
-                label: 'Left Leg'
+                label: 'Left Leg',
+                behaviour:{
+                    sensitivity: {
+                        xSkew: 0.2,
+                        ySkew: 0.4,
+                        xOffset: 0.6,
+                        yOffset: 0.6,
+                        rotation: 0.4
+                    },
+                    range: 200
+                }
             },
             rightLeg: {
-                label: 'Right Leg'
+                label: 'Right Leg',
+                behaviour:{
+                    sensitivity: {
+                        xSkew: 0.2,
+                        ySkew: 0.4,
+                        xOffset: 0.6,
+                        yOffset: 0.6,
+                        rotation: 0.4
+                    },
+                    range: 200
+                }
             }
         };
         var partKeys = [
