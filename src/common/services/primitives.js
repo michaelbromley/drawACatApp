@@ -8,67 +8,6 @@ angular.module('drawACat.common.services')
     .factory('primitives', function() {
 
         /**
-         * A PartCollection represents a "scene" composed of one or more parts. It is, in essence, an array of parts, with some helper methods for manipulating those parts.
-         * @constructor
-         */
-        var PartCollection = function() {
-            var parts = [];
-            var i = 0;
-
-            /**
-             * Add a part to the collection
-             * @param part
-             */
-            this.addPart = function(part) {
-                parts.push(part);
-            };
-
-            /**
-             * Return a part object with a given id, else return false if not found.
-             * @param id
-             * @returns {*}
-             */
-            this.getPartById = function(id) {
-                // ensure the id is an integer, rather than a string
-                var idInt = parseInt(id, 10);
-                for (var i = 0; i < parts.length; i ++) {
-                    if (parts[i].getId() === idInt) {
-                        return parts[i];
-                    }
-                }
-                return false;
-            };
-
-            /**
-             * Iterate over each part in the collection, returning the part object each time, and return
-             * false when the last one has been returned.
-             * @returns {*}
-             */
-            this.getNextPart = function() {
-                if (i < parts.length) {
-                    i += 1;
-                    return parts[i-1];
-                } else {
-                    i = 0;
-                    return false;
-                }
-            };
-
-            this.count = function() {
-                return parts.length;
-            };
-
-            this.getPath = function() {
-                var path = [];
-                for (var part = 0; part < parts.length; part ++) {
-                    var partPath = parts[part].getPath();
-                    path = path.concat(partPath);
-                }
-                return path;
-            };
-        };
-
-        /**
          * A Part is a discrete object that has been drawn and is considered one entity, although
          * it may be composed of many Lines.
          * @constructor
@@ -276,9 +215,6 @@ angular.module('drawACat.common.services')
             },
             Part: function() {
                 return new Part();
-            },
-            PartCollection: function() {
-                return new PartCollection();
             }
         };
     });
