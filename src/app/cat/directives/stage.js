@@ -2,9 +2,9 @@
  * Created by Michael on 10/03/14.
  */
 
-angular.module('drawACat.cat.stage', [])
+angular.module('drawACat.cat.directives')
 
-    .directive('dacStage', function($window, $document, $timeout, renderer, transformer, rafPolyfill) {
+    .directive('dacStage', function($window, $document, renderer, transformer, actuator) {
 
         return {
             restrict: 'E',
@@ -16,26 +16,15 @@ angular.module('drawACat.cat.stage', [])
             link: function(scope, element) {
 
                 var rafId;
-                rafPolyfill.run(); // polyfill the $window.requestAnimationFrame method
+                actuator.init(scope.cat);
 
                 var renderFrame = function() {
-                    // test some random blinking
-                    var isBlinking = scope.cat.bodyParts.eyesClosed.behaviour.visible === true;
-                    if (Math.random() < 0.01 && !isBlinking) {
-                        scope.cat.blink(500);
-                    }
-
-
                     _renderer.clearCanvas();
                     transformer.transform(scope.cat, scope.x, scope.y);
                     _renderer.renderCat(scope.cat);
                     rafId = $window.requestAnimationFrame(renderFrame);
-                    //setTimeout(renderFrame, 16);
                 };
 
-                scope.cat.openEyes();
-                scope.cat.closeMouth();
-                //setInterval(renderFrame, 16);
 
                 $document.on('mousemove', function(e) {
                     var stageRect = element[0].getBoundingClientRect();
@@ -52,6 +41,7 @@ angular.module('drawACat.cat.stage', [])
                 scope.$on("$destroy", function() {
                     if (rafId) {
                         $window.cancelAnimationFrame(rafId);
+                        actuator.destroy();
                     }
                 });
 
