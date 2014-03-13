@@ -4,8 +4,8 @@
 
 angular.module( 'drawACat.cat', [
         'ui.state',
-        'drawACat.cat.stage',
-        'drawACat.cat.transformer'
+        'drawACat.cat.directives',
+        'drawACat.cat.services'
     ])
 
 
@@ -31,9 +31,9 @@ angular.module( 'drawACat.cat', [
  * And of course we define a controller for our route.
  */
     .controller( 'CatController', function CatController( $scope, catFactory, serializer, catPromise ) {
-        $scope.catName = catPromise.data.name;
-
+        $scope.cat = null;
         $scope.cat = serializer.unserializeCat(catPromise.data.data);
+        $scope.cat.name = catPromise.data.name;
     })
 
 ;

@@ -2,7 +2,7 @@
  * Created by Michael on 10/03/14.
  */
 
-angular.module('drawACat.cat.transformer', [])
+angular.module('drawACat.cat.services')
 /**
  * The transformer takes the x & y coordinates of the stimulus (mouse pointer, ball or whatever) and transforms the
  * Parts of the cat to react to it, as defined by that part's behaviour object.
