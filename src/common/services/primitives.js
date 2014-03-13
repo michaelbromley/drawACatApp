@@ -13,7 +13,8 @@ angular.module('drawACat.common.services')
          * @constructor
          */
         var Part = function() {
-            var name;
+            var name = '';
+            var path = [];
             var x; // x coordinate of top left corner of part
             var y; // y coordinate of top left corner of part
             var xOffset = 0; // used to move the part around the canvas
@@ -21,19 +22,18 @@ angular.module('drawACat.common.services')
             var rotation = 0;
             var xSkew = 0;
             var ySkew = 0;
-            var pivotPointX; // used as the point around which the part may rotate and skew
-            var pivotPointY;
-            var width;
-            var height;
+            var pivotPointX = 0; // used as the point around which the part may rotate and skew
+            var pivotPointY = 0;
+            var width = 0;
+            var height = 0;
+            var centrePoint = [0, 0];
+            var parentPart;
 
             var maskWidth; // the mask is used to clear the area when the part was when doing a render
             var maskHeight;
             var maskX;
             var maskY;
 
-            var centrePoint;
-            var path;
-            var parentPart;
 
 
             /**
@@ -42,6 +42,10 @@ angular.module('drawACat.common.services')
              * @param newPath
              */
             this.createFromPath = function(newName, newPath) {
+
+                if (typeof newName !== 'string' || !(newPath instanceof Array)) {
+                    return;
+                }
                 name = newName;
                 path = newPath;
                 var minX = 1000000, minY = 1000000, maxX = 0, maxY = 0; // for calculating the centre point and bounding box
@@ -153,19 +157,14 @@ angular.module('drawACat.common.services')
          */
         var Line = function() {
             var points = [];
-            var currentPoint = 0;
 
             /**
              *  Add a point to the array of points (coordinates) making up the line
              */
             this.addPoint = function(x, y) {
                 points.push([x, y]);
-                currentPoint += 1;
             };
 
-            this.endDraw = function() {
-
-            };
             this.getPath = function() {
                 return points;
             };
@@ -204,7 +203,6 @@ angular.module('drawACat.common.services')
                 return lines.length;
             };
         };
-
 
         return {
             Line: function() {
