@@ -17,7 +17,8 @@ angular.module( 'drawACat', [
         $urlRouterProvider.otherwise( '/home' );
     })
 
-    .run( function run () {
+    .run( function run (rafPolyfill) {
+        rafPolyfill.run();// polyfill the $window.requestAnimationFrame, cancelAnimationFrame methods
     })
 
     .controller( 'AppController', function AppController ( $scope, $location ) {

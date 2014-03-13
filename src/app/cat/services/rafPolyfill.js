@@ -1,25 +1,31 @@
 /**
  * Created by Michael on 12/03/14.
  */
-angular.module('drawACat.cat.rafPolyfill', [])
-
+angular.module('drawACat.cat.services')
+/**
+ * Service to polyfill the $window service with fallbacks for requestAnimationFrame and cancelAnimationFrame for browsers that do not
+ * support the native methods.
+ *
+ * ---------------------------------------------------------------------------
+ * Adapted from https://gist.github.com/paulirish/1579671 which derived from
+ * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+ * http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+ *
+ * requestAnimationFrame polyfill by Erik Möller.
+ * Fixes from Paul Irish, Tino Zijdel, Andrew Mao, Klemen Slavič, Darius Bacon
+ *
+ * MIT license
+ *
+ */
     .factory('rafPolyfill', function($window, $timeout)
     {
 
         var runPolyfill = function() {
-            // Adapted from https://gist.github.com/paulirish/1579671 which derived from
-            // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-            // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 
-            // requestAnimationFrame polyfill by Erik Möller.
-            // Fixes from Paul Irish, Tino Zijdel, Andrew Mao, Klemen Slavič, Darius Bacon
-
-            // MIT license
 
             if (!Date.now) {
                 Date.now = function() { return new Date().getTime(); };
             }
-
 
             var vendors = ['webkit', 'moz'];
             for (var i = 0; i < vendors.length && !$window.requestAnimationFrame; ++i) {
