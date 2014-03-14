@@ -1,0 +1,39 @@
+<div>
+    <canvas width="800" height="500"
+            ng-mousedown="mouseDownHandler($event)"
+            ng-mousemove="mouseMoveHandler($event)"
+            ng-mouseup="mouseUpHandler()">
+    </canvas>
+    <p>Mouse coordinates: {{ x }}, {{ y }}</p>
+    <div class="behaviour-editor row">
+        <div ng-repeat="bodyPart in cat.bodyParts" class="behaviour-box col-sm-4">
+            <h3 ng-click="box = !box">{{ bodyPart.part.getName() }}</h3>
+            <div class="behaviour-controls" ng-show="box">
+                <label>
+                    xSkew {{ bodyPart.behaviour.sensitivity.xSkew }}:
+                    <input type="range" min="-1" max="1" step="0.01" ng-model="bodyPart.behaviour.sensitivity.xSkew">
+                </label><br>
+                <label>
+                    ySkew {{ bodyPart.behaviour.sensitivity.ySkew }}:
+                    <input type="range" min="-1" max="1" step="0.01" ng-model="bodyPart.behaviour.sensitivity.ySkew">
+                </label><br>
+                <label>
+                    xOffset {{ bodyPart.behaviour.sensitivity.xOffset }}:
+                    <input type="range" min="-1" max="1" step="0.01" ng-model="bodyPart.behaviour.sensitivity.xOffset">
+                </label><br>
+                <label>
+                    yOffest {{ bodyPart.behaviour.sensitivity.yOffset }}:
+                    <input type="range" min="-1" max="1" step="0.01" ng-model="bodyPart.behaviour.sensitivity.yOffset">
+                </label><br>
+                <label>
+                    Rotation {{ bodyPart.behaviour.sensitivity.rotation }}:
+                    <input type="range" min="-1" max="1" step="0.01" ng-model="bodyPart.behaviour.sensitivity.rotation">
+                </label><br>
+                <label>
+                    Range {{ bodyPart.behaviour.range }}:
+                    <input type="range" min="0" max="1000" step="1" ng-model="bodyPart.behaviour.range">
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
