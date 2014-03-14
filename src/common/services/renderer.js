@@ -9,6 +9,7 @@ angular.module('drawACat.common.services')
     .factory('renderer', function() {
 
         var context;
+        var FILL_COLOUR = '#efefef';
 
         var Renderer = function(canvasElement) {
             context = canvasElement.getContext('2d');
@@ -30,23 +31,41 @@ angular.module('drawACat.common.services')
 
         Renderer.prototype.renderPath = function(path) {
 
-            var renderLine = function(line) {
-                context.moveTo(line[0][0], line[0][1]);
-
-                for (var point = 1; point < line.length; point ++) {
-                    context.lineTo(line[point][0], line[point][1]);
-                    context.stroke();
-                }
-            };
-
             context.beginPath();
             for (var line = 0; line < path.length; line ++) {
                 renderLine(path[line]);
             }
+
+            function renderLine(line) {
+                context.moveTo(line[0][0], line[0][1]);
+                for (var point = 1; point < line.length; point ++) {
+                    context.lineTo(line[point][0], line[point][1]);
+                }
+                if (lineIsABoundary(line)) {
+                    context.fillStyle = FILL_COLOUR;
+                    context.fill();
+                }
+                context.stroke();
+            }
         };
 
         Renderer.prototype.renderCat = function(cat) {
-            angular.forEach(cat.bodyParts, function(bodyPart) {
+
+            // cause the parts to be rendered in a specific sequence, so that
+            // the body is at the back, the head is on top of the body etc.
+            var sequence = [
+                'body',
+                'head',
+                'eyesOpen',
+                'eyesClosed',
+                'mouthOpen',
+                'mouthClosed',
+                'leftLeg',
+                'rightLeg'
+            ];
+
+            angular.forEach(sequence, function(bodyPartName) {
+                var bodyPart = cat.bodyParts[bodyPartName];
                 if (bodyPart.behaviour.visible !== false) {
                     renderPartWithTransformations(bodyPart.part);
                 }
@@ -56,17 +75,9 @@ angular.module('drawACat.common.services')
         var renderPartWithTransformations = function(part) {
             var path = part.getPath();
             var transformationData = part.getTransformationData();
-
             var coords;
-            // the following vars are used to return the dimensions of the part path, which allows
-            // the part to calculate it's mask box.
-            var minX = 100000,
-                maxX = 0,
-                minY = 10000,
-                maxY = 0;
 
             for (var line = 0; line < path.length; line ++) {
-
                 context.beginPath();
                 coords = applyTransformations(path[line][0], transformationData);
                 context.moveTo(coords[0], coords[1]);
@@ -80,17 +91,56 @@ angular.module('drawACat.common.services')
                     }
 
                     coords = applyTransformations(path[line][point], transformationData);
-
                     context.lineTo(coords[0], coords[1]);
-                    context.stroke();
-
-                    minX = coords[0] < minX ? coords[0] : minX;
-                    minY = coords[1] < minY ? coords[1] : minY;
-                    maxX = coords[0] > maxX ? coords[0] : maxX;
-                    maxY = coords[1] > maxY ? coords[1] : maxY;
                 }
-            }
 
+                if (lineIsABoundary(path[line])) {
+                    context.fillStyle = FILL_COLOUR;
+                    context.fill();
+                }
+                context.stroke();
+            }
+        };
+
+        /**
+         * Determine whether this line encloses an area and therefore should be filled in. A line is
+         * considered a boundary if the width or height of the shape it creates is greater than the
+         * distance between the start and end points.
+         * @param line
+         * @returns {boolean}
+         */
+        var lineIsABoundary = function(line) {
+            var startPoint = line[0];
+            var endPoint = line[line.length - 1];
+            var deltaX = Math.abs(startPoint[0] - endPoint[0]);
+            var deltaY = Math.abs(startPoint[1] - endPoint[1]);
+            var distanceBetweenEndPoints = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            
+            var limits = getLineLimits(line);
+
+            var width = limits.maxX - limits.minX;
+            var height = limits.maxY - limits.minY;
+
+            return (width > distanceBetweenEndPoints || height > distanceBetweenEndPoints);
+        };
+
+        /**
+         * Find the maximum and minimum values of x and y for a given line.
+         * @param line
+         * @returns {{minX: number, maxX: number, minY: number, maxY: number}}
+         */
+        var getLineLimits = function(line) {
+            var minX = 100000,
+                maxX = 0,
+                minY = 10000,
+                maxY = 0;
+
+            for(var point = 1; point < line.length; point ++) {
+                minX = line[point][0] < minX ? line[point][0] : minX;
+                minY = line[point][1] < minY ? line[point][1] : minY;
+                maxX = line[point][0] > maxX ? line[point][0] : maxX;
+                maxY = line[point][1] > maxY ? line[point][1] : maxY;
+            }
             return {
                 minX: minX,
                 maxX: maxX,
