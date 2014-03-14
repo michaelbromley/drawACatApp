@@ -8,7 +8,7 @@ angular.module('drawACat.cat.services')
  * http://www.scratchapixel.com/lessons/3d-advanced-lessons/noise-part-1/creating-a-simple-1d-noise/
  *
  */
-    .factory('perlinNoise', function() {
+    .factory('noise', function() {
 
         var Simple1DNoise = function() {
             var MAX_VERTICES = 256;
@@ -57,6 +57,7 @@ angular.module('drawACat.cat.services')
                 setScale: function(newScale) {
                     scale = newScale;
                 },
+                // just an alias for setScale make the code more clear
                 setFrequency: function(frequency) {
                     scale = frequency;
                 }
