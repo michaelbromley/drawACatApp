@@ -17,6 +17,7 @@ angular.module('drawACat.common.services')
             var path = [];
             var x; // x coordinate of top left corner of part
             var y; // y coordinate of top left corner of part
+            var globalOffset = [0, 0]; // used to reposition the part on the canvas (e.g. when resizing the whole canvas and we want to centre the part)
             var xOffset = 0; // used to move the part around the canvas
             var yOffset = 0;
             var rotation = 0;
@@ -108,6 +109,9 @@ angular.module('drawACat.common.services')
             this.setYSkew = function(newYSkew) {
                 ySkew = parseInt(newYSkew, 10);
             };
+            this.setGlobalOffset = function(x, y) {
+                globalOffset = [x, y];
+            };
 
 
 
@@ -118,21 +122,30 @@ angular.module('drawACat.common.services')
                     return {
                         xOffset: xOffset,
                         yOffset: yOffset,
-                        pivotPointX: pivotPointX,
-                        pivotPointY: pivotPointY,
+                        pivotPointX: pivotPointX + globalOffset[0],
+                        pivotPointY: pivotPointY + globalOffset[1],
                         rotation: rotation,
                         xSkew: xSkew,
                         ySkew: ySkew,
                         width: width,
                         height: height,
-                        centreX: centrePoint[0],
-                        centreY: centrePoint[1]
+                        centreX: centrePoint[0] + globalOffset[0],
+                        centreY: centrePoint[1] + globalOffset[1]
                     };
                 }
             };
 
             this.getPath = function() {
-                return path;
+                var pathWithOffset = path.map(function(line) {
+                    return line.map(function(point) {
+                        return [
+                            point[0] + globalOffset[0],
+                            point[1] + globalOffset[1]
+                        ];
+                    });
+                });
+
+                return pathWithOffset;
             };
 
             /**
