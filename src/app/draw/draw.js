@@ -108,6 +108,7 @@ angular.module('drawACat.draw', [
                     sensitivity: {
                         xSkew: 0.2,
                         ySkew: 0.2,
+                        xOffset: -0.05,
                         rotation: 0.1
                     },
                     range: 350
@@ -135,9 +136,9 @@ angular.module('drawACat.draw', [
                 label: 'Body',
                 behaviour:{
                     sensitivity: {
-                        xSkew: 0.06,
+                        xSkew: 0.01,
                         ySkew: 0.15,
-                        xOffset: -0.05,
+                        xOffset: -0.01,
                         yOffset: -0.03,
                         rotation: 0
                     },

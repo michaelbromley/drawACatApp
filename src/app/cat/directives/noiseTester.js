@@ -5,9 +5,9 @@
 angular.module('drawACat.cat.directives')
 
 /**
- * This is a directive to test out the perlinNoise service in a visual and interactive way.
+ * This is a directive to test out the noise service in a visual and interactive way.
  */
-.directive('noiseTester', function(perlinNoise) {
+.directive('noiseTester', function(noise) {
         var context;
         var width;
         var height;
@@ -60,17 +60,17 @@ angular.module('drawACat.cat.directives')
             link: function(scope, element) {
                 var canvas = element.children()[0];
                 context = canvas.getContext('2d');
-                var noise = perlinNoise.newGenerator();
+                var _noise = noise.newGenerator();
                 scope.amplitude = 1;
                 scope.scale = 1;
                 var numSteps = 800;
 
                 scope.$watch('amplitude', function(val) {
-                    noise.setAmplitude(val);
+                    _noise.setAmplitude(val);
                     renderNoise();
                 });
                 scope.$watch('scale', function(val) {
-                    noise.setScale(val);
+                    _noise.setScale(val);
                     renderNoise();
                 });
 
@@ -78,7 +78,7 @@ angular.module('drawACat.cat.directives')
                     var points = [];
                     for ( var i = 0; i < numSteps; ++i ) {
                         var x = i/10;
-                        var y = noise.getVal(x);
+                        var y = _noise.getVal(x);
                         points.push([x, y]);
                     }
                     drawLine(points);

@@ -53,9 +53,16 @@ angular.module('drawACat.cat.services')
             currentPart.setYOffset(deltaY);
         };
 
+        /**
+         * Skew simulates a "rotation" on the z-axis towards or away from the pointer. It is primarily used to make the head
+         * "look" towards the pointer.
+         * @param pointerX
+         * @param pointerY
+         */
         var setSkew = function(pointerX, pointerY) {
-            var relativeXOffset = pointerX - currentPart.getTransformationData().centreX;
-            var relativeYOffset = pointerY - currentPart.getTransformationData().centreY;
+            var transformationData = currentPart.getTransformationData();
+            var relativeXOffset = pointerX - transformationData.centreX;
+            var relativeYOffset = pointerY - transformationData.centreY;
 
             var deltaX = relativeXOffset * sensitivity.xSkew * rangeFactor;
             var deltaY = relativeYOffset * sensitivity.ySkew * rangeFactor;

@@ -268,6 +268,9 @@ module.exports = function ( grunt ) {
             }
         },
 
+        /**
+         * I am now using grunt-contrib-less rather than recess, as recess does not seem to work with the Bootstrap 3 .less files.
+         */
         less: {
             build: {
                 src: [ '<%= app_files.less %>' ],

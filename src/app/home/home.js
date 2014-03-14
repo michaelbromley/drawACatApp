@@ -13,7 +13,7 @@ angular.module( 'drawACat.home', [
         templateUrl: 'home/home.tpl.html'
       }
     },
-    data:{ pageTitle: 'Home' }
+    data:{ pageTitle: 'Draw A Cat!' }
   });
 })
 
