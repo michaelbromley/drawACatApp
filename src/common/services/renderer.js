@@ -10,6 +10,7 @@ angular.module('drawACat.common.services')
 
         var context;
         var FILL_COLOUR = '#efefef';
+        var debugMode = true;
 
         var Renderer = function(canvasElement) {
             context = canvasElement.getContext('2d');
@@ -77,19 +78,13 @@ angular.module('drawACat.common.services')
             var transformationData = part.getTransformationData();
             var coords;
 
+            context.strokeStyle = '#333333';
             for (var line = 0; line < path.length; line ++) {
                 context.beginPath();
                 coords = applyTransformations(path[line][0], transformationData);
                 context.moveTo(coords[0], coords[1]);
 
                 for(var point = 1; point < path[line].length; point ++) {
-
-                    // reduce the number of points that get rendered. This greatly speeds up the rendering,
-                    // with no perceptible loss in quality.
-                    if (point % 2 === 0 || point % 5 === 0) {
-                        continue;
-                    }
-
                     coords = applyTransformations(path[line][point], transformationData);
                     context.lineTo(coords[0], coords[1]);
                 }
@@ -99,6 +94,22 @@ angular.module('drawACat.common.services')
                     context.fill();
                 }
                 context.stroke();
+            }
+
+            if (debugMode) {
+                // debug - draw bounding box
+                var bb = part.getBoundingBox();
+                context.fillStyle = 'rgba(250,200,200,0.3)';
+                context.fillRect(bb.x, bb.y, bb.width, bb.height);
+
+                // draw acceleration vector
+                if (part.ax) {
+                    context.strokeStyle = 'rgba(150, 240, 150, 0.8)';
+                    context.beginPath();
+                    context.moveTo(transformationData.centreX, transformationData.centreY);
+                    context.lineTo(transformationData.centreX + part.ax, transformationData.centreY + part.ay);
+                    context.stroke();
+                }
             }
         };
 
@@ -197,6 +208,16 @@ angular.module('drawACat.common.services')
             y = ppy + Math.cos(startingAngle + rotationInRadians) * radius;
 
             return [x, y];
+        };
+
+        Renderer.prototype.renderBall = function(ball) {
+            context.beginPath();
+            context.arc(ball.getX(), ball.getY(), ball.getRadius(), 0, 2 * Math.PI, false);
+            context.fillStyle = '#dedede';
+            context.fill();
+            context.lineWidth = 2;
+            context.strokeStyle = '#666666';
+            context.stroke();
         };
 
         return {

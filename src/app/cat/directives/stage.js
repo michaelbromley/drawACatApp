@@ -4,7 +4,9 @@
 
 angular.module('drawACat.cat.directives')
 
-    .directive('dacStage', function($window, $document, renderer, transformer, actuator) {
+    .directive('dacStage', function($window, $document, ballFactory, renderer, transformer, actuator) {
+
+
 
         return {
             restrict: 'E',
@@ -17,8 +19,9 @@ angular.module('drawACat.cat.directives')
                 var canvas = document.getElementById('stage');
                 actuator.init(scope.cat);
                 var _renderer = renderer.Init(canvas);
-                scope.x = 0;
+                scope.x = 0; // mouse pointer location
                 scope.y = 0;
+                var ball = ballFactory.newBall(30);
 
                 function resizeCanvas() {
                     var windowWidth = $window.innerWidth;
@@ -26,11 +29,13 @@ angular.module('drawACat.cat.directives')
                     canvas.width = windowWidth;
                     canvas.height = windowHeight;
 
+                    ball.windowResized();
+
                     // move the cat to be in the centre and at the bottom of the canvas
                     var catWidth = scope.cat.getWidth();
                     var catHeight = scope.cat.getHeight();
                     var xAdjustment = (windowWidth / 2) - (catWidth / 2);
-                    var yAdjustment = windowHeight - (catHeight + 20);
+                    var yAdjustment = windowHeight - (catHeight);
                     scope.cat.adjustPosition(xAdjustment, yAdjustment);
                 }
                 resizeCanvas();
@@ -41,8 +46,15 @@ angular.module('drawACat.cat.directives')
                 var rafId;
                 var renderFrame = function() {
                     _renderer.clearCanvas();
-                    transformer.transform(scope.cat, scope.x, scope.y);
+                    transformer.transform(scope.cat, ball.getX(), ball.getY());
                     _renderer.renderCat(scope.cat);
+
+                    // ball logic
+                    ball.updatePosition();
+                    ball.checkPartCollision(scope.cat.bodyParts.leftLeg.part);
+                    ball.checkPartCollision(scope.cat.bodyParts.rightLeg.part);
+                    ball.pointerIsOver(scope.x, scope.y);
+                    _renderer.renderBall(ball);
                     rafId = $window.requestAnimationFrame(renderFrame);
                 };
                 renderFrame();
@@ -51,7 +63,28 @@ angular.module('drawACat.cat.directives')
                     var stageRect = canvas.getBoundingClientRect();
                     scope.x = e.clientX - stageRect.left;
                     scope.y = e.clientY - stageRect.top;
+
+                    if(ball.isInDragMode()) {
+                        var lastX = ball.getX();
+                        var lastY = ball.getY();
+                        ball.setAx(scope.x - lastX);
+                        ball.setAy(scope.y - lastY);
+                        ball.setX(scope.x);
+                        ball.setY(scope.y);
+                    }
                 });
+
+                $document.on('mousedown', function(e) {
+                    if (ball.pointerIsOver(scope.x, scope.y)) {
+                        ball.startDrag();
+                    }
+                });
+
+                $document.on('mouseup', function(e) {
+                    ball.endDrag();
+                });
+
+
 
                 scope.$on("$destroy", function() {
                     if (rafId) {

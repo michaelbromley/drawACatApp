@@ -37,20 +37,29 @@ angular.module('drawACat.cat.services')
         };
 
         /**
-         * Transform the x and y offset to make the part move towards the pointer.
+         * Transform the x and y offset to make the part move towards the pointer. Also decorate the part with
+         * acceleration values.
          *
          * @param pointerX
          * @param pointerY
          */
         var setOffset = function(pointerX, pointerY) {
-            var relativeXOffset = pointerX - currentPart.getTransformationData().centreX;
-            var relativeYOffset = pointerY - currentPart.getTransformationData().centreY;
+            var transformationData = currentPart.getTransformationData();
+            var currentXOffset = transformationData.xOffset;
+            var currentYOffset = transformationData.yOffset;
 
-            var deltaX = relativeXOffset * sensitivity.xOffset * rangeFactor;
-            var deltaY = relativeYOffset * sensitivity.yOffset * rangeFactor;
+            var relativeXOffset = pointerX - transformationData.centreX;
+            var relativeYOffset = pointerY - transformationData.centreY;
 
-            currentPart.setXOffset(deltaX);
-            currentPart.setYOffset(deltaY);
+            var newXOffset = relativeXOffset * sensitivity.xOffset * rangeFactor;
+            var newYOffset = relativeYOffset * sensitivity.yOffset * rangeFactor;
+
+            // calculate acceleration and decorate part with the data.
+            currentPart.ax = Math.round((newXOffset - currentXOffset) * 2);
+            currentPart.ay = Math.round((newYOffset - currentYOffset) * 1);
+
+            currentPart.setXOffset(newXOffset);
+            currentPart.setYOffset(newYOffset);
         };
 
         /**

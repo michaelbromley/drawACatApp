@@ -30,10 +30,10 @@ angular.module('drawACat.common.services')
             var centrePoint = [0, 0];
             var parentPart;
 
-            var maskWidth; // the mask is used to clear the area when the part was when doing a render
-            var maskHeight;
-            var maskX;
-            var maskY;
+            var boundingBoxWidth; // the mask is the part's bounding box
+            var boundingBoxHeight;
+            var boundingBoxX;
+            var boundingBoxY;
 
 
 
@@ -149,17 +149,17 @@ angular.module('drawACat.common.services')
             };
 
             /**
-             * Set the location and dimensions of the mask (the bounding rectangle of the part).
-             * @param x
-             * @param y
-             * @param width
-             * @param height
+             * Get the bounding box of the part, used for collision detection.
+             * @returns {{x: *, y: *, width: number, height: number}}
              */
-            this.setMask = function(x, y, width, height) {
-                maskX = x;
-                maskY = y;
-                maskWidth = width;
-                maskHeight = height;
+            this.getBoundingBox = function() {
+                return {
+                    x: x + globalOffset[0] + xOffset,
+                    y: y + globalOffset[1] + yOffset,
+                    width: width,
+                    height: height
+                };
+
             };
         };
 

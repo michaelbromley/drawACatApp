@@ -5,7 +5,7 @@
             ng-mouseup="mouseUpHandler()">
     </canvas>
     <p>Mouse coordinates: {{ x }}, {{ y }}</p>
-    <div class="behaviour-editor row">
+    <div class="behaviour-editor row" ng-show="false">
         <div ng-repeat="bodyPart in cat.bodyParts" class="behaviour-box col-sm-4">
             <h3 ng-click="box = !box">{{ bodyPart.part.getName() }}</h3>
             <div class="behaviour-controls" ng-show="box">
