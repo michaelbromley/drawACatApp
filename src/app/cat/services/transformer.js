@@ -38,7 +38,7 @@ angular.module('drawACat.cat.services')
 
         /**
          * Transform the x and y offset to make the part move towards the pointer. Also decorate the part with
-         * acceleration values.
+         * velocity values.
          *
          * @param pointerX
          * @param pointerY
@@ -55,8 +55,8 @@ angular.module('drawACat.cat.services')
             var newYOffset = relativeYOffset * sensitivity.yOffset * rangeFactor;
 
             // calculate acceleration and decorate part with the data.
-            currentPart.ax = Math.round((newXOffset - currentXOffset) * 2);
-            currentPart.ay = Math.round((newYOffset - currentYOffset) * 1);
+            currentPart.vx = Math.round((newXOffset - currentXOffset) * 2);
+            currentPart.vy = Math.round((newYOffset - currentYOffset) * 1);
 
             currentPart.setXOffset(newXOffset);
             currentPart.setYOffset(newYOffset);

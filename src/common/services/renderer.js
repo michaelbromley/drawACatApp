@@ -10,7 +10,7 @@ angular.module('drawACat.common.services')
 
         var context;
         var FILL_COLOUR = '#efefef';
-        var debugMode = true;
+        var debugMode = false;
 
         var Renderer = function(canvasElement) {
             context = canvasElement.getContext('2d');
@@ -103,11 +103,11 @@ angular.module('drawACat.common.services')
                 context.fillRect(bb.x, bb.y, bb.width, bb.height);
 
                 // draw acceleration vector
-                if (part.ax) {
-                    context.strokeStyle = 'rgba(150, 240, 150, 0.8)';
+                if (part.vx) {
+                    context.strokeStyle = 'rgba(150, 240, 150, 1)';
                     context.beginPath();
                     context.moveTo(transformationData.centreX, transformationData.centreY);
-                    context.lineTo(transformationData.centreX + part.ax, transformationData.centreY + part.ay);
+                    context.lineTo(transformationData.centreX + part.vx, transformationData.centreY + part.vy);
                     context.stroke();
                 }
             }
@@ -126,7 +126,7 @@ angular.module('drawACat.common.services')
             var deltaX = Math.abs(startPoint[0] - endPoint[0]);
             var deltaY = Math.abs(startPoint[1] - endPoint[1]);
             var distanceBetweenEndPoints = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-            
+
             var limits = getLineLimits(line);
 
             var width = limits.maxX - limits.minX;
@@ -211,13 +211,11 @@ angular.module('drawACat.common.services')
         };
 
         Renderer.prototype.renderBall = function(ball) {
-            context.beginPath();
-            context.arc(ball.getX(), ball.getY(), ball.getRadius(), 0, 2 * Math.PI, false);
-            context.fillStyle = '#dedede';
-            context.fill();
-            context.lineWidth = 2;
-            context.strokeStyle = '#666666';
-            context.stroke();
+            context.save();
+            context.translate(ball.getX(), ball.getY());
+            context.rotate(ball.getAngle());
+            context.drawImage(ball.getImage(), -ball.getRadius(), -ball.getRadius());
+            context.restore();
         };
 
         return {

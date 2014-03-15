@@ -4,7 +4,7 @@
 
 angular.module('drawACat.cat.directives')
 
-    .directive('dacStage', function($window, $document, ballFactory, renderer, transformer, actuator) {
+    .directive('dacStage', function($window, $document, CONFIG, ballFactory, renderer, transformer, actuator) {
 
 
 
@@ -21,7 +21,7 @@ angular.module('drawACat.cat.directives')
                 var _renderer = renderer.Init(canvas);
                 scope.x = 0; // mouse pointer location
                 scope.y = 0;
-                var ball = ballFactory.newBall(30);
+                var ball = ballFactory.newBall(25, CONFIG.BALL_IMAGE_SRC);
 
                 function resizeCanvas() {
                     var windowWidth = $window.innerWidth;
@@ -67,8 +67,8 @@ angular.module('drawACat.cat.directives')
                     if(ball.isInDragMode()) {
                         var lastX = ball.getX();
                         var lastY = ball.getY();
-                        ball.setAx(scope.x - lastX);
-                        ball.setAy(scope.y - lastY);
+                        ball.setVx(scope.x - lastX);
+                        ball.setVy(scope.y - lastY);
                         ball.setX(scope.x);
                         ball.setY(scope.y);
                     }

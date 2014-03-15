@@ -10,7 +10,8 @@ angular.module( 'drawACat', [
     ])
 
     .value('CONFIG', {
-        API_URL: 'http://localhost/GitHub/drawACatApp/api/'
+        API_URL: 'http://localhost/GitHub/drawACatApp/api/',
+        BALL_IMAGE_SRC: 'assets/images/ball01.gif'
     })
 
     .config( function myAppConfig ( $stateProvider, $urlRouterProvider ) {

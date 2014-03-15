@@ -4,23 +4,33 @@
 angular.module('drawACat.cat.services')
 
     .factory('ballFactory', function($window, $timeout) {
-        var Ball = function(newRadius) {
+
+        var Ball = function(newRadius, imageUrl) {
+            var image = new Image();
+            image.src = imageUrl;
             var windowHeight = $window.innerHeight;
             var windowWidth = $window.innerWidth;
             var ballDamping = 0.7;
             var G = 0.5; // gravity
             var MAX_ACCELLERATION = 20;
+            var FRICTION = 35; // higher is more slippery
 
             var dragMode = false;
             var radius = newRadius;
             var x = 100;
-            var y = 100;
-            var ax = 30;
-            var ay = 0;
+            var y = windowHeight - 100;
+            var vx = 0;
+            var vy = 0;
+            var angle = 0;
+            var angularVelocity = 0.01;
 
             this.windowResized = function() {
                 windowHeight = $window.innerHeight;
                 windowWidth = $window.innerWidth;
+            };
+
+            this.getImage = function() {
+                return image;
             };
             this.getRadius = function() {
                 return radius;
@@ -37,17 +47,23 @@ angular.module('drawACat.cat.services')
             this.setY = function(newY) {
                 y = newY;
             };
-            this.getAx = function() {
-                return ax;
+            this.getVx = function() {
+                return vx;
             };
-            this.setAx = function(newAx) {
-                ax = Math.min(newAx, MAX_ACCELLERATION);
+            this.setVx = function(newVx) {
+                vx = Math.min(newVx, MAX_ACCELLERATION);
             };
-            this.getAy = function() {
-                return ay;
+            this.getVy = function() {
+                return vy;
             };
-            this.setAy = function(newAy) {
-                ay = Math.min(newAy, MAX_ACCELLERATION);
+            this.setVy = function(newVy) {
+                vy = Math.min(newVy, MAX_ACCELLERATION / 2);
+            };
+            this.getAngle = function() {
+                return angle;
+            };
+            this.getAngularVelocity = function() {
+                return angularVelocity;
             };
 
             /**
@@ -72,12 +88,11 @@ angular.module('drawACat.cat.services')
                     // is it within the y bounds too?
                     if (bb.y < y && y < (bb.y + bb.height)) {
                         if (!disableCollisions) {
-                            ax += part.ax;
-                            ay += part.ay;
-                            // add some occasional extra -ay to make the ball more bouncy and fun
+                            vx += part.vx;
+                            vy += part.vy;
+                            // add some occasional extra -vy to make the ball more bouncy and fun
                             if (Math.random() < 0.8) {
-                                ay -= Math.random() * 20;
-                                console.log('random bounce! ball.ay = ' + ay);
+                                vy -= Math.random() * 20;
                             }
                             disableCollisions = true;
                             $timeout(function() {
@@ -102,40 +117,52 @@ angular.module('drawACat.cat.services')
 
             this.updatePosition = function() {
                 if (!dragMode) {
-                    ay += G;
-                    y += Math.round(ay);
 
-                    ax *= 0.995;
-                    x += ax;
+                    // update the position
+                    vy += G;
+                    y += Math.round(vy);
+                    vx *= 0.995;
+                    x += vx;
+
+                    // update the rotation
+                    angle += angularVelocity;
 
                     // hit the floor
                     if (y + radius >= windowHeight) {
-                        if (0 < ay) {
+                        if (0 < vy) {
                             y = windowHeight - radius;
-                            ay *= -ballDamping; // reverse the acceleration
+                            vy *= -ballDamping;
+                            setAngularVelocity(vx);
                         }
                     }
                     // hit the right wall
                     if (x + radius >= windowWidth) {
-                        if (0 < ax) {
+                        if (0 < vx) {
                             x = windowWidth - radius;
-                            ax *= - ballDamping;
+                            vx *= - ballDamping;
+                            setAngularVelocity(vy);
                         }
                     }
                     // hit the left wall
                     if (x - radius <= 0) {
-                        if (0 > ax) {
+                        if (0 > vx) {
                             x = radius;
-                            ax *= - ballDamping;
+                            vx *= - ballDamping;
+                            setAngularVelocity(vy);
                         }
                     }
                 }
             };
+
+            var setAngularVelocity = function(v) {
+                angularVelocity = v / FRICTION;
+            };
         };
 
+
         return {
-            newBall: function(radius) {
-                return new Ball(radius);
+            newBall: function(radius, imageUrl) {
+                return new Ball(radius, imageUrl);
             }
         };
     });
