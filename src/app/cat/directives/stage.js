@@ -4,7 +4,7 @@
 
 angular.module('drawACat.cat.directives')
 
-    .directive('dacStage', function($window, $document, CONFIG, ballFactory, renderer, transformer, actuator) {
+    .directive('dacStage', function($window, $document, CONFIG, ballFactory, renderer, transformer, actuator, emotion) {
 
 
 
@@ -19,8 +19,11 @@ angular.module('drawACat.cat.directives')
                 var canvas = document.getElementById('stage');
                 actuator.init(scope.cat);
                 var _renderer = renderer.Init(canvas);
+                scope.cat.emotion = emotion;
+
                 scope.x = 0; // mouse pointer location
                 scope.y = 0;
+
                 var ball = ballFactory.newBall(25, CONFIG.BALL_IMAGE_SRC);
 
                 function resizeCanvas() {
@@ -51,11 +54,18 @@ angular.module('drawACat.cat.directives')
 
                     // ball logic
                     ball.updatePosition();
-                    ball.checkPartCollision(scope.cat.bodyParts.leftLeg.part);
-                    ball.checkPartCollision(scope.cat.bodyParts.rightLeg.part);
+                    var touchedBallLeft = ball.checkPartCollision(scope.cat.bodyParts.leftLeg.part);
+                    var touchedBallRight = ball.checkPartCollision(scope.cat.bodyParts.rightLeg.part);
+                    if (touchedBallLeft || touchedBallRight) {
+                        scope.cat.emotion.getExcited();
+                    }
                     ball.pointerIsOver(scope.x, scope.y);
                     _renderer.renderBall(ball);
                     rafId = $window.requestAnimationFrame(renderFrame);
+
+                    scope.cat.emotion.calmDown();
+                    // debug
+                    scope.moodValue = scope.cat.emotion.getMoodValue();
                 };
                 renderFrame();
 

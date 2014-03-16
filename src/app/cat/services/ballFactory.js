@@ -12,8 +12,8 @@ angular.module('drawACat.cat.services')
             var windowWidth = $window.innerWidth;
             var ballDamping = 0.7;
             var G = 0.5; // gravity
-            var MAX_ACCELLERATION = 20;
-            var FRICTION = 35; // higher is more slippery
+            var MAX_VELOCITY = 25;
+            var FRICTION = 30; // higher is more slippery
 
             var dragMode = false;
             var radius = newRadius;
@@ -51,13 +51,27 @@ angular.module('drawACat.cat.services')
                 return vx;
             };
             this.setVx = function(newVx) {
-                vx = Math.min(newVx, MAX_ACCELLERATION);
+               setVx(newVx);
+            };
+            var setVx = function(newVx) {
+                if (0 < newVx) {
+                    vx = Math.min(newVx, MAX_VELOCITY);
+                } else {
+                    vx = Math.max(newVx, -MAX_VELOCITY);
+                }
             };
             this.getVy = function() {
                 return vy;
             };
             this.setVy = function(newVy) {
-                vy = Math.min(newVy, MAX_ACCELLERATION / 2);
+                setVy(newVy);
+            };
+            var setVy = function(newVy) {
+                if (0 < newVy) {
+                    vy = Math.min(newVy, MAX_VELOCITY);
+                } else {
+                    vy = Math.max(newVy, -MAX_VELOCITY);
+                }
             };
             this.getAngle = function() {
                 return angle;
@@ -82,17 +96,20 @@ angular.module('drawACat.cat.services')
 
             var disableCollisions;
             this.checkPartCollision = function(part) {
+                var collided = false;
                 var bb = part.getBoundingBox();
                 // is it within the x bounds of the part?
                 if (bb.x < x && x < (bb.x + bb.width)) {
                     // is it within the y bounds too?
                     if (bb.y < y && y < (bb.y + bb.height)) {
                         if (!disableCollisions) {
-                            vx += part.vx;
-                            vy += part.vy;
+                            collided = true;
+
+                            setVx(vx + part.vx);
+                            setVy(vy + part.vy);
                             // add some occasional extra -vy to make the ball more bouncy and fun
                             if (Math.random() < 0.8) {
-                                vy -= Math.random() * 20;
+                                setVy(vy - Math.random() * 20);
                             }
                             disableCollisions = true;
                             $timeout(function() {
@@ -101,6 +118,7 @@ angular.module('drawACat.cat.services')
                         }
                     }
                 }
+                return collided;
             };
 
             this.isInDragMode = function() {
@@ -131,7 +149,7 @@ angular.module('drawACat.cat.services')
                     if (y + radius >= windowHeight) {
                         if (0 < vy) {
                             y = windowHeight - radius;
-                            vy *= -ballDamping;
+                            setVy(vy * -ballDamping);
                             setAngularVelocity(vx);
                         }
                     }
@@ -139,15 +157,15 @@ angular.module('drawACat.cat.services')
                     if (x + radius >= windowWidth) {
                         if (0 < vx) {
                             x = windowWidth - radius;
-                            vx *= - ballDamping;
-                            setAngularVelocity(vy);
+                            setVx(vx * -ballDamping);
+                            setAngularVelocity(-vy);
                         }
                     }
                     // hit the left wall
                     if (x - radius <= 0) {
                         if (0 > vx) {
                             x = radius;
-                            vx *= - ballDamping;
+                            setVx(vx * -ballDamping);
                             setAngularVelocity(vy);
                         }
                     }
