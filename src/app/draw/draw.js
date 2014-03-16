@@ -4,7 +4,8 @@
 
 angular.module('drawACat.draw', [
         'ui.state',
-        'drawACat.draw.canvas'
+        'drawACat.draw.canvas',
+        'drawACat.draw.services'
     ])
 
     .config(function config( $stateProvider ) {
@@ -12,7 +13,7 @@ angular.module('drawACat.draw', [
         url: '/cat/new',
         views: {
           "main": {
-            controller: 'drawController',
+            controller: 'DrawController',
             templateUrl: 'draw/draw.tpl.html'
           }
         },
@@ -20,7 +21,7 @@ angular.module('drawACat.draw', [
       });
     })
 
-    .controller('drawController', function($scope, primitives, catFactory, behaviourFactory, drawHelper, serializer, datastore) {
+    .controller('DrawController', function($scope, primitives, catFactory, behaviourFactory, drawHelper, serializer, datastore) {
 
         /**
          * Private methods and variables
@@ -35,6 +36,86 @@ angular.module('drawACat.draw', [
             }
         };
         showInstructions();
+
+        /**
+         * Takes the "raw" form of the cat that was just drawn, and processes it into a form suitable for saving.
+         * @param rawCat
+         * @returns {*}
+         */
+        var normalizeCat = function(rawCat) {
+            var minX = rawCat.getBoundaries('x').min;
+            var minY = rawCat.getBoundaries('y').min;
+
+            var normalCat = catFactory.newCat();
+
+            angular.forEach(drawHelper.catParts, function(partTemplate, partName) {
+                var partPath = rawCat.bodyParts[partName].part.getPath();
+                var normalizedPath = normalizePath(partPath, minX, minY);
+
+                var newPart = primitives.Part();
+                newPart.createFromPath(partName, normalizedPath);
+                normalCat.bodyParts[partName].part = newPart;
+
+                var newBehaviour = behaviourFactory.newBehaviour();
+                newBehaviour = applyBehaviourTemplate(newBehaviour, partTemplate.behaviour);
+                normalCat.bodyParts[partName].behaviour = newBehaviour;
+            });
+
+            // now we need to loop through the bodyParts once more to resolve the parent/child relationships
+            angular.forEach(drawHelper.catParts, function(partTemplate, partName) {
+                if(partTemplate.parentPart) {
+                    normalCat.bodyParts[partName].part.setParent(normalCat.bodyParts[partTemplate.parentPart].part);
+                }
+            });
+
+            return normalCat;
+        };
+
+        /**
+         * Make the cat's path origin start from coordinate 0,0. This will allow us to properly position the cat when it is
+         * subsequently rendered. In this step we also halve the number of points in the path.
+         *
+         * @param partPath
+         * @param minX
+         * @param minY
+         * @returns {*|Array}
+         */
+        var normalizePath = function(partPath, minX, minY) {
+            return partPath.map(function(line) {
+                return line
+                    .filter(function(point, index) {
+                        // filter out every other element (starting from the second element) to reduce the amount of
+                        // data to be stored. Has no visible effect of the rendered shapes, but halves the storage space required
+                        // and vastly speeds up rendering.
+                        return (index + 1) % 2 === 0;
+                    })
+                    .map(function(point) {
+                        // subtract the minX and minY values from each coordinate so that the cat is aligned to the top left
+                        // of the x/y origin point.
+                        return [
+                            point[0] - minX,
+                            point[1] - minY
+                        ];
+                    });
+            });
+        };
+
+
+        var applyBehaviourTemplate = function(newBehaviour, templateBehaviour) {
+            if (templateBehaviour) {
+                if (templateBehaviour.sensitivity) {
+                    newBehaviour.setSensitivity(templateBehaviour.sensitivity);
+                }
+                if (templateBehaviour.range) {
+                    newBehaviour.range = templateBehaviour.range;
+                }
+                if (templateBehaviour.visible) {
+                    newBehaviour.visible = templateBehaviour.visible;
+                }
+            }
+
+            return newBehaviour;
+        };
 
         /**
          * Scope properties
@@ -57,22 +138,7 @@ angular.module('drawACat.draw', [
             var newPart = primitives.Part();
             newPart.createFromPath(partName, $scope.lineCollection.getPath());
 
-            var newBehaviour = behaviourFactory.newBehaviour();
-            var templateBehaviour = drawHelper.catParts[drawHelper.getCurrentPartKey()].behaviour;
-            if (templateBehaviour) {
-                if (templateBehaviour.sensitivity) {
-                    newBehaviour.setSensitivity(templateBehaviour.sensitivity);
-                }
-                if (templateBehaviour.range) {
-                    newBehaviour.range = templateBehaviour.range;
-                }
-                if (templateBehaviour.visible) {
-                    newBehaviour.visible = templateBehaviour.visible;
-                }
-            }
-
             $scope.cat.bodyParts[partName].part = newPart;
-            $scope.cat.bodyParts[partName].behaviour = newBehaviour;
 
             // reset the lineCollection to an empty collection and move on to the next part to draw
             $scope.lineCollection = primitives.LineCollection();
@@ -81,131 +147,15 @@ angular.module('drawACat.draw', [
         };
 
         $scope.saveCat = function() {
-            // now we need to loop through the bodyParts once more to resolve the parent/child relationships
-            angular.forEach(drawHelper.catParts, function(value, name) {
-                if(value.parentPart) {
-                    $scope.cat.bodyParts[name].part.setParent($scope.cat.bodyParts[value.parentPart].part);
-                }
-            });
+            var finalCat = normalizeCat($scope.cat);
 
-            var serializedCat = serializer.serializeCat($scope.cat);
+            var serializedCat = serializer.serializeCat(finalCat);
 
             datastore.saveCat($scope.name, $scope.description, serializedCat);
         };
 
-    })
+        $scope.$on("$destroy", function() {
+            drawHelper.reset();
+        });
 
-/**
- * This service is used to control the sequence in which the parts of the cat are drawn. It also contains pre-configured settings which are used to
- * set up the new cat instance.
- */
-.factory('drawHelper', function() {
-
-        var catParts = {
-            head: {
-                label: 'Head',
-                behaviour:{
-                    sensitivity: {
-                        xSkew: 0.2,
-                        ySkew: 0.2,
-                        xOffset: -0.05,
-                        rotation: 0.1
-                    },
-                    range: 350
-                }
-            },
-            eyesOpen: {
-                label: 'Eyes Open',
-                parentPart: 'head'
-            },
-            eyesClosed: {
-                label: 'Eyes Closed',
-                parentPart: 'head',
-                visible: false
-            },
-            mouthOpen: {
-                label: 'Mouth Open',
-                parentPart: 'head',
-                visible: false
-            },
-            mouthClosed: {
-                label: 'Mouth Closed',
-                parentPart: 'head'
-            },
-            body: {
-                label: 'Body',
-                behaviour:{
-                    sensitivity: {
-                        xSkew: 0.01,
-                        ySkew: 0.15,
-                        xOffset: -0.01,
-                        yOffset: -0.03,
-                        rotation: 0
-                    },
-                    range: 300
-                }
-            },
-            leftLeg: {
-                label: 'Left Leg',
-                behaviour:{
-                    sensitivity: {
-                        xSkew: 0.2,
-                        ySkew: 0.4,
-                        xOffset: 0.6,
-                        yOffset: 0.6,
-                        rotation: 0.4
-                    },
-                    range: 200
-                }
-            },
-            rightLeg: {
-                label: 'Right Leg',
-                behaviour:{
-                    sensitivity: {
-                        xSkew: 0.2,
-                        ySkew: 0.4,
-                        xOffset: 0.6,
-                        yOffset: 0.6,
-                        rotation: 0.4
-                    },
-                    range: 200
-                }
-            }
-        };
-        var partKeys = [
-            'head',
-            'eyesOpen',
-            'eyesClosed',
-            'mouthOpen',
-            'mouthClosed',
-            'body',
-            'leftLeg',
-            'rightLeg'
-        ];
-        var currentPartIndex = 0;
-
-        return {
-            catParts: catParts,
-            getCurrentPartLabel: function() {
-                if (currentPartIndex < partKeys.length) {
-                    var currentPartKey = partKeys[currentPartIndex];
-                    return catParts[currentPartKey].label;
-                } else {
-                    return 'end';
-                }
-            },
-            getCurrentPartKey: function() {
-                if (currentPartIndex < partKeys.length) {
-                return partKeys[currentPartIndex];
-                } else {
-                    return 'end';
-                }
-            },
-            next: function() {
-                currentPartIndex ++;
-            }
-        };
-    })
-
-
-;
+    });
