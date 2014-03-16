@@ -38,12 +38,23 @@ angular.module('drawACat.cat.services')
          * @returns {{actuate: actuate}}
          */
         var actuateBlinking = function() {
-            // test some random blinking
             return {
                 actuate: function() {
                     if (Math.random() < 0.01) {
                         closeEyes();
                         $timeout(openEyes, 200);
+                    }
+                }
+            };
+        };
+
+        var actuateMouth = function() {
+            return {
+                actuate: function() {
+                    if (Math.random() < 0.001) {
+                        openMouth();
+                        var duration = (Math.random() + 1) * 500;
+                        $timeout(closeMouth, 500);
                     }
                 }
             };
@@ -121,6 +132,7 @@ angular.module('drawACat.cat.services')
                 // register the functions that will run the in main actuatorLoop
                 actuatorFunctions.push(actuateLegs());
                 actuatorFunctions.push(actuateBlinking());
+                actuatorFunctions.push(actuateMouth());
                 actuatorFunctions.push(actuateHead());
 
                 actuatorLoop();
