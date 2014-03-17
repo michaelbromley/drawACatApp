@@ -61,6 +61,15 @@ angular.module('drawACat.cat.directives')
                         ball.setVy(scope.pointerY - lastY);
                         ball.setX(scope.pointerX);
                         ball.setY(scope.pointerY);
+
+                        // if the pointer goes off the canvas, drop the ball
+                        var pad = 10;
+                        if (scope.pointerX <= pad ||
+                            scope.pointerX >= canvas.width - pad ||
+                            scope.pointerY <= pad ||
+                            scope.pointerY >= canvas.height - pad) {
+                            ball.endDrag();
+                        }
                     }
                 };
 
