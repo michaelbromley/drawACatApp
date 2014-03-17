@@ -32,33 +32,58 @@ angular.module('drawACat.cat.services')
             timeoutRef = $timeout(actuatorLoop, 16);
         };
 
-
-        /**
-         * Cause random blinking
-         * @returns {{actuate: actuate}}
-         */
-        var actuateBlinking = function() {
+        var actuateEmotions = function() {
+            var expressionTimeOutId;
+            var isPurring = false;
             return {
                 actuate: function() {
-                    if (Math.random() < 0.01) {
-                        closeEyes();
-                        $timeout(openEyes, 200);
+                    if (cat.emotion.isHappy()) {
+                        if (!isPurring) {
+                            $timeout.cancel(expressionTimeOutId);
+                            isPurring = true;
+                            purr();
+                        }
+                    } else {
+                        if (isPurring) {
+                            isPurring = false;
+                            console.log('stopped purring');
+                        }
+
+                        var expression = ['blink'];
+                        if (cat.emotion.isExcited()) {
+                            expression.push('excited');
+                        }
+                        if (cat.emotion.isBored()) {
+                            expression.push('bored');
+                        }
+                        if (cat.emotion.isAngry()) {
+                            expression.push('angry');
+                        }
+
+                        if (Math.random() < 0.01) {
+                            var emotionToExpress = expression[getRandomInt(0, expression.length - 1)];
+                            if (emotionToExpress === 'blink') {
+                                closeEyes();
+                                expressionTimeOutId = $timeout(openEyes, 200);
+                            } else if (emotionToExpress === 'bored') {
+                                yawn();
+                                expressionTimeOutId = $timeout(backToNormal, 1000);
+                            } else if (emotionToExpress === 'angry') {
+                                angryMeow();
+                                expressionTimeOutId = $timeout(backToNormal, 500);
+                            } else if (emotionToExpress === 'excited') {
+                                excitedMeow();
+                                expressionTimeOutId = $timeout(backToNormal, 500);
+                            }
+                        }
                     }
                 }
             };
         };
-
-        var actuateMouth = function() {
-            return {
-                actuate: function() {
-                    if (Math.random() < 0.001) {
-                        openMouth();
-                        var duration = (Math.random() + 1) * 500;
-                        $timeout(closeMouth, 500);
-                    }
-                }
-            };
-        };
+        //http://stackoverflow.com/a/1527820/772859
+        function getRandomInt (min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
 
 
         /**
@@ -103,22 +128,46 @@ angular.module('drawACat.cat.services')
             };
         };
 
+        var purr = function() {
+            closeEyes();
+            closeMouth();
+            console.log('purrrrrrr ;)');
+        };
+        var yawn = function() {
+            closeEyes();
+            openMouth();
+            console.log('yawn :|');
+        };
+        var angryMeow = function() {
+            openEyes();
+            console.log('angry MEOW!! :(');
+        };
+        var excitedMeow = function() {
+            openEyes();
+            openMouth();
+            console.log('excited meow! :)');
+        };
+        var backToNormal = function() {
+            openEyes();
+            closeMouth();
+            console.log('back to normal');
+        };
         var closeEyes = function() {
-            cat.bodyParts.eyesOpen.behaviour.visible = false;
-            cat.bodyParts.eyesClosed.behaviour.visible = true;
+            b('eyesOpen').visible = false;
+            b('eyesClosed').visible = true;
         };
         var openEyes = function() {
-            cat.bodyParts.eyesOpen.behaviour.visible = true;
-            cat.bodyParts.eyesClosed.behaviour.visible = false;
+            b('eyesOpen').visible = true;
+            b('eyesClosed').visible = false;
         };
 
         var closeMouth = function(){
-            cat.bodyParts.mouthOpen.behaviour.visible = false;
-            cat.bodyParts.mouthClosed.behaviour.visible = true;
+            b('mouthOpen').visible = false;
+            b('mouthClosed').visible = true;
         };
         var openMouth = function(){
-            cat.bodyParts.mouthOpen.behaviour.visible = true;
-            cat.bodyParts.mouthClosed.behaviour.visible = false;
+            b('mouthOpen').visible = true;
+            b('mouthClosed').visible = false;
         };
 
 
@@ -131,9 +180,8 @@ angular.module('drawACat.cat.services')
 
                 // register the functions that will run the in main actuatorLoop
                 actuatorFunctions.push(actuateLegs());
-                actuatorFunctions.push(actuateBlinking());
-                actuatorFunctions.push(actuateMouth());
                 actuatorFunctions.push(actuateHead());
+                actuatorFunctions.push(actuateEmotions());
 
                 actuatorLoop();
             },

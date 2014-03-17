@@ -148,6 +148,18 @@ angular.module('drawACat.common.services')
                 return pathWithOffset;
             };
 
+            this.pointerIsOver = function(pointerX, pointerY) {
+                var bb = this.getBoundingBox();
+                // is it within the x bounds of the part?
+                if (bb.x < pointerX && pointerX < (bb.x + bb.width)) {
+                    // is it within the y bounds too?
+                    if (bb.y < pointerY && pointerY < (bb.y + bb.height)) {
+                        return true;
+                    }
+                }
+                return false;
+            };
+
             /**
              * Get the bounding box of the part, used for collision detection.
              * @returns {{x: *, y: *, width: number, height: number}}

@@ -4,27 +4,27 @@
 
 angular.module('drawACat.cat.directives')
 
-    .directive('dacStage', function($window, $document, CONFIG, ballFactory, renderer, transformer, actuator, emotion) {
-
-
-
+    .directive('dacStage', function($window, renderer, transformer, actuator) {
         return {
             restrict: 'E',
             templateUrl: 'cat/directives/stage.tpl.html',
             replace: true,
             scope: {
-                cat: '='
+                cat: '=',
+                ball: '='
             },
-            link: function(scope, element) {
+            link: function(scope) {
+                /**
+                 * Initializations
+                 */
                 var canvas = document.getElementById('stage');
-                actuator.init(scope.cat);
                 var _renderer = renderer.Init(canvas);
-                scope.cat.emotion = emotion;
+                var ball = scope.ball;
+                var respondTo = 'ball';
 
-                scope.x = 0; // mouse pointer location
-                scope.y = 0;
-
-                var ball = ballFactory.newBall(25, CONFIG.BALL_IMAGE_SRC);
+                actuator.init(scope.cat);
+                scope.pointerX = 0; // mouse pointer location
+                scope.pointerY = 0;
 
                 function resizeCanvas() {
                     var windowWidth = $window.innerWidth;
@@ -42,14 +42,71 @@ angular.module('drawACat.cat.directives')
                     scope.cat.adjustPosition(xAdjustment, yAdjustment);
                 }
                 resizeCanvas();
+
+                /**
+                 * Event handlers
+                 */
                 angular.element($window).bind('resize', function() {
                     resizeCanvas();
                 });
 
+                scope.mouseMoveHandler = function(e) {
+                    var stageRect = canvas.getBoundingClientRect();
+                    scope.pointerX = e.clientX - stageRect.left;
+                    scope.pointerY = e.clientY - stageRect.top;
+                    if(ball.isInDragMode()) {
+                        var lastX = ball.getX();
+                        var lastY = ball.getY();
+                        ball.setVx(scope.pointerX - lastX);
+                        ball.setVy(scope.pointerY - lastY);
+                        ball.setX(scope.pointerX);
+                        ball.setY(scope.pointerY);
+                    }
+                };
+
+                scope.mouseDownHandler = function(e) {
+                    var stageRect = canvas.getBoundingClientRect();
+                    scope.pointerX = e.clientX - stageRect.left;
+                    scope.pointerY = e.clientY - stageRect.top;
+                    if (ball.pointerIsOver(scope.pointerX, scope.pointerY)) {
+                        ball.startDrag();
+                    }
+
+                    // touching cat's head?
+                    if (scope.cat.bodyParts.head.part.pointerIsOver(scope.pointerX, scope.pointerY)) {
+                        scope.cat.emotion.startStroking();
+                        scope.cat.bodyParts.head.behaviour.sensitivity.rotation *= -1;
+                        scope.cat.bodyParts.head.behaviour.sensitivity.xSkew *= -1;
+                        respondTo = 'pointer';
+                    }
+                };
+
+                scope.mouseUpHandler = function() {
+                    ball.endDrag();
+                    scope.cat.emotion.stopStroking();
+                    if (respondTo === 'pointer') {
+                        scope.cat.bodyParts.head.behaviour.sensitivity.rotation *= -1;
+                        scope.cat.bodyParts.head.behaviour.sensitivity.xSkew *= -1;
+                        respondTo = 'ball';
+                    }
+                };
+
+                scope.$on("$destroy", function() {
+                    if (rafId) {
+                        $window.cancelAnimationFrame(rafId);
+                        actuator.destroy();
+                    }
+                });
+
+                /**
+                 * The main animation loop
+                 */
                 var rafId;
                 var renderFrame = function() {
                     _renderer.clearCanvas();
-                    transformer.transform(scope.cat, ball.getX(), ball.getY());
+                    var inputX = respondTo === 'ball' ? ball.getX() : scope.pointerX;
+                    var inputY = respondTo === 'ball' ? ball.getY() : scope.pointerY;
+                    transformer.transform(scope.cat, inputX, inputY);
                     _renderer.renderCat(scope.cat);
 
                     // ball logic
@@ -59,49 +116,14 @@ angular.module('drawACat.cat.directives')
                     if (touchedBallLeft || touchedBallRight) {
                         scope.cat.emotion.getExcited();
                     }
-                    ball.pointerIsOver(scope.x, scope.y);
-                    _renderer.renderBall(ball);
-                    rafId = $window.requestAnimationFrame(renderFrame);
 
-                    scope.cat.emotion.calmDown();
+                    _renderer.renderBall(ball);
                     // debug
                     scope.moodValue = scope.cat.emotion.getMoodValue();
+
+                    rafId = $window.requestAnimationFrame(renderFrame);
                 };
                 renderFrame();
-
-                $document.on('mousemove', function(e) {
-                    var stageRect = canvas.getBoundingClientRect();
-                    scope.x = e.clientX - stageRect.left;
-                    scope.y = e.clientY - stageRect.top;
-
-                    if(ball.isInDragMode()) {
-                        var lastX = ball.getX();
-                        var lastY = ball.getY();
-                        ball.setVx(scope.x - lastX);
-                        ball.setVy(scope.y - lastY);
-                        ball.setX(scope.x);
-                        ball.setY(scope.y);
-                    }
-                });
-
-                $document.on('mousedown', function(e) {
-                    if (ball.pointerIsOver(scope.x, scope.y)) {
-                        ball.startDrag();
-                    }
-                });
-
-                $document.on('mouseup', function(e) {
-                    ball.endDrag();
-                });
-
-
-
-                scope.$on("$destroy", function() {
-                    if (rafId) {
-                        $window.cancelAnimationFrame(rafId);
-                        actuator.destroy();
-                    }
-                });
             }
         };
     }
