@@ -1,8 +1,7 @@
 angular.module( 'drawACat', [
         'templates-app',
         'templates-common',
-        'ui.state',
-        'ui.route',
+        'ui.router',
         'drawACat.home',
         'drawACat.cat',
         'drawACat.draw',

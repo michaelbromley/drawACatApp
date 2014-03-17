@@ -3,7 +3,7 @@
  */
 
 angular.module('drawACat.draw', [
-        'ui.state',
+        'ui.router',
         'drawACat.draw.canvas',
         'drawACat.draw.services'
     ])

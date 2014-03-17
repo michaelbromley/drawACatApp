@@ -1,6 +1,6 @@
 
 angular.module( 'drawACat.home', [
-        'ui.state'
+        'ui.router'
 ])
 
 
