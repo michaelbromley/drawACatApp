@@ -7,7 +7,7 @@ angular.module('drawACat.draw.services')
  * This service is used to control the sequence in which the parts of the cat are drawn. It also contains pre-configured settings which are used to
  * set up the new cat instance.
  */
-.factory('drawHelper', function() {
+    .factory('drawHelper', function() {
 
         var catParts = {
             head: {
@@ -20,25 +20,30 @@ angular.module('drawACat.draw.services')
                         rotation: 0.1
                     },
                     range: 550
-                }
+                },
+                done: false
             },
             eyesOpen: {
                 label: 'Eyes Open',
-                parentPart: 'head'
+                parentPart: 'head',
+                done: false
             },
             eyesClosed: {
                 label: 'Eyes Closed',
                 parentPart: 'head',
-                visible: false
+                visible: false,
+                done: false
             },
             mouthOpen: {
                 label: 'Mouth Open',
                 parentPart: 'head',
-                visible: false
+                visible: false,
+                done: false
             },
             mouthClosed: {
                 label: 'Mouth Closed',
-                parentPart: 'head'
+                parentPart: 'head',
+                done: false
             },
             body: {
                 label: 'Body',
@@ -51,7 +56,8 @@ angular.module('drawACat.draw.services')
                         rotation: 0
                     },
                     range: 300
-                }
+                },
+                done: false
             },
             leftLeg: {
                 label: 'Left Leg',
@@ -64,7 +70,8 @@ angular.module('drawACat.draw.services')
                         rotation: 0.4
                     },
                     range: 200
-                }
+                },
+                done: false
             },
             rightLeg: {
                 label: 'Right Leg',
@@ -77,15 +84,16 @@ angular.module('drawACat.draw.services')
                         rotation: 0.4
                     },
                     range: 200
-                }
+                },
+                done: false
             }
         };
         var partKeys = [
             'head',
             'eyesOpen',
             'eyesClosed',
-            'mouthOpen',
             'mouthClosed',
+            'mouthOpen',
             'body',
             'leftLeg',
             'rightLeg'
@@ -94,6 +102,7 @@ angular.module('drawACat.draw.services')
 
         return {
             catParts: catParts,
+            partKeys: partKeys,
             getCurrentPartLabel: function() {
                 if (currentPartIndex < partKeys.length) {
                     var currentPartKey = partKeys[currentPartIndex];
@@ -104,13 +113,20 @@ angular.module('drawACat.draw.services')
             },
             getCurrentPartKey: function() {
                 if (currentPartIndex < partKeys.length) {
-                return partKeys[currentPartIndex];
+                    return partKeys[currentPartIndex];
                 } else {
                     return 'end';
                 }
             },
             next: function() {
-                currentPartIndex ++;
+                if (currentPartIndex < partKeys.length - 1) {
+                    currentPartIndex ++;
+                }
+            },
+            previous: function() {
+                if (0 < currentPartIndex) {
+                    currentPartIndex --;
+                }
             },
             reset: function() {
                 currentPartIndex = 0;

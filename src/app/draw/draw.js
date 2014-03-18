@@ -4,7 +4,7 @@
 
 angular.module('drawACat.draw', [
         'ui.router',
-        'drawACat.draw.canvas',
+        'drawACat.draw.directives',
         'drawACat.draw.services'
     ])
     .config(function config( $stateProvider ) {
@@ -21,29 +21,15 @@ angular.module('drawACat.draw', [
     })
 
     .controller('DrawController', function($scope, primitives, catFactory, behaviourFactory, drawHelper, serializer, datastore, catNormalizer) {
-
-        /**
-         * Private methods and variables
-         */
-        var showInstructions = function() {
-            var currentPartLabel =  drawHelper.getCurrentPartLabel();
-
-            if (currentPartLabel != 'end') {
-                $scope.currentPartLabel = currentPartLabel;
-            } else {
-                $scope.completed = true;
-            }
-        };
-        showInstructions();
-
         /**
          * Scope properties
          */
         $scope.catParts = drawHelper.catParts;
+        $scope.steps = drawHelper.partKeys;
+        $scope.currentStep = drawHelper.getCurrentPartKey();
         $scope.lineCollection = primitives.LineCollection();
         $scope.cat = catFactory.newCat();
         $scope.completed = false;
-
 
         /**
          * Scope methods
@@ -52,16 +38,23 @@ angular.module('drawACat.draw', [
             $scope.lineCollection.removeLine();
         };
 
-        $scope.addNewPart = function() {
-            var partName = drawHelper.getCurrentPartKey();
+        $scope.savePart = function() {
+            var partName = $scope.currentStep;
             var newPart = primitives.Part();
             newPart.createFromPath(partName, $scope.lineCollection.getPath());
             $scope.cat.bodyParts[partName].part = newPart;
+            $scope.catParts[partName].done = true;
 
             // reset the lineCollection to an empty collection and move on to the next part to draw
             $scope.lineCollection = primitives.LineCollection();
             drawHelper.next();
-            showInstructions();
+        };
+
+        $scope.nextStep = function() {
+            drawHelper.next();
+        };
+        $scope.previousStep = function() {
+            drawHelper.previous();
         };
 
         $scope.saveCat = function() {

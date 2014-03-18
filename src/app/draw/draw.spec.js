@@ -78,7 +78,7 @@ describe('draw page', function() {
             expect(scope.completed).toBe(false);
         });
 
-        describe('addNewPart() method', function() {
+        describe('savePart() method', function() {
 
             beforeEach(function() {
                 spyOn(drawHelper, 'getCurrentPartKey').and.returnValue('head');
@@ -88,11 +88,7 @@ describe('draw page', function() {
                 testLine.addPoint([1,2]);
                 scope.lineCollection.addLine(testLine);
 
-                scope.addNewPart();
-            });
-
-            it('should get the part key from the drawHelper', function() {
-                expect(drawHelper.getCurrentPartKey).toHaveBeenCalled();
+                scope.savePart();
             });
 
             it('should add the new part to the cat', function() {

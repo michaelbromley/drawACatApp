@@ -1,0 +1,45 @@
+<div class="draw-instructions">
+    <h2>Currently drawing: {{ currentStepLabel }}</h2>
+    <div class="instructions-container">
+        <div class="instruction" ng-show="currentStep == 'head'">
+            <p>
+                Instructions for the head!
+            </p>
+        </div>
+        <div class="instruction" ng-show="currentStep == 'eyesOpen'">
+            <p>
+                Instructions for the open eyes!
+            </p>
+        </div>
+        <div class="instruction" ng-show="currentStep == 'eyesClosed'">
+            <p>
+                Instructions for the closed eyes!
+            </p>
+        </div>
+        <div class="instruction" ng-show="currentStep == 'mouthOpen'">
+            <p>
+                Instructions for the open mouth!
+            </p>
+        </div>
+        <div class="instruction" ng-show="currentStep == 'mouthClosed'">
+            <p>
+                Instructions for the closed mouth!
+            </p>
+        </div>
+        <div class="instruction" ng-show="currentStep == 'body'">
+            <p>
+                Instructions for the body!
+            </p>
+        </div>
+        <div class="instruction" ng-show="currentStep == 'leftLeg'">
+            <p>
+                Instructions for the left leg!
+            </p>
+        </div>
+        <div class="instruction" ng-show="currentStep == 'rightLeg'">
+            <p>
+                Instructions for the right leg!
+            </p>
+        </div>
+    </div>
+</div>

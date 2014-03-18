@@ -1,27 +1,24 @@
 <h1>Draw a cat here:</h1>
 
 <dac-canvas line-collection="lineCollection" cat="cat"></dac-canvas>
-
 <div class="draw-controls">
     <button ng-disabled="lineCollection.count() == 0" ng-click="undo()">Undo</button>
-    <button ng-disabled="lineCollection.count() == 0" ng-click="addNewPart()">Save Part</button>
+    <button ng-disabled="lineCollection.count() == 0" ng-click="savePart()">Save Part</button>
     <div class="save-controls" ng-show="completed">
         <label for="name">Name: </label><input id="name" ng-model="name">
         <label for="description">Description: </label><textarea id="description" ng-model="description"></textarea>
         <button ng-click="saveCat()">Save Cat</button>
     </div>
+    <br>
+    <button ng-click="previousStep()">Previous</button>
+    <button ng-click="nextStep()">Next</button>
 
 </div>
-
-<div class="alert alert-info">
-    Number of lines in current lineCollection: {{ lineCollection.count() }}
+<div class="steps-list">
+    <ul>
+        <li ng-repeat="step in steps" ng-class="{lead: step == currentStep}">
+            {{ catParts[step].label }} <span ng-show="catParts[step].done">edit</span>
+        </li>
+    </ul>
 </div>
-<h2>Currently drawing: {{ currentPartLabel }}</h2>
-<div class="cat-parts-list">
-        <h3>Cat Parts:</h3>
-        <ul>
-            <li ng-repeat="(part, properties) in catParts">
-                {{ properties.label }}
-            </li>
-        </ul>
-    </div>
+<dac-draw-instructions></dac-draw-instructions>

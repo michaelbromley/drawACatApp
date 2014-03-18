@@ -67,8 +67,10 @@ angular.module('drawACat.common.services')
 
             angular.forEach(sequence, function(bodyPartName) {
                 var bodyPart = cat.bodyParts[bodyPartName];
-                if (bodyPart.behaviour.visible !== false) {
-                    renderPartWithTransformations(bodyPart.part);
+                if (bodyPart.part) {
+                    if (!bodyPart.behaviour || bodyPart.behaviour.visible !== false) {
+                        renderPartWithTransformations(bodyPart.part);
+                    }
                 }
             });
         };
