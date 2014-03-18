@@ -46,7 +46,8 @@ angular.module('drawACat.cat.services')
                     } else {
                         if (isPurring) {
                             isPurring = false;
-                            console.log('stopped purring');
+                            backToNormal();
+                            //console.log('stopped purring');
                         }
 
                         var expression = ['blink'];
@@ -131,26 +132,27 @@ angular.module('drawACat.cat.services')
         var purr = function() {
             closeEyes();
             closeMouth();
-            console.log('purrrrrrr ;)');
+            //console.log('purrrrrrr ;)');
         };
         var yawn = function() {
             closeEyes();
             openMouth();
-            console.log('yawn :|');
+            //console.log('yawn :|');
         };
         var angryMeow = function() {
             openEyes();
-            console.log('angry MEOW!! :(');
+            openMouth();
+            //console.log('angry MEOW!! :(');
         };
         var excitedMeow = function() {
-            openEyes();
+            closeEyes();
             openMouth();
-            console.log('excited meow! :)');
+            //console.log('excited meow! :)');
         };
         var backToNormal = function() {
             openEyes();
             closeMouth();
-            console.log('back to normal');
+            //console.log('back to normal');
         };
         var closeEyes = function() {
             b('eyesOpen').visible = false;

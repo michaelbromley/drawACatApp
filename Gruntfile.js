@@ -309,7 +309,7 @@ module.exports = function ( grunt ) {
             options: {
                 curly: true,
                 immed: true,
-                newcap: true,
+                newcap: false, // interfering with hammer.js
                 noarg: true,
                 sub: true,
                 boss: true,

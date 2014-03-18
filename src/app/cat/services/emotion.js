@@ -78,10 +78,15 @@ angular.module('drawACat.cat.services')
             }
         }
         function getExcited() {
-            if (excited < MAX_MOOD) {
+            if (excited < 0) {
+                excited += 2;
+            } else if (excited < MAX_MOOD) {
                 excited ++;
-                timeSinceAnythingHappened = 0;
             }
+            if (happy < 0) {
+                happy += 3;
+            }
+            timeSinceAnythingHappened = 0;
         }
         function getBored() {
             if (EXCITED_THRESHOLD < excited) {
@@ -115,7 +120,7 @@ angular.module('drawACat.cat.services')
             stopStroking: function() {
                 if (isBeingStroked) {
                     isBeingStroked = false;
-                    happy = 10;
+                    happy = 18;
                 }
             },
             getMoodValue: function() {

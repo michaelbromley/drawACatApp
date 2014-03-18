@@ -12,7 +12,7 @@ angular.module('drawACat.cat.services')
             var windowWidth = $window.innerWidth;
             var ballDamping = 0.7;
             var G = 0.5; // gravity
-            var MAX_VELOCITY = 25;
+            var MAX_VELOCITY = 40;
             var FRICTION = 30; // higher is more slippery
 
             var dragMode = false;
@@ -126,11 +126,9 @@ angular.module('drawACat.cat.services')
             };
             this.startDrag = function() {
                 dragMode = true;
-                console.log('drag start');
             };
             this.endDrag = function() {
                 dragMode = false;
-                console.log('drag end');
             };
 
             this.updatePosition = function() {

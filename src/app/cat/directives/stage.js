@@ -17,6 +17,7 @@ angular.module('drawACat.cat.directives')
                 /**
                  * Initializations
                  */
+                scope.debugMode = false;
                 var canvas = document.getElementById('stage');
                 var _renderer = renderer.Init(canvas);
                 var ball = scope.ball;
@@ -113,9 +114,8 @@ angular.module('drawACat.cat.directives')
                 var rafId;
                 var renderFrame = function() {
                     _renderer.clearCanvas();
-                    var inputX = respondTo === 'ball' ? ball.getX() : scope.pointerX;
-                    var inputY = respondTo === 'ball' ? ball.getY() : scope.pointerY;
-                    transformer.transform(scope.cat, inputX, inputY);
+                    var input = getInputCoordinates();
+                    transformer.transform(scope.cat, input.x, input.y);
                     _renderer.renderCat(scope.cat);
 
                     // ball logic
@@ -132,6 +132,18 @@ angular.module('drawACat.cat.directives')
 
                     rafId = $window.requestAnimationFrame(renderFrame);
                 };
+                function getInputCoordinates() {
+                    var inputX = respondTo === 'ball' ? ball.getX() : scope.pointerX;
+                    var inputY = respondTo === 'ball' ? ball.getY() : scope.pointerY;
+
+                    inputX = isNaN(inputX) ? 0 : inputX;
+                    inputY = isNaN(inputY) ? 0 : inputY;
+
+                    return {
+                        x: inputX,
+                        y: inputY
+                    };
+                }
                 renderFrame();
             }
         };
