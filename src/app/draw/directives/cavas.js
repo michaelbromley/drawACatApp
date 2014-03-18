@@ -2,7 +2,7 @@
  * Created by Michael on 07/03/14.
  */
 
-angular.module('drawACat.draw.canvas', [])
+angular.module('drawACat.draw.directives', [])
 
     .directive('dacCanvas', function(primitives, renderer) {
 
@@ -35,9 +35,9 @@ angular.module('drawACat.draw.canvas', [])
                     if (newVal < oldVal) {
                         // either a line has been removed (undo), or the lineCollection has been save to a part and reset,
                         // so we need to clear the canvas and re-draw everything.
-                         _renderer.clearCanvas();
+                        _renderer.clearCanvas();
                         _renderer.renderPath(scope.lineCollection.getPath());
-                        _renderer.renderPath(scope.cat.getPath());
+                        _renderer.renderCat(scope.cat);
                     }
                 });
 
