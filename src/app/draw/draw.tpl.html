@@ -1,24 +1,23 @@
-<h1>Draw a cat here:</h1>
+<div class="row">
+    <div class="col-xs-12 col-sm-9 col-md-7 col-lg-6">
+        <dac-canvas line-collection="lineCollection" cat-parts="catParts"></dac-canvas>
+    </div>
+    <div class="col-xs-12 col-sm-3 col-md-5 col-lg-6">
+        <div class="draw-controls">
+            <button ng-disabled="lineCollection.count() == 0" ng-click="undo()">Undo</button>
+            <br>
+            <button ng-click="previousStep()">Previous</button>
+            <button ng-click="nextStep()">Next</button>
+            <button ng-click="showSaveDialog = true" ng-show="true">Save</button>
 
-<dac-canvas line-collection="lineCollection" cat="cat"></dac-canvas>
-<div class="draw-controls">
-    <button ng-disabled="lineCollection.count() == 0" ng-click="undo()">Undo</button>
-    <button ng-disabled="lineCollection.count() == 0" ng-click="savePart()">Save Part</button>
-    <div class="save-controls" ng-show="completed">
+        </div>
+        <dac-draw-instructions></dac-draw-instructions>
+    </div>
+</div>
+<dac-modal-dialog show="showSaveDialog">
+    <div class="save-controls">
         <label for="name">Name: </label><input id="name" ng-model="name">
         <label for="description">Description: </label><textarea id="description" ng-model="description"></textarea>
-        <button ng-click="saveCat()">Save Cat</button>
+        <button action="saveCat()">Save Cat</button>
     </div>
-    <br>
-    <button ng-click="previousStep()">Previous</button>
-    <button ng-click="nextStep()">Next</button>
-
-</div>
-<div class="steps-list">
-    <ul>
-        <li ng-repeat="step in steps" ng-class="{lead: step == currentStep}">
-            {{ catParts[step].label }} <span ng-show="catParts[step].done">edit</span>
-        </li>
-    </ul>
-</div>
-<dac-draw-instructions></dac-draw-instructions>
+</dac-modal-dialog>
