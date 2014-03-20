@@ -9,11 +9,20 @@ angular.module('drawACat.common.services')
     .factory('renderer', function() {
 
         var context;
-        var FILL_COLOUR = '#efefef';
+        var strokeStyle = '#333333';
+        var fillStyle = '#efefef';
         var debugMode = false;
 
         var Renderer = function(canvasElement) {
             context = canvasElement.getContext('2d');
+        };
+
+        Renderer.prototype.strokeStyle = function(value) {
+            strokeStyle = value;
+        };
+
+        Renderer.prototype.fillStyle = function(value) {
+            fillStyle = value;
         };
 
         Renderer.prototype.drawStart = function(x, y) {
@@ -23,6 +32,7 @@ angular.module('drawACat.common.services')
 
         Renderer.prototype.drawMove = function(x, y) {
             context.lineTo(x, y);
+            context.strokeStyle = strokeStyle;
             context.stroke();
         };
 
@@ -31,21 +41,27 @@ angular.module('drawACat.common.services')
         };
 
         Renderer.prototype.renderPath = function(path) {
-
-            context.beginPath();
             for (var line = 0; line < path.length; line ++) {
                 renderLine(path[line]);
             }
 
             function renderLine(line) {
+                context.strokeStyle = strokeStyle;
+                context.beginPath();
+
                 context.moveTo(line[0][0], line[0][1]);
+
                 for (var point = 1; point < line.length; point ++) {
                     context.lineTo(line[point][0], line[point][1]);
                 }
+
                 if (lineIsABoundary(line)) {
-                    context.fillStyle = FILL_COLOUR;
-                    context.fill();
+                    context.fillStyle = fillStyle;
+                } else {
+                    context.fillStyle = 'rgba(0,0,0,0)';
                 }
+
+                context.fill();
                 context.stroke();
             }
         };
@@ -80,7 +96,7 @@ angular.module('drawACat.common.services')
             var transformationData = part.getTransformationData();
             var coords;
 
-            context.strokeStyle = '#333333';
+            context.strokeStyle = strokeStyle;
             for (var line = 0; line < path.length; line ++) {
                 context.beginPath();
                 coords = applyTransformations(path[line][0], transformationData);
@@ -92,7 +108,7 @@ angular.module('drawACat.common.services')
                 }
 
                 if (lineIsABoundary(path[line])) {
-                    context.fillStyle = FILL_COLOUR;
+                    context.fillStyle = fillStyle;
                     context.fill();
                 }
                 context.stroke();

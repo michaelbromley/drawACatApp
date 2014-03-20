@@ -20,6 +20,8 @@ angular.module('drawACat.cat.directives')
                 scope.debugMode = false;
                 var canvas = document.getElementById('stage');
                 var _renderer = renderer.Init(canvas);
+                _renderer.strokeStyle('#333333');
+                _renderer.fillStyle('#efefef');
                 var ball = scope.ball;
                 var respondTo = 'ball';
 
