@@ -11,7 +11,7 @@ angular.module('drawACat.common.directives')
             compile: function($element, attr) {
                 var fn = $parse(attr['dacPointerstart']);
                 return function(scope, element, attr) {
-                    Hammer(element[0], { prevent_default: true }).on('touch', function(event) {
+                    Hammer(element[0], { prevent_default: true, drag_min_distance: 2 }).on('touch', function(event) {
                         event = event.gesture;
                         if (!event.clientX && event.touches) {
                             var propertiesToCopy = [
@@ -40,7 +40,7 @@ angular.module('drawACat.common.directives')
             compile: function($element, attr) {
                 var fn = $parse(attr['dacPointermove']);
                 return function(scope, element, attr) {
-                    Hammer(element[0], { prevent_default: true }).on('drag', function(event) {
+                    Hammer(element[0], { prevent_default: true}).on('drag', function(event) {
                         event = event.gesture;
                         if (!event.clientX && event.touches) {
                             var propertiesToCopy = [
