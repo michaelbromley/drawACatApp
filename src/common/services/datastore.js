@@ -8,11 +8,15 @@ angular.module('drawACat.common.services')
         var apiUrl = CONFIG.API_URL;
 
         return {
-            saveCat: function(name, description, cat) {
+            saveCat: function(catInfo) {
                 return $http.post(apiUrl + 'cat/', {
-                    name: name,
-                    description: description,
-                    cat: cat
+                    name: catInfo.name,
+                    description: catInfo.description,
+                    author: catInfo.author,
+                    isPublic: catInfo.isPublic,
+                    tags: catInfo.tags,
+                    thumbnail: catInfo.thumbnail,
+                    cat: catInfo.cat
                 });
             },
             listCats: function() {

@@ -23,18 +23,19 @@ angular.module('drawACat.common.services')
 
         /**
          * Get a path array for the whole cat, which concatenates each bodyPart path into one big array.
+         * Omits the closedEyes and the openMouth parts from the path.
          * @returns {Array}
          */
         Cat.prototype.getPath = function() {
             var path = [];
-            for (var key in this.bodyParts) {
-                if (this.bodyParts.hasOwnProperty(key)) {
-                    if (this.bodyParts[key].part) {
-                        var partPath = this.bodyParts[key].part.getPath();
-                        path = path.concat(partPath);
-                    }
+            angular.forEach(this.bodyParts, function(bodyPart, partName) {
+                if (partName !== 'eyesClosed' &&
+                    partName !== 'mouthOpen' &&
+                    bodyPart.part) {
+                    var partPath = bodyPart.part.getPath();
+                    path = path.concat(partPath);
                 }
-            }
+            });
             return path;
         };
 

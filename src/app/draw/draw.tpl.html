@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row draw-container">
     <div class="col-xs-12 col-sm-9 col-md-7 col-lg-6">
         <dac-canvas line-collection="lineCollection" cat-parts="catParts"></dac-canvas>
     </div>
@@ -14,10 +14,38 @@
         <dac-draw-instructions></dac-draw-instructions>
     </div>
 </div>
+
 <dac-modal-dialog show="showSaveDialog">
-    <div class="save-controls">
-        <label for="name">Name: </label><input id="name" ng-model="name">
-        <label for="description">Description: </label><textarea id="description" ng-model="description"></textarea>
-        <button action="saveCat()">Save Cat</button>
-    </div>
+    <form role="form" name="saveForm" ng-submit="saveCat()">
+        <div class="form-group">
+            <label for="catName">Name of your cat:</label>
+            <input type="text" class="form-control" id="catName" ng-model="name" ng-required="true">
+        </div>
+        <div class="form-group">
+            <label for="description">Description (optional):</label>
+            <textarea id="description" ng-model="description" class="form-control" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="author">Your name:</label>
+            <input type="text" class="form-control" id="author" ng-model="author" ng-required="true">
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" ng-model="isPublic" id="public-true" value="true">
+                Make Public&mdash;you cat will appear on the site's home page.
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" ng-model="isPublic" id="public-false" value="false">
+                Make Private&mdash;only those who have the URL can view the cat.
+            </label>
+        </div>
+        <div class="form-group" ng-show="isPublic">
+            <label for="tags">Tags:</label>
+            <input type="text" class="form-control" id="tags" ng-model="tags">
+        </div>
+        <button type="submit" class="btn btn-primary" ng-disabled="saveForm.$invalid">{{ saveDialog.buttonText }}</button>
+        <div class="alert alert-warning">{{ saveDialog.errorText }}</div>
+    </form>
 </dac-modal-dialog>
