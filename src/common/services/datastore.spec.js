@@ -40,15 +40,28 @@ describe('datastore service', function() {
         datastore.listCats();
     });
 
-    it('should make correct api call on save', function() {
-        var postData = {
-            name: 'bobby',
-            description: 'a testing cat',
-            cat: { catObject: 'mocked!' }
-        };
 
-        $httpBackend.expectPOST(mockApiUrl + 'cat/', postData).respond(201);
-        datastore.saveCat('bobby', 'a testing cat', { catObject: 'mocked!' });
+    describe('saveCat() method', function() {
+
+        var postData;
+
+        beforeEach(function() {
+            postData = {
+                name: 'bobby',
+                description: 'a testing cat',
+                author: 'Jim Test',
+                isPublic: true,
+                tags: 'tag1 tag2',
+                cat: { catObject: 'mocked!' },
+                thumbnail: 'wdawdawdawdawdawd'
+            };
+        });
+
+        it('should make correct api call on save', function() {
+            $httpBackend.expectPOST(mockApiUrl + 'cat/', postData).respond(201);
+            datastore.saveCat(postData);
+        });
     });
+
 
 });
