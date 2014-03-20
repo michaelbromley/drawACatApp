@@ -2,8 +2,6 @@
  * Created by Michael on 17/03/14.
  */
 
-
-
 describe('draw page', function() {
 
     beforeEach(module('drawACat'));
@@ -36,38 +34,38 @@ describe('draw page', function() {
 
         var scope;
         var drawController;
-        var catFactory;
         var datastore;
         var primitives;
         var drawHelper;
-        var catNormalizer;
+        var catBuilder;
         var serializer;
+        var thumbnailGenerator;
 
 
-        beforeEach(inject(function($rootScope, $controller, _catFactory_, _datastore_, _primitives_, _drawHelper_, _catNormalizer_, _serializer_) {
+        beforeEach(inject(function($rootScope, $controller, _primitives_, _drawHelper_, _serializer_, _datastore_, _catBuilder_, _thumbnailGenerator_) {
             scope = $rootScope.$new();
 
-            catFactory = _catFactory_;
             datastore = _datastore_;
             primitives = _primitives_;
             drawHelper = _drawHelper_;
-            catNormalizer = _catNormalizer_;
             serializer = _serializer_;
+            thumbnailGenerator = _thumbnailGenerator_;
+            catBuilder = _catBuilder_;
 
             // calls that should be made upon instantiation of the controller
-            spyOn(catFactory, "newCat").and.callThrough();
+            spyOn(drawHelper, "getCurrentPartKey").and.callThrough();
             spyOn(primitives, 'LineCollection').and.callThrough();
 
             drawController = $controller('DrawController', {
                 $scope: scope,
-                catFactory: catFactory,
+                drawHelper: drawHelper,
                 datastore: datastore,
                 primitives: primitives
             });
         }));
 
-        it('should initialize the cat', function() {
-            expect(catFactory.newCat).toHaveBeenCalled();
+        it('should call drawHelper.getCurrentPartKey()', function() {
+            expect(drawHelper.getCurrentPartKey).toHaveBeenCalled();
         });
 
         it('should create a new LineCollection', function() {
@@ -75,58 +73,87 @@ describe('draw page', function() {
         });
 
         it('should start with `completed` being false', function() {
-            expect(scope.completed).toBe(false);
+            expect(scope.drawing.completed).toBe(false);
         });
 
-        describe('savePart() method', function() {
+        describe('nextStep() method', function() {
+
+            var lineCollection;
 
             beforeEach(function() {
-                spyOn(drawHelper, 'getCurrentPartKey').and.returnValue('head');
-                spyOn(drawHelper, 'next');
-
                 var testLine = primitives.Line();
                 testLine.addPoint([1,2]);
                 scope.lineCollection.addLine(testLine);
+                scope.currentStep = 'head';
 
-                scope.savePart();
+                lineCollection = scope.lineCollection;
+
+                scope.nextStep();
             });
 
             it('should add the new part to the cat', function() {
-                expect(scope.cat.bodyParts.head.part).toBeDefined();
+                expect(scope.catParts.head.lineCollection).toEqual(lineCollection);
             });
 
             it('should reset the lineCollection', function() {
                 expect(scope.lineCollection.getPath()).toEqual([]);
             });
 
-            it('should move the drawHelper on to the next part', function() {
-                expect(drawHelper.next).toHaveBeenCalled();
+            it('should advance to the next step', function() {
+                expect(drawHelper.getCurrentPartKey()).toEqual('eyesOpen');
             });
         });
 
         describe('saveCat() method', function() {
 
-            beforeEach(function() {
-               spyOn(catNormalizer, 'normalize');
-               spyOn(serializer, 'serializeCat');
-               spyOn(datastore, 'saveCat');
+            var $state;
 
-               scope.saveCat();
-            });
+            beforeEach(inject(function(_$q_, _$state_) {
+                $state = _$state_;
 
-            it('should call the normalizer', function() {
-                expect(catNormalizer.normalize).toHaveBeenCalled();
+                spyOn(catBuilder, 'buildCatFromParts');
+                spyOn(serializer, 'serializeCat');
+                spyOn(thumbnailGenerator, 'getDataUri');
+                spyOn($state, 'go');
+
+                var deferred = _$q_.defer();
+                deferred.resolve({id: 123});
+                spyOn(datastore, 'saveCat').and.callFake(function() {
+                    return deferred.promise;
+                });
+
+                // populate a test catParts object
+                var testLine = primitives.Line();
+                testLine.addPoint([1,2]);
+                var testLineCollection = primitives.LineCollection();
+                testLineCollection.addLine(testLine);
+                angular.forEach(scope.catParts, function(catPart) {
+                    catPart.lineCollection = testLineCollection;
+                });
+
+                scope.saveCat({});
+            }));
+
+            it('should call the catBuilder', function() {
+                expect(catBuilder.buildCatFromParts).toHaveBeenCalled();
             });
 
             it('should call the serializer', function() {
                 expect(serializer.serializeCat).toHaveBeenCalled();
             });
 
-            it('should call the normalizer', function() {
+            it('should call the thumbnailGenerator', function() {
+                expect(thumbnailGenerator.getDataUri).toHaveBeenCalled();
+            });
+
+            it('should call the datastore.saveCat() method', function() {
                 expect(datastore.saveCat).toHaveBeenCalled();
             });
 
-
+            it('should redirect to created cat page on success', function() {
+                scope.$apply();
+                expect($state.go).toHaveBeenCalledWith('cat', { id: 123 });
+            });
         });
     });
 });

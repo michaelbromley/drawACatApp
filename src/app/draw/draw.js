@@ -20,16 +20,16 @@ angular.module('drawACat.draw', [
     })
 
     .config(function config( $stateProvider ) {
-      $stateProvider.state( 'draw', {
-        url: '/cat/new',
-        views: {
-          "main": {
-            controller: 'DrawController',
-            templateUrl: 'draw/draw.tpl.html'
-          }
-        },
-        data:{ pageTitle: 'Home' }
-      });
+        $stateProvider.state( 'draw', {
+            url: '/cat/new',
+            views: {
+                "main": {
+                    controller: 'DrawController',
+                    templateUrl: 'draw/draw.tpl.html'
+                }
+            },
+            data:{ pageTitle: 'Home' }
+        });
     })
 
     .controller('DrawController', function($scope, $state, primitives, drawHelper, serializer, datastore, catBuilder, thumbnailGenerator) {
@@ -41,17 +41,40 @@ angular.module('drawACat.draw', [
             completed: false,
             showGuide: true
         };
-        $scope.saveDialog = {
-            buttonText: "Save Cat",
-            isPublic: true,
-            errorText: ""
-        };
-
         $scope.showSaveDialog = false;
 
         $scope.undo = function() {
             $scope.lineCollection.removeLine();
         };
+
+        $scope.nextStep = function() {
+            savePart();
+            drawHelper.next();
+            loadLineCollection();
+        };
+
+        $scope.previousStep = function() {
+            savePart();
+            drawHelper.previous();
+            loadLineCollection();
+        };
+
+        $scope.saveCat = function(formData) {
+            var catInfo = makeCatInfoObject(formData);
+
+            datastore.saveCat(catInfo).then(
+                function(data) {
+                    $state.go('cat', { id: data.id});
+                },
+                function() {
+                    $scope.errorText = "An error occurred! Try again.";
+                }
+            );
+        };
+
+        $scope.$on("$destroy", function() {
+            drawHelper.reset();
+        });
 
         function savePart() {
             var partName = $scope.currentStep;
@@ -73,16 +96,6 @@ angular.module('drawACat.draw', [
             return result;
         }
 
-        $scope.nextStep = function() {
-            savePart();
-            drawHelper.next();
-            loadLineCollection();
-        };
-        $scope.previousStep = function() {
-            savePart();
-            drawHelper.previous();
-            loadLineCollection();
-        };
         function loadLineCollection() {
             if ($scope.catParts[drawHelper.getCurrentPartKey()].done === false) {
                 // reset the lineCollection to an empty collection and move on to the next part to draw
@@ -92,41 +105,18 @@ angular.module('drawACat.draw', [
             }
         }
 
-        $scope.saveCat = function() {
-            $scope.saveDialog.buttonText = "Saving...";
-            angular.element(saveForm).css('opacity', 0.6);
+        function makeCatInfoObject(formData) {
             var finalCat = catBuilder.buildCatFromParts($scope.catParts);
-
             var thumbnail = thumbnailGenerator.getDataUri(finalCat);
             var serializedCat = serializer.serializeCat(finalCat);
-
-            var catInfo = {
-                name: this.name,
-                description: this.description,
-                author: this.author,
-                isPublic: this.isPublic,
-                tags: this.tags,
+            return {
+                name: formData.name,
+                description: formData.description,
+                author: formData.author,
+                isPublic: formData.isPublic,
+                tags: formData.tags,
                 cat: serializedCat,
                 thumbnail: thumbnail
             };
-
-            datastore.saveCat(catInfo).then(
-                function(data) {
-                    $state.go('cat', { id: data.id});
-                },
-                function() {
-                    $scope.saveDialog.errorText = "An error occurred! Try again.";
-                }
-            )['finally'](
-                function() {
-                    $scope.saveDialog.buttonText = "Save Cat";
-                    angular.element(saveForm).css('opacity', 1);
-                }
-            );
-        };
-
-        $scope.$on("$destroy", function() {
-            drawHelper.reset();
-        });
-
+        }
     });
