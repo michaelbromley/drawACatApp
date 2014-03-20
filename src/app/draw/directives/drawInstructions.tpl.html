@@ -1,45 +1,16 @@
 <div class="draw-instructions">
-    <h2>Currently drawing: {{ currentStepLabel }}</h2>
-    <div class="instructions-container">
-        <div class="instruction" ng-show="currentStep == 'head'">
-            <p>
-                Instructions for the head!
-            </p>
-        </div>
-        <div class="instruction" ng-show="currentStep == 'eyesOpen'">
-            <p>
-                Instructions for the open eyes!
-            </p>
-        </div>
-        <div class="instruction" ng-show="currentStep == 'eyesClosed'">
-            <p>
-                Instructions for the closed eyes!
-            </p>
-        </div>
-        <div class="instruction" ng-show="currentStep == 'mouthOpen'">
-            <p>
-                Instructions for the open mouth!
-            </p>
-        </div>
-        <div class="instruction" ng-show="currentStep == 'mouthClosed'">
-            <p>
-                Instructions for the closed mouth!
-            </p>
-        </div>
-        <div class="instruction" ng-show="currentStep == 'body'">
-            <p>
-                Instructions for the body!
-            </p>
-        </div>
-        <div class="instruction" ng-show="currentStep == 'leftLeg'">
-            <p>
-                Instructions for the left leg!
-            </p>
-        </div>
-        <div class="instruction" ng-show="currentStep == 'rightLeg'">
-            <p>
-                Instructions for the right leg!
-            </p>
-        </div>
+    <h3>Instructions:</h3>
+    <input type="checkbox" ng-model="drawing.showGuide" id="showGuideCheckbox"><label for="showGuideCheckbox">Show drawing guide</label>
+    <div class="steps-list">
+        <ul>
+            <li ng-repeat="step in steps">
+                <span ng-class="{lead: step == currentStep}">{{ catParts[step].label }}</span> <span ng-show="catParts[step].done">done!</span>
+                <div class="instruction" ng-show="step == currentStep">
+                    <p>
+                        {{ instruction }}
+                    </p>
+                </div>
+            </li>
+        </ul>
     </div>
 </div>

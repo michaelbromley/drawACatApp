@@ -9,85 +9,96 @@ angular.module('drawACat.draw.services')
  */
     .factory('drawHelper', function() {
 
-        var catParts = {
-            head: {
-                label: 'Head',
-                behaviour:{
-                    sensitivity: {
-                        xSkew: 0.25,
-                        ySkew: 0.25,
-                        xOffset: -0.05,
-                        rotation: 0.1
+        var catPartsTemplate = function() {
+            return {
+                head: {
+                    label: 'Head',
+                    lineCollection: false,
+                    behaviour:{
+                        sensitivity: {
+                            xSkew: 0.25,
+                            ySkew: 0.25,
+                            xOffset: -0.05,
+                            rotation: 0.1
+                        },
+                        range: 550
                     },
-                    range: 550
+                    done: false
                 },
-                done: false
-            },
-            eyesOpen: {
-                label: 'Eyes Open',
-                parentPart: 'head',
-                done: false
-            },
-            eyesClosed: {
-                label: 'Eyes Closed',
-                parentPart: 'head',
-                visible: false,
-                done: false
-            },
-            mouthOpen: {
-                label: 'Mouth Open',
-                parentPart: 'head',
-                visible: false,
-                done: false
-            },
-            mouthClosed: {
-                label: 'Mouth Closed',
-                parentPart: 'head',
-                done: false
-            },
-            body: {
-                label: 'Body',
-                behaviour:{
-                    sensitivity: {
-                        xSkew: 0.01,
-                        ySkew: 0.15,
-                        xOffset: -0.01,
-                        yOffset: -0.03,
-                        rotation: 0
+                eyesOpen: {
+                    label: 'Eyes Open',
+                    lineCollection: false,
+                    parentPart: 'head',
+                    done: false
+                },
+                eyesClosed: {
+                    label: 'Eyes Closed',
+                    lineCollection: false,
+                    parentPart: 'head',
+                    visible: false,
+                    done: false
+                },
+                mouthOpen: {
+                    label: 'Mouth Open',
+                    lineCollection: false,
+                    parentPart: 'head',
+                    visible: false,
+                    done: false
+                },
+                mouthClosed: {
+                    label: 'Mouth Closed',
+                    lineCollection: false,
+                    parentPart: 'head',
+                    done: false
+                },
+                body: {
+                    label: 'Body',
+                    lineCollection: false,
+                    behaviour:{
+                        sensitivity: {
+                            xSkew: 0.01,
+                            ySkew: 0.05,
+                            xOffset: -0.01,
+                            yOffset: -0.02,
+                            rotation: 0
+                        },
+                        range: 300
                     },
-                    range: 300
+                    done: false
                 },
-                done: false
-            },
-            leftLeg: {
-                label: 'Left Leg',
-                behaviour:{
-                    sensitivity: {
-                        xSkew: 0.2,
-                        ySkew: 0.4,
-                        xOffset: 0.6,
-                        yOffset: 0.6,
-                        rotation: 0.4
+                leftLeg: {
+                    label: 'Left Leg',
+                    lineCollection: false,
+                    behaviour:{
+                        sensitivity: {
+                            xSkew: 0.2,
+                            ySkew: 0.4,
+                            xOffset: 0.6,
+                            yOffset: 0.6,
+                            rotation: 0.4
+                        },
+                        range: 200
                     },
-                    range: 200
+                    done: false
                 },
-                done: false
-            },
-            rightLeg: {
-                label: 'Right Leg',
-                behaviour:{
-                    sensitivity: {
-                        xSkew: 0.2,
-                        ySkew: 0.4,
-                        xOffset: 0.6,
-                        yOffset: 0.6,
-                        rotation: 0.4
+                rightLeg: {
+                    label: 'Right Leg',
+                    lineCollection: false,
+                    behaviour:{
+                        sensitivity: {
+                            xSkew: 0.2,
+                            ySkew: 0.4,
+                            xOffset: 0.6,
+                            yOffset: 0.6,
+                            rotation: 0.4
+                        },
+                        range: 200
                     },
-                    range: 200
-                },
-                done: false
-            }
+                    done: false
+                }
+            };
         };
+        var catParts = catPartsTemplate();
         var partKeys = [
             'head',
             'eyesOpen',
@@ -130,6 +141,7 @@ angular.module('drawACat.draw.services')
             },
             reset: function() {
                 currentPartIndex = 0;
+                this.catParts = catPartsTemplate();
             }
         };
     })
