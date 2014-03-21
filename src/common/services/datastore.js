@@ -20,7 +20,16 @@ angular.module('drawACat.common.services')
                 });
             },
             listCats: function() {
-                return $http.get(apiUrl + 'cat/');
+                return $http.get(apiUrl + 'cat/', {
+                    transformResponse: function(data) {
+                        var cats = angular.fromJson(data);
+                        return cats.map(function(cat) {
+                            cat.thumbnail = CONFIG.THUMBNAILS_URL + cat.thumbnail;
+                            cat.created = cat.created + '000';
+                            return cat;
+                        });
+                    }
+                });
             },
             loadCat: function(id) {
                 return $http.get(apiUrl + 'cat/' + id);

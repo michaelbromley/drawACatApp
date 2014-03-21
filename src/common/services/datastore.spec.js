@@ -7,13 +7,15 @@ describe('datastore service', function() {
     var datastore;
     var $httpBackend;
     var mockApiUrl =  'http://www.mydomain.com/api/';
+    var mockThumbnailsUrl =  'http://www.mydomain.com/api/thumbnails';
 
     beforeEach( module( 'drawACat' ) );
     beforeEach( module( 'drawACat.common.services' ) );
 
     beforeEach( function() {
         var mockCONFIG  = {
-            API_URL: mockApiUrl
+            API_URL: mockApiUrl,
+            THUMBNAILS_URL: mockThumbnailsUrl
         };
         module(function ($provide) {
             $provide.value('CONFIG', mockCONFIG);
@@ -35,10 +37,37 @@ describe('datastore service', function() {
         datastore.loadCat(123);
     });
 
-    it('should make correct api call on list', function() {
-        $httpBackend.expectGET(mockApiUrl + 'cat/').respond(200);
-        datastore.listCats();
+    describe('listCats() method', function() {
+
+        var response;
+
+        beforeEach(function() {
+            var mockResponse = [
+                {
+                    name: 'test cat',
+                    created: '123456789',
+                    thumbnail: 'thumb.png'
+                }
+            ];
+            $httpBackend.whenGET(mockApiUrl + 'cat/').respond(200, angular.toJson(mockResponse));
+            datastore.listCats().then(function(data) {
+                response = data;
+            });
+        });
+
+        it('should make correct api call on list', function() {
+            $httpBackend.expectGET(mockApiUrl + 'cat/');
+        });
+
+        it('should transform the response timestamp with an extra 3 zeros', function() {
+            expect(response.data[0].created).toEqual('123456789000');
+        });
+
+        it('should add the image path to the thumbnail', function() {
+            expect(response.data[0].thumbnail).toEqual(mockThumbnailsUrl + 'thumb.png');
+        });
     });
+
 
 
     describe('saveCat() method', function() {
