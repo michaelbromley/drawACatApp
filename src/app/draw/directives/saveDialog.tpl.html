@@ -1,0 +1,39 @@
+<div class='dac-modal' ng-show='show'>
+    <div class='dac-modal-overlay' ng-click='hideModal()'></div>
+    <div class='dac-modal-dialog' ng-style='dialogStyle'>
+        <div class='dac-modal-close' ng-click='hideModal()'><button type="button" class="close" aria-hidden="true">&times;</button></div>
+        <div class='dac-modal-dialog-content'>
+            <form role="form" name="saveForm" ng-submit="submitForm()">
+                <div class="form-group">
+                    <label for="catName">Name of your cat:</label>
+                    <input type="text" class="form-control" id="catName" ng-model="name" ng-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description (optional):</label>
+                    <textarea id="description" ng-model="description" class="form-control" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="author">Your name:</label>
+                    <input type="text" class="form-control" id="author" ng-model="author" ng-required="true">
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" ng-model="isPublic" id="public-true" ng-value="true">
+                        Make Public&mdash;you cat will appear on the site's home page.
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" ng-model="isPublic" id="public-false" ng-value="false">
+                        Make Private&mdash;only those who have the URL can view the cat.
+                    </label>
+                </div>
+                <div class="form-group" ng-show="isPublic">
+                    <label for="tags">Tags:</label>
+                    <input type="text" class="form-control" id="tags" ng-model="tags" ng-required="isPublic">
+                </div>
+                <button type="submit" class="btn btn-primary" ng-disabled="saveForm.$invalid">{{ buttonText }}</button>
+            </form>
+        </div>
+    </div>
+</div>
