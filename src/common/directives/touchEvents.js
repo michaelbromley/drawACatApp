@@ -10,7 +10,7 @@ angular.module('drawACat.common.directives')
             restrict: 'A',
             compile: function($element, attr) {
                 var fn = $parse(attr['dacPointerstart']);
-                return function(scope, element, attr) {
+                return function(scope, element) {
                     Hammer(element[0], { prevent_default: true, drag_min_distance: 2 }).on('touch', function(event) {
                         event = event.gesture;
                         if (!event.clientX && event.touches) {
@@ -39,7 +39,7 @@ angular.module('drawACat.common.directives')
             restrict: 'A',
             compile: function($element, attr) {
                 var fn = $parse(attr['dacPointermove']);
-                return function(scope, element, attr) {
+                return function(scope, element) {
                     Hammer(element[0], { prevent_default: true}).on('drag', function(event) {
                         event = event.gesture;
                         if (!event.clientX && event.touches) {
@@ -68,7 +68,7 @@ angular.module('drawACat.common.directives')
             restrict: 'A',
             compile: function($element, attr) {
                 var fn = $parse(attr['dacPointerend']);
-                return function(scope, element, attr) {
+                return function(scope, element) {
                     Hammer(element[0], { prevent_default: true }).on('release', function(event) {
                         scope.$apply(function() {
                             fn(scope, {$event:event});

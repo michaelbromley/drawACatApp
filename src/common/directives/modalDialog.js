@@ -7,13 +7,12 @@ angular.module('drawACat.common.directives')
 .directive('dacModalDialog', function() {
         return {
             restrict: 'E',
-            replace: true,
             templateUrl: 'directives/modalDialog.tpl.html',
             transclude: true,
             scope: {
                 show: '='
             },
-            link: function(scope, element, attrs) {
+            link: function(scope) {
                 scope.hideModal = function() {
                     scope.show = false;
                 };
