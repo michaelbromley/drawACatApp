@@ -42,7 +42,9 @@ angular.module('drawACat.common.services')
 
         Renderer.prototype.renderPath = function(path) {
             for (var line = 0; line < path.length; line ++) {
-                renderLine(path[line]);
+                if (0 < path[line].length) {
+                    renderLine(path[line]);
+                }
             }
 
             function renderLine(line) {
@@ -98,20 +100,22 @@ angular.module('drawACat.common.services')
 
             context.strokeStyle = strokeStyle;
             for (var line = 0; line < path.length; line ++) {
-                context.beginPath();
-                coords = applyTransformations(path[line][0], transformationData);
-                context.moveTo(coords[0], coords[1]);
+                if (0 < path[line].length) {
+                    context.beginPath();
+                    coords = applyTransformations(path[line][0], transformationData);
+                    context.moveTo(coords[0], coords[1]);
 
-                for(var point = 1; point < path[line].length; point ++) {
-                    coords = applyTransformations(path[line][point], transformationData);
-                    context.lineTo(coords[0], coords[1]);
-                }
+                    for(var point = 1; point < path[line].length; point ++) {
+                        coords = applyTransformations(path[line][point], transformationData);
+                        context.lineTo(coords[0], coords[1]);
+                    }
 
-                if (lineIsABoundary(path[line])) {
-                    context.fillStyle = fillStyle;
-                    context.fill();
+                    if (lineIsABoundary(path[line])) {
+                        context.fillStyle = fillStyle;
+                        context.fill();
+                    }
+                    context.stroke();
                 }
-                context.stroke();
             }
 
             if (debugMode) {
@@ -191,7 +195,8 @@ angular.module('drawACat.common.services')
          */
         var applyTransformations = function(coords, transformationData) {
 
-            var td = transformationData;
+            var td;
+            td = transformationData;
             var x = coords[0];
             var y = coords[1];
 
