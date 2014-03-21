@@ -32,7 +32,7 @@ angular.module('drawACat.draw', [
         });
     })
 
-    .controller('DrawController', function($scope, $state, primitives, drawHelper, serializer, datastore, catBuilder, thumbnailGenerator) {
+    .controller('DrawController', function($scope, $filter, $state, primitives, drawHelper, serializer, datastore, catBuilder, thumbnailGenerator) {
         $scope.catParts = drawHelper.catParts;
         $scope.steps = drawHelper.partKeys;
         $scope.currentStep = drawHelper.getCurrentPartKey();
@@ -63,8 +63,9 @@ angular.module('drawACat.draw', [
             var catInfo = makeCatInfoObject(formData);
 
             datastore.saveCat(catInfo).then(
-                function(data) {
-                    $state.go('cat', { id: data.id});
+                function(response) {
+                    var urlName = $filter('urlFriendlyName')(catInfo.name);
+                    $state.go('cat', { id: response.data.id, name: urlName});
                 },
                 function() {
                     $scope.errorText = "An error occurred! Try again.";

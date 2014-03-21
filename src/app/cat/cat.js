@@ -11,7 +11,7 @@ angular.module( 'drawACat.cat', [
 
     .config(function config( $stateProvider ) {
         $stateProvider.state( 'cat', {
-            url: '/cat/{id:[0-9]+}',
+            url: '/cat/{id:[0-9]+}/{name:[a-zA-Z0-9-]+}',
             views: {
                 "main": {
                     controller: 'CatController',

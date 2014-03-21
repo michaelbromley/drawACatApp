@@ -117,7 +117,9 @@ describe('draw page', function() {
                 spyOn($state, 'go');
 
                 var deferred = _$q_.defer();
-                deferred.resolve({id: 123});
+                deferred.resolve({
+                    data: {id: 123}
+                });
                 spyOn(datastore, 'saveCat').and.callFake(function() {
                     return deferred.promise;
                 });
@@ -131,7 +133,7 @@ describe('draw page', function() {
                     catPart.lineCollection = testLineCollection;
                 });
 
-                scope.saveCat({});
+                scope.saveCat({name: 'test'});
             }));
 
             it('should call the catBuilder', function() {
@@ -152,7 +154,7 @@ describe('draw page', function() {
 
             it('should redirect to created cat page on success', function() {
                 scope.$apply();
-                expect($state.go).toHaveBeenCalledWith('cat', { id: 123 });
+                expect($state.go).toHaveBeenCalledWith('cat', { id: 123, name: 'test'});
             });
         });
     });
