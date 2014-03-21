@@ -19,7 +19,7 @@ $db = getConnection();
  * Define the routes of the API
  */
 $app->get('/cat/', function() use($app, $db) {
-	$sql = "SELECT id, name, description, rating FROM cats";
+	$sql = "SELECT id, name, thumbnail, author, UNIX_TIMESTAMP(created) as created, rating FROM cats";
 
 	try {
 		$stmt = $db->prepare($sql);
@@ -63,7 +63,7 @@ $app->post('/cat/', function() use($app, $db) {
 	$thumbnail->save();
 	$thumbnailFileName = $thumbnail->getFileName();
 
-	$sql = "INSERT INTO cats (name, description, data, author, isPublic, thumbnail) VALUES (:name, :description, :data, :author, :isPublic, :thumbnail)";
+	$sql = "INSERT INTO cats (name, description, data, author, isPublic, thumbnail, created) VALUES (:name, :description, :data, :author, :isPublic, :thumbnail, NOW())";
 	$isPublic = $data->isPublic === "true" ? 1 : 0;
 	try {
 		$stmt = $db->prepare($sql);
