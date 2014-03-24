@@ -30,13 +30,6 @@ angular.module('drawACat.common.services')
             var centrePoint = [0, 0];
             var parentPart;
 
-            var boundingBoxWidth; // the mask is the part's bounding box
-            var boundingBoxHeight;
-            var boundingBoxX;
-            var boundingBoxY;
-
-
-
             /**
              * Create a new part from a given path array of points.
              * @param newName
@@ -136,15 +129,15 @@ angular.module('drawACat.common.services')
             };
 
             this.getPath = function() {
-                var pathWithOffset = path.map(function(line) {
-                    return line.map(function(point) {
+                var pathWithOffset;
+                pathWithOffset = path.map(function (line) {
+                    return line.map(function (point) {
                         return [
                             point[0] + globalOffset[0],
                             point[1] + globalOffset[1]
                         ];
                     });
                 });
-
                 return pathWithOffset;
             };
 
