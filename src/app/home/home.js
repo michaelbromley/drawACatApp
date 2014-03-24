@@ -27,20 +27,23 @@ angular.module( 'drawACat.home', [
             $scope.cats = data;
         });
 
+        $scope.tags = [];
         datastore.getTags().then(function(data) {
-            $scope.tags = data;
+            $scope.tags = data.data;
         });
 
         $scope.searchInput = "";
         $scope.tagsArray = [];
-        $scope.filterByTags = function() {
+        $scope.predicate = "created";
+        $scope.reverse = true;
+        $scope.$watch('searchInput', function() {
             var regexp = /#([a-zA-Z0-9_]+)/g;
             $scope.tagsArray = [];
             var match;
             while (match = regexp.exec($scope.searchInput)) {
                 $scope.tagsArray.push(match[1]);
             }
-        };
+        });
     })
 
 ;

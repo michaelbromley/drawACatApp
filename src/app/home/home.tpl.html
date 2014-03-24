@@ -3,16 +3,20 @@
 <a href="#/cat/new" class="btn btn-primary">Draw a new cat</a>
 
 <div class="row">
-    Search by tag: <input type="text" ng-model="searchInput" ng-change="filterByTags()">
+    Search by tag: <input type="text" ng-model="searchInput" dac-hashtag-area="tags">
+    Order by:
+    <button ng-click="predicate = 'rating'; reverse = !reverse">rating</button>
+    <button ng-click="predicate = 'created'; reverse = !reverse">created</button>
 </div>
 
 <div class="row">
     <div class="col-xs-12">
-        <div class="preview-pane" ng-repeat="cat in cats | byTag: tagsArray">
+        <div class="preview-pane" ng-repeat="cat in cats | byTag: tagsArray | orderBy: predicate:reverse">
             <a href="#cat/{{ cat.id }}/{{ cat.name | urlFriendlyName }}"><img ng-src="{{ cat.thumbnail }}" width="100" height="100" class="img-thumbnail"></a>
             <div class="cat-name"><a href="#cat/{{ cat.id }}/{{ cat.name | urlFriendlyName }}">{{ cat.name }}</a></div>
             by {{ cat.author }}<br>
-            created {{ cat.created | timeAgo }}
+            created {{ cat.created | timeAgo }}<br>
+            rating: {{ cat.rating }}
             <ul>
                 <li ng-repeat="tag in cat.tags">{{ tag }}</li>
             </ul>
