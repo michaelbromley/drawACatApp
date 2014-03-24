@@ -1,5 +1,6 @@
 
 angular.module( 'drawACat.home', [
+        'drawACat.home.filters',
         'ui.router'
 ])
 
@@ -25,7 +26,22 @@ angular.module( 'drawACat.home', [
         datastore.listCats().success(function(data) {
             $scope.cats = data;
         });
-})
+
+        datastore.getTags().then(function(data) {
+            $scope.tags = data;
+        });
+
+        $scope.searchInput = "";
+        $scope.tagsArray = [];
+        $scope.filterByTags = function() {
+            var regexp = /#([a-zA-Z0-9_]+)/g;
+            $scope.tagsArray = [];
+            var match;
+            while (match = regexp.exec($scope.searchInput)) {
+                $scope.tagsArray.push(match[1]);
+            }
+        };
+    })
 
 ;
 

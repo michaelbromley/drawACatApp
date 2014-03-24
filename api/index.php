@@ -129,6 +129,24 @@ $app->post('/cat/', function() use($app, $db) {
 		respondError($e->getMessage());
 	}
 });
+$app->get('/tags/', function() use($app, $db) {
+	$sql = "SELECT label FROM tags";
+	try {
+		$stmt = $db->prepare($sql);
+		$stmt->execute();
+		$tags = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+
+		$response = $app->response();
+		$response['Content-Type'] = 'application/json';
+		$response->status(200);
+		$response->body(json_encode($tags));
+	} catch(PDOException $e) {
+		respondError($e->getMessage());
+	}
+});
+
+
+
 $app->run();
 
 function respondError($errorMessage) {

@@ -33,6 +33,9 @@ angular.module('drawACat.common.services')
             },
             loadCat: function(id) {
                 return $http.get(apiUrl + 'cat/' + id);
+            },
+            getTags: function() {
+                return $http.get(apiUrl + 'tags/');
             }
         };
     }
