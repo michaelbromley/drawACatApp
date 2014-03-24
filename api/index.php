@@ -19,12 +19,28 @@ $db = getConnection();
  * Define the routes of the API
  */
 $app->get('/cat/', function() use($app, $db) {
-	$sql = "SELECT id, name, thumbnail, author, UNIX_TIMESTAMP(created) as created, rating FROM cats";
+	$sql = "SELECT id, name, thumbnail, author, UNIX_TIMESTAMP(created) as created, rating
+			FROM cats
+			WHERE isPublic = '1'";
 
 	try {
 		$stmt = $db->prepare($sql);
 		$stmt->execute();
-		$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		$result = array();
+		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			// add any tags to the result
+			$sql = "SELECT t.label FROM tags t
+					INNER JOIN cats_tags ct
+					ON ct.tag_id = t.id
+					WHERE ct.cat_id = :catId";
+			$tagStmt = $db->prepare($sql);
+			$tagStmt->bindParam("catId", $row['id']);
+			$tagStmt->execute();
+			$tags = $tagStmt->fetchAll(PDO::FETCH_COLUMN, 0);
+			$row['tags'] = $tags;
+
+			array_push($result, $row);
+		}
 
 		$response = $app->response();
 		$response['Content-Type'] = 'application/json';
@@ -64,7 +80,7 @@ $app->post('/cat/', function() use($app, $db) {
 	$thumbnailFileName = $thumbnail->getFileName();
 
 	$sql = "INSERT INTO cats (name, description, data, author, isPublic, thumbnail, created) VALUES (:name, :description, :data, :author, :isPublic, :thumbnail, NOW())";
-	$isPublic = $data->isPublic === "true" ? 1 : 0;
+	$isPublic = $data->isPublic == true ? 1 : 0;
 	try {
 		$stmt = $db->prepare($sql);
 		$stmt->bindParam("name", $data->name);
@@ -75,9 +91,35 @@ $app->post('/cat/', function() use($app, $db) {
 		$stmt->bindParam("thumbnail", $thumbnailFileName);
 		$stmt->execute();
 
+		$catId = $db->lastInsertId();
 		$responseData = array(
-			"id" => $db->lastInsertId()
+			"id" => $catId
 		);
+
+		foreach($data->tags as $tag) {
+			$sql = "INSERT IGNORE INTO tags (label) VALUES (:label)";
+			$stmt = $db->prepare($sql);
+			$stmt->bindParam("label", $tag);
+			$stmt->execute();
+
+			if ($db->lastInsertId() == "0") {
+				// the tag already exists in the database, so we need to get the id
+				$sql = "SELECT id FROM tags WHERE label = :label";
+				$stmt = $db->prepare($sql);
+				$stmt->bindParam("label", $tag);
+				$stmt->execute();
+				$result = $stmt->fetch(PDO::FETCH_ASSOC);
+				$tagId = $result['id'];
+			} else {
+				$tagId = $db->lastInsertId();
+			}
+
+			$sql = "INSERT INTO cats_tags (cat_id, tag_id) VALUES (:catId, :tagId)";
+			$stmt = $db->prepare($sql);
+			$stmt->bindParam("catId", $catId);
+			$stmt->bindParam("tagId", $tagId);
+			$stmt->execute();
+		}
 
 		$response = $app->response();
 		$response['Content-Type'] = 'application/json';

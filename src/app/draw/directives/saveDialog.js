@@ -6,7 +6,13 @@ angular.module('drawACat.draw.directives')
 .directive('dacSaveDialog', function() {
 
         function getTagsFromDescription(description) {
-
+            var regexp = /#([a-zA-Z0-9_]+)/g;
+            var tags = [];
+            var match;
+            while (match = regexp.exec(description)) {
+                tags.push(match[1]);
+            }
+            return tags;
         }
 
         return {
@@ -39,7 +45,7 @@ angular.module('drawACat.draw.directives')
                         description: scope.description,
                         author: scope.author,
                         isPublic: scope.isPublic,
-                        tags: scope.tags
+                        tags: getTagsFromDescription(scope.description)
                     }});
                 };
             }

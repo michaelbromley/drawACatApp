@@ -37,12 +37,14 @@ angular.module('drawACat.draw.directives')
             scope: {
                 tags: '=dacHashtagArea'
             },
-            link: function(scope, element) {
+            link: function(scope, element, attrs) {
 
                 function insertSelectedTag(selectedTag) {
                     var input = textarea.val();
                     var output = input.substring(0, scope.candidate.start) + '#' + selectedTag + input.substring(scope.candidate.end);
+
                     scope.$parent.$apply(function() {
+                        scope.$parent[attrs.ngModel] = output;
                         textarea.val(output);
                     });
                 }
@@ -93,7 +95,6 @@ angular.module('drawACat.draw.directives')
                         var endOfHashtag = startOfHashtag + match[0].length;
 
                         if (startOfHashtag < currentCaretIndex && currentCaretIndex <= endOfHashtag) {
-                            console.log('scope.candidateHashtag ' + scope.candidateHashtag);
                             candidateChanged =  match[0].substring(1);
                             scope.candidate.start = startOfHashtag;
                             scope.candidate.end = endOfHashtag;

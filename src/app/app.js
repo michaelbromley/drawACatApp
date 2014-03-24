@@ -6,11 +6,13 @@ angular.module( 'drawACat', [
         'drawACat.cat',
         'drawACat.draw',
         'drawACat.common.services',
-        'drawACat.common.directives'
+        'drawACat.common.directives',
+        'drawACat.common.filters'
     ])
 
     .value('CONFIG', {
         API_URL: 'http://192.168.0.10/GitHub/drawACatApp/api/',
+        THUMBNAILS_URL: 'http://192.168.0.10/GitHub/drawACatApp/api/thumbnails/',
         BALL_IMAGE_SRC: 'assets/images/ball01.gif'
     })
 
