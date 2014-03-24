@@ -4,7 +4,7 @@
 
 angular.module('drawACat.cat.directives')
 
-    .directive('dacStage', function($window, renderer, transformer, actuator) {
+    .directive('dacStage', function($window, CONFIG,  renderer, transformer, actuator) {
         return {
             restrict: 'E',
             templateUrl: 'cat/directives/stage.tpl.html',
@@ -20,8 +20,8 @@ angular.module('drawACat.cat.directives')
                 scope.debugMode = false;
                 var canvas = document.getElementById('stage');
                 var _renderer = renderer.Init(canvas);
-                _renderer.strokeStyle('#333333');
-                _renderer.fillStyle('#efefef');
+                _renderer.strokeStyle(CONFIG.STROKE_COLOUR);
+                _renderer.fillStyle(CONFIG.FILL_COLOUR);
                 var ball = scope.ball;
                 var respondTo = 'ball';
 

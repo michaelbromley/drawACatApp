@@ -13,7 +13,9 @@ angular.module( 'drawACat', [
     .value('CONFIG', {
         API_URL: 'http://192.168.0.10/GitHub/drawACatApp/api/',
         THUMBNAILS_URL: 'http://192.168.0.10/GitHub/drawACatApp/api/thumbnails/',
-        BALL_IMAGE_SRC: 'assets/images/ball01.gif'
+        BALL_IMAGE_SRC: 'assets/images/ball01.gif',
+        FILL_COLOUR: '#efefef',
+        STROKE_COLOUR: '#333333'
     })
 
     .config( function myAppConfig ( $stateProvider, $urlRouterProvider ) {
