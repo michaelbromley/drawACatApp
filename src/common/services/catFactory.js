@@ -23,15 +23,27 @@ angular.module('drawACat.common.services')
 
         /**
          * Get a path array for the whole cat, which concatenates each bodyPart path into one big array.
-         * Omits the closedEyes and the openMouth parts from the path.
+         * Omits the closedEyes and the openMouth parts from the path, and orders the layers in the correct
+         * sequence for rendering.
          * @returns {Array}
          */
         Cat.prototype.getPath = function() {
+
+            // cause the parts to be rendered in a specific sequence, so that
+            // the body is at the back, the head is on top of the body etc.
+            var sequence = [
+                'body',
+                'head',
+                'eyesOpen',
+                'mouthClosed',
+                'leftLeg',
+                'rightLeg'
+            ];
+            var bodyParts = this.bodyParts;
             var path = [];
-            angular.forEach(this.bodyParts, function(bodyPart, partName) {
-                if (partName !== 'eyesClosed' &&
-                    partName !== 'mouthOpen' &&
-                    bodyPart.part) {
+            angular.forEach(sequence, function(bodyPartName) {
+                var bodyPart = bodyParts[bodyPartName];
+                if (bodyPart.part) {
                     var partPath = bodyPart.part.getPath();
                     path = path.concat(partPath);
                 }

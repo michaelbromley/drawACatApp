@@ -4,31 +4,45 @@
 
 angular.module('drawACat.draw.services')
 
-.factory('thumbnailGenerator', function(renderer) {
+    .factory('thumbnailGenerator', function(CONFIG, renderer) {
 
-        var generateThumbnailFromCat = function(cat) {
+        var DIMENSION = 100; // thumbnail dimensions in pixels
+        var canvas = angular.element('<canvas></canvas>')[0];
+        canvas.width = DIMENSION;
+        canvas.height = DIMENSION;
 
-            var DIMENSION = 100; // thumbnail dimensions in pixels
+        function fillBackground() {
+            var context = canvas.getContext('2d');
+            context.fillStyle = CONFIG.FILL_COLOUR;
+            context.fillRect(0, 0, DIMENSION, DIMENSION);
+        }
 
-            var canvas = angular.element('<canvas></canvas>')[0];
+        function getScaledCatPath(cat) {
             var path = cat.getPath();
             var width = cat.getWidth();
             var height = cat.getHeight();
-            canvas.width = DIMENSION;
-            canvas.height = DIMENSION;
             var scaleFactor = DIMENSION / Math.max(width, height);
-
-            var _renderer = renderer.Init(canvas);
-            _renderer.fillStyle('rgba(0, 0, 0, 0)');
-            _renderer.strokeStyle('#333333');
-
-            var scaledPath = path.map(function(line) {
-                    return line.map(function(point) {
+            var scaledPath;
+            scaledPath = path.map(function (line) {
+                    return line.map(function (point) {
                         return [point[0] * scaleFactor, point[1] * scaleFactor];
                     });
                 }
             );
-            _renderer.renderPath(scaledPath);
+            return scaledPath;
+        }
+
+
+        var generateThumbnailFromCat = function(cat) {
+            var _renderer = renderer.Init(canvas);
+            _renderer.fillStyle(CONFIG.FILL_COLOUR);
+            _renderer.strokeStyle(CONFIG.STROKE_COLOUR);
+
+            fillBackground();
+
+            var path = getScaledCatPath(cat);
+            _renderer.renderPath(path);
+
             return  canvas.toDataURL();
         };
 
