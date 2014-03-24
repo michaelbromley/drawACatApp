@@ -6,12 +6,14 @@ angular.module('drawACat.cat.services')
 /**
  * Te actuator service is responsible for all the macro behaviours of the cat such as blinking, meowing, and so on.
  */
-    .factory('actuator', function($timeout, noise) {
+    .factory('actuator', function($timeout, noise, audioPlayer) {
 
         var cat;
         var actuatorFunctions = [];
         var timeoutRef;
+        audioPlayer.init();
 
+        //noinspection JSClosureCompilerSyntax
         /**
          * Helper function to return the behaviour object of the specified partName
          * @param partName
@@ -42,10 +44,12 @@ angular.module('drawACat.cat.services')
                             $timeout.cancel(expressionTimeOutId);
                             isPurring = true;
                             purr();
+                            audioPlayer.purrStart();
                         }
                     } else {
                         if (isPurring) {
                             isPurring = false;
+                            audioPlayer.purrStop();
                             backToNormal();
                             //console.log('stopped purring');
                         }
@@ -142,11 +146,13 @@ angular.module('drawACat.cat.services')
         var angryMeow = function() {
             openEyes();
             openMouth();
+            audioPlayer.angryMeow();
             //console.log('angry MEOW!! :(');
         };
         var excitedMeow = function() {
             closeEyes();
             openMouth();
+            audioPlayer.excitedMeow();
             //console.log('excited meow! :)');
         };
         var backToNormal = function() {

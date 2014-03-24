@@ -13,6 +13,7 @@ angular.module( 'drawACat', [
     .value('CONFIG', {
         API_URL: 'http://192.168.0.10/GitHub/drawACatApp/api/',
         THUMBNAILS_URL: 'http://192.168.0.10/GitHub/drawACatApp/api/thumbnails/',
+        AUDIO_FILES_URL: 'assets/audio/',
         BALL_IMAGE_SRC: 'assets/images/ball01.gif',
         FILL_COLOUR: '#efefef',
         STROKE_COLOUR: '#333333'
@@ -26,12 +27,23 @@ angular.module( 'drawACat', [
         rafPolyfill.run();// polyfill the $window.requestAnimationFrame, cancelAnimationFrame methods
     })
 
-    .controller( 'AppController', function AppController ( $scope, $location ) {
-        $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+    .controller( 'AppController', function AppController ( $scope, audioPlayer ) {
+        $scope.$on('$stateChangeSuccess', function(event, toState){
             if ( angular.isDefined( toState.data.pageTitle ) ) {
                 $scope.pageTitle = toState.data.pageTitle ;
             }
         });
+
+        $scope.audioSetting = "on";
+        $scope.toggleAudio = function() {
+            if ($scope.audioSetting == "on") {
+                audioPlayer.setAudio(false);
+                $scope.audioSetting = "off";
+            } else {
+                audioPlayer.setAudio(true);
+                $scope.audioSetting = "on";
+            }
+        };
     })
 
 ;

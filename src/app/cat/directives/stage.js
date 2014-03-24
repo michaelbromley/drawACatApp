@@ -17,7 +17,8 @@ angular.module('drawACat.cat.directives')
                 /**
                  * Initializations
                  */
-                scope.debugMode = false;
+                scope.debugMode = true;
+
                 var canvas = document.getElementById('stage');
                 var _renderer = renderer.Init(canvas);
                 _renderer.strokeStyle(CONFIG.STROKE_COLOUR);
