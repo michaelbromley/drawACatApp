@@ -25,7 +25,7 @@ describe('hashtagArea directive', function() {
     var suggestions;
     var scope;
 
-    beforeEach(module('drawACat.draw.directives'));
+    beforeEach(module('drawACat.common.directives'));
     beforeEach(module('drawACat.common.filters'));
     beforeEach(inject(function(_$compile_, _$rootScope_) {
         scope = _$rootScope_;

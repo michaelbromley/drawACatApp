@@ -2,7 +2,7 @@
  * Created by Michael on 21/03/14.
  */
 
-angular.module('drawACat.draw.directives')
+angular.module('drawACat.common.directives')
 
     .directive('dacHashtagArea', function($compile) {
 
@@ -40,12 +40,12 @@ angular.module('drawACat.draw.directives')
             link: function(scope, element, attrs) {
 
                 function insertSelectedTag(selectedTag) {
-                    var input = textarea.val();
-                    var output = input.substring(0, scope.candidate.start) + '#' + selectedTag + input.substring(scope.candidate.end);
+                    var inputVal = input.val();
+                    var output = inputVal.substring(0, scope.candidate.start) + '#' + selectedTag + inputVal.substring(scope.candidate.end);
 
                     scope.$parent.$apply(function() {
                         scope.$parent[attrs.ngModel] = output;
-                        textarea.val(output);
+                        input.val(output);
                     });
                 }
 
@@ -57,8 +57,10 @@ angular.module('drawACat.draw.directives')
                 suggestions.css({
                     'position': 'absolute',
                     'width': element[0].offsetWidth + 'px',
+                    'left': element[0].getBoundingClientRect().left + 'px',
                     'max-height': '200px',
-                    'overflow': 'auto'
+                    'overflow': 'auto',
+                    'z-index': 100
                 });
                 element.after(suggestions);
                 $compile(suggestions)(scope);
@@ -71,9 +73,9 @@ angular.module('drawACat.draw.directives')
                 scope.selectedIndex = null;
                 scope.filteredTags = [];
 
-                var textarea = element;
+                var input = element;
                 // ensure the element is a textarea
-                if (textarea[0].nodeName !== 'TEXTAREA') {
+                if (input[0].nodeName !== 'TEXTAREA' && input[0].nodeName !== 'INPUT') {
                     return;
                 }
 
@@ -83,11 +85,11 @@ angular.module('drawACat.draw.directives')
                     suggestions.addClass('ng-hide');
                 });
 
-                textarea.on('keyup', function() {
+                input.on('keyup', function() {
                     // is the caret inside a hashtag?
                     var candidateChanged = false;
-                    var currentCaretIndex = getCaret(textarea[0]);
-                    var text = textarea.val();
+                    var currentCaretIndex = getCaret(input[0]);
+                    var text = input.val();
                     var regexp = /#[a-zA-Z0-9_]+/g;
                     var match;
                     while ((match = regexp.exec(text)) != null) {
@@ -105,7 +107,7 @@ angular.module('drawACat.draw.directives')
                     });
                 });
 
-                textarea.on('keydown', function(e) {
+                input.on('keydown', function(e) {
                     var listLength = scope.filteredTags.length;
                     if (0 < listLength) {
                         var currentIndex;
