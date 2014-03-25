@@ -5,6 +5,9 @@ angular.module('drawACat.cat.services')
 
     .factory('audioPlayer', function(CONFIG, $timeout) {
         var catSounds = {};
+        var ballSounds = {};
+        var currentPurrSound;
+        var purrIsFadingInOrOut = false;
 
         function init() {
             catSounds.excited = [
@@ -25,6 +28,12 @@ angular.module('drawACat.cat.services')
             catSounds.purr = [
                 loadAudioFile(CONFIG.AUDIO_FILES_URL + 'purr-01.mp3', true)
                 ];
+            ballSounds.soft = [
+                loadAudioFile(CONFIG.AUDIO_FILES_URL + 'ball-bounce-soft-01.mp3', false)
+            ];
+            ballSounds.hard = [
+                loadAudioFile(CONFIG.AUDIO_FILES_URL + 'ball-bounce-hard-01.mp3', false)
+            ];
 
             // make the purr a continuous loop (this is a hack to prevent the brief gap in playback)
             angular.forEach(catSounds.purr, function(audioFile) {
@@ -49,48 +58,72 @@ angular.module('drawACat.cat.services')
         function getAudioFile(fileArray) {
             var filesCount = fileArray.length;
             var selectedFile = Math.floor(Math.random() * (filesCount));
+            fileArray[selectedFile].currentTime = 0;
             return fileArray[selectedFile];
         }
 
         return {
             init: init,
-            excitedMeow: function() {
-                getAudioFile(catSounds.excited).play();
+            excitedMeow: function(emotionVal) {
+                var sound = getAudioFile(catSounds.excited);
+                sound.volume = emotionVal;
+                sound.play();
             },
-            angryMeow: function() {
-                getAudioFile(catSounds.angry).play();
+            angryMeow: function(emotionVal) {
+                var sound = getAudioFile(catSounds.angry);
+                sound.volume = emotionVal;
+                sound.play();
             },
-            yawn: function() {
-                getAudioFile(catSounds.bored).play();
+            yawn: function(emotionVal) {
+                var sound = getAudioFile(catSounds.bored);
+                sound.volume = emotionVal;
+                sound.play();
             },
             purrStart: function() {
-                var purrSound = catSounds.purr[0];
-                purrSound.volume = 0;
-                purrSound.play();
+                currentPurrSound = catSounds.purr[0];
+                currentPurrSound.volume = 0;
+                currentPurrSound.play();
+                purrIsFadingInOrOut = true;
                 function fadeIn() {
-                    purrSound.volume += 0.02;
-                    if (purrSound.volume < 0.9) {
+                    currentPurrSound.volume += 0.02;
+                    if (currentPurrSound.volume < 0.9) {
                         $timeout(fadeIn, 50);
                     } else {
-                        purrSound.volume = 1;
+                        currentPurrSound.volume = 1;
+                        purrIsFadingInOrOut = false;
                     }
                 }
                 fadeIn();
             },
             purrStop: function() {
-                var purrSound = catSounds.purr[0];
-                purrSound.play();
+                purrIsFadingInOrOut = true;
                 function fadeOut() {
-                    purrSound.volume -= 0.01;
-                    if (0.1 < purrSound.volume) {
+                    currentPurrSound.volume -= 0.01;
+                    if (0.1 < currentPurrSound.volume) {
                         $timeout(fadeOut, 50);
                     } else {
-                        purrSound.volume = 0;
-                        purrSound.pause();
-                        purrSound.currentTime = 0;
+                        currentPurrSound.volume = 0;
+                        currentPurrSound.pause();
+                        currentPurrSound.currentTime = 0;
+                        purrIsFadingInOrOut = false;
                     }
                 }
                 fadeOut();
+            },
+            setPurrVolume: function(emotionVal) {
+                if (!purrIsFadingInOrOut) {
+                    currentPurrSound.volume = emotionVal;
+                }
+            },
+            ballBounceSoft: function(velocity) {
+                var bounceSound = getAudioFile(ballSounds.soft);
+                bounceSound.volume = Math.min(velocity, 10) / 10;
+                bounceSound.play();
+            },
+            ballBounceHard: function(velocity) {
+                var bounceSound = getAudioFile(ballSounds.hard);
+                bounceSound.volume = Math.min(velocity, 10) / 10;
+                bounceSound.play();
             },
             setAudio: function(val) {
                 var volume = (val === true) ? 1 : 0;

@@ -45,6 +45,8 @@ angular.module('drawACat.cat.services')
                             isPurring = true;
                             purr();
                             audioPlayer.purrStart();
+                        } else {
+                            audioPlayer.setPurrVolume(cat.emotion.getMoodValue().happy);
                         }
                     } else {
                         if (isPurring) {
@@ -140,17 +142,17 @@ angular.module('drawACat.cat.services')
         var yawn = function() {
             closeEyes();
             openMouth();
-            audioPlayer.yawn();
+            audioPlayer.yawn(cat.emotion.getMoodValue().bored);
         };
         var angryMeow = function() {
             openEyes();
             openMouth();
-            audioPlayer.angryMeow();
+            audioPlayer.angryMeow(cat.emotion.getMoodValue().angry);
         };
         var excitedMeow = function() {
             closeEyes();
             openMouth();
-            audioPlayer.excitedMeow();
+            audioPlayer.excitedMeow(cat.emotion.getMoodValue().excited);
         };
         var backToNormal = function() {
             openEyes();

@@ -3,7 +3,7 @@
  */
 angular.module('drawACat.cat.services')
 
-    .factory('ballFactory', function($window, $timeout) {
+    .factory('ballFactory', function($window, $timeout, audioPlayer) {
 
         var Ball = function(newRadius, imageUrl) {
             var image = new Image();
@@ -115,6 +115,9 @@ angular.module('drawACat.cat.services')
                             $timeout(function() {
                                 disableCollisions = false;
                             }, 500);
+
+                            var velocity = Math.max(Math.abs(vx), Math.abs(vy));
+                            audioPlayer.ballBounceSoft(velocity);
                         }
                     }
                 }
@@ -143,12 +146,14 @@ angular.module('drawACat.cat.services')
                     // update the rotation
                     angle += angularVelocity;
 
+                    var strikeVelocity = 0;
                     // hit the floor
                     if (y + radius >= windowHeight) {
                         if (0 < vy) {
                             y = windowHeight - radius;
                             setVy(vy * -ballDamping);
                             setAngularVelocity(vx);
+                            strikeVelocity = vy;
                         }
                     }
                     // hit the right wall
@@ -157,6 +162,7 @@ angular.module('drawACat.cat.services')
                             x = windowWidth - radius;
                             setVx(vx * -ballDamping);
                             setAngularVelocity(-vy);
+                            strikeVelocity = vx;
                         }
                     }
                     // hit the left wall
@@ -165,7 +171,12 @@ angular.module('drawACat.cat.services')
                             x = radius;
                             setVx(vx * -ballDamping);
                             setAngularVelocity(vy);
+                            strikeVelocity = vx;
                         }
+                    }
+
+                    if (2 < Math.abs(strikeVelocity)) {
+                        audioPlayer.ballBounceHard(Math.abs(strikeVelocity));
                     }
                 }
             };

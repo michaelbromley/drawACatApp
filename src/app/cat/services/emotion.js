@@ -124,11 +124,15 @@ angular.module('drawACat.cat.services')
                 }
             },
             getMoodValue: function() {
-                var happiness = Math.round(happy);
-                var excitedness= Math.round(excited);
+                var happyVal = (happy - HAPPY_THRESHOLD) / (MAX_MOOD - HAPPY_THRESHOLD);
+                var angryVal = (happy - ANGRY_THRESHOLD) / (MIN_MOOD - ANGRY_THRESHOLD);
+                var excitedVal = (excited - EXCITED_THRESHOLD) / (MAX_MOOD - EXCITED_THRESHOLD);
+                var boredVal = (excited - BORED_THRESHOLD) / (MIN_MOOD - BORED_THRESHOLD);
                 return {
-                    happiness: happiness,
-                    excitedness: excitedness
+                    happy: Math.max(happyVal, 0),
+                    angry: Math.max(angryVal, 0),
+                    excited: Math.max(excitedVal, 0),
+                    bored: Math.max(boredVal, 0)
                 };
             },
             cancelTimer: function(){
