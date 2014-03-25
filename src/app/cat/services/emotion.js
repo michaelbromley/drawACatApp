@@ -60,7 +60,6 @@ angular.module('drawACat.cat.services')
 
             timerId = $timeout(emotionLoop, 1000);
         }
-        emotionLoop();
 
         function getHappier() {
             if (happy < MAX_MOOD) {
@@ -135,8 +134,15 @@ angular.module('drawACat.cat.services')
                     bored: Math.max(boredVal, 0)
                 };
             },
-            cancelTimer: function(){
+            start: function() {
+                emotionLoop();
+            },
+            reset: function(){
                 $timeout.cancel(timerId);
+                happy = 0;
+                excited = 0;
+                timeSinceAnythingHappened = 0;
+                isBeingStroked = false;
             }
         };
     });

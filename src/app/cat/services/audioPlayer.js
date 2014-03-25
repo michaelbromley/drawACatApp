@@ -6,6 +6,7 @@ angular.module('drawACat.cat.services')
     .factory('audioPlayer', function(CONFIG, $timeout) {
         var catSounds = {};
         var ballSounds = {};
+        var isMuted = false;
         var currentPurrSound;
         var purrIsFadingInOrOut = false;
 
@@ -55,38 +56,36 @@ angular.module('drawACat.cat.services')
         }
 
 
-        function getAudioFile(fileArray) {
-            var filesCount = fileArray.length;
-            var selectedFile = Math.floor(Math.random() * (filesCount));
-            fileArray[selectedFile].currentTime = 0;
-            return fileArray[selectedFile];
+        function playAudioFile(fileArray, volume) {
+            if (!isMuted) {
+                var filesCount = fileArray.length;
+                var selectedFile = Math.floor(Math.random() * (filesCount));
+                fileArray[selectedFile].currentTime = 0;
+                fileArray[selectedFile].volume = volume;
+                fileArray[selectedFile].play();
+            }
         }
 
         return {
             init: init,
             excitedMeow: function(emotionVal) {
-                var sound = getAudioFile(catSounds.excited);
-                sound.volume = emotionVal;
-                sound.play();
+                playAudioFile(catSounds.excited, emotionVal);
             },
             angryMeow: function(emotionVal) {
-                var sound = getAudioFile(catSounds.angry);
-                sound.volume = emotionVal;
-                sound.play();
+                playAudioFile(catSounds.angry, emotionVal);
             },
             yawn: function(emotionVal) {
-                var sound = getAudioFile(catSounds.bored);
-                sound.volume = emotionVal;
-                sound.play();
+                playAudioFile(catSounds.bored, emotionVal);
             },
             purrStart: function() {
+                var maxVol = isMuted ? 0 : 0.9;
                 currentPurrSound = catSounds.purr[0];
                 currentPurrSound.volume = 0;
                 currentPurrSound.play();
                 purrIsFadingInOrOut = true;
                 function fadeIn() {
-                    currentPurrSound.volume += 0.02;
-                    if (currentPurrSound.volume < 0.9) {
+                    if (currentPurrSound.volume < maxVol) {
+                        currentPurrSound.volume += 0.02;
                         $timeout(fadeIn, 50);
                     } else {
                         currentPurrSound.volume = 1;
@@ -98,8 +97,8 @@ angular.module('drawACat.cat.services')
             purrStop: function() {
                 purrIsFadingInOrOut = true;
                 function fadeOut() {
-                    currentPurrSound.volume -= 0.01;
-                    if (0.1 < currentPurrSound.volume) {
+                    if (0.05 < currentPurrSound.volume) {
+                        currentPurrSound.volume -= 0.01;
                         $timeout(fadeOut, 50);
                     } else {
                         currentPurrSound.volume = 0;
@@ -111,27 +110,37 @@ angular.module('drawACat.cat.services')
                 fadeOut();
             },
             setPurrVolume: function(emotionVal) {
-                if (!purrIsFadingInOrOut) {
+                if (isMuted) {
+                    currentPurrSound.volume = 0;
+                } else if (!purrIsFadingInOrOut) {
                     currentPurrSound.volume = emotionVal;
                 }
             },
             ballBounceSoft: function(velocity) {
-                var bounceSound = getAudioFile(ballSounds.soft);
-                bounceSound.volume = Math.min(velocity, 10) / 10;
-                bounceSound.play();
+                var volume = Math.min(velocity, 10) / 10;
+                playAudioFile(ballSounds.soft, volume);
             },
             ballBounceHard: function(velocity) {
-                var bounceSound = getAudioFile(ballSounds.hard);
-                bounceSound.volume = Math.min(velocity, 10) / 10;
-                bounceSound.play();
+                var volume = Math.min(velocity, 10) / 10;
+                playAudioFile(ballSounds.hard, volume);
             },
             setAudio: function(val) {
-                var volume = (val === true) ? 1 : 0;
-                angular.forEach(catSounds, function(soundArray) {
-                    angular.forEach(soundArray, function(sound) {
-                        sound.volume = volume;
+                isMuted = (val !== true);
+            },
+            reset: function() {
+                // stop all audio from playing and set all clips to the start
+                function resetSounds(soundCollection) {
+                    angular.forEach(soundCollection, function(soundArray) {
+                        angular.forEach(soundArray, function(sound) {
+                            sound.pause();
+                            sound.currentTime = 0;
+                        });
                     });
-                });
+                }
+
+                resetSounds(catSounds);
+                resetSounds(ballSounds);
+                purrIsFadingInOrOut = false;
             }
         };
     });

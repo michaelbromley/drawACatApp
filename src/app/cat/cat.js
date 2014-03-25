@@ -34,10 +34,11 @@ angular.module( 'drawACat.cat', [
         $scope.cat = serializer.unserializeCat(catPromise.data.data);
         $scope.cat.name = catPromise.data.name;
         $scope.cat.emotion = emotion;
+        $scope.cat.emotion.start();
         $scope.ball = ballFactory.newBall(25, CONFIG.BALL_IMAGE_SRC);
 
         $scope.$on('$destroy', function() {
-            emotion.cancelTimer();
+            emotion.reset();
         });
     })
 

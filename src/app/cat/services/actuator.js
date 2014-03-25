@@ -193,6 +193,7 @@ angular.module('drawACat.cat.services')
             },
             destroy: function() {
                 $timeout.cancel(timeoutRef);
+                audioPlayer.reset();
             }
         };
 
