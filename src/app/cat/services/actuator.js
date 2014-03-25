@@ -136,29 +136,25 @@ angular.module('drawACat.cat.services')
         var purr = function() {
             closeEyes();
             closeMouth();
-            //console.log('purrrrrrr ;)');
         };
         var yawn = function() {
             closeEyes();
             openMouth();
-            //console.log('yawn :|');
+            audioPlayer.yawn();
         };
         var angryMeow = function() {
             openEyes();
             openMouth();
             audioPlayer.angryMeow();
-            //console.log('angry MEOW!! :(');
         };
         var excitedMeow = function() {
             closeEyes();
             openMouth();
             audioPlayer.excitedMeow();
-            //console.log('excited meow! :)');
         };
         var backToNormal = function() {
             openEyes();
             closeMouth();
-            //console.log('back to normal');
         };
         var closeEyes = function() {
             b('eyesOpen').visible = false;
