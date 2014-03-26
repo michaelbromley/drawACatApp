@@ -28,7 +28,8 @@ angular.module('drawACat.draw.directives', [])
 
                 var currentLine;
                 var mouseIsDown = false;
-                var _renderer = renderer.Init(document.getElementById('canvas'));
+                var canvas = document.getElementById('canvas');
+                var _renderer = renderer.Init(canvas);
 
                 function refreshCanvas() {
                     _renderer.clearCanvas();
@@ -104,9 +105,14 @@ angular.module('drawACat.draw.directives', [])
 
                 scope.mouseMoveHandler = function(event) {
                     if (mouseIsDown) {
-                        var mousePosition = getMousePositionFromEvent(event);
-                        currentLine.addPoint(mousePosition.x, mousePosition.y);
-                        _renderer.drawMove(mousePosition.x, mousePosition.y);
+                        // if the pointer has gone off the edge of the canvas, we should treat it like a mouseup
+                        if (event.target != canvas) {
+                            scope.mouseUpHandler();
+                        } else {
+                            var mousePosition = getMousePositionFromEvent(event);
+                            currentLine.addPoint(mousePosition.x, mousePosition.y);
+                            _renderer.drawMove(mousePosition.x, mousePosition.y);
+                        }
                     }
                 };
 
