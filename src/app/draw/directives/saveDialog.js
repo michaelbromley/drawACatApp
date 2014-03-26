@@ -3,7 +3,7 @@
  */
 angular.module('drawACat.draw.directives')
 
-.directive('dacSaveDialog', function() {
+.directive('dacSaveDialog', function(datastore) {
 
         function getTagsFromDescription(description) {
             var regexp = /#([a-zA-Z0-9_]+)/g;
@@ -26,13 +26,10 @@ angular.module('drawACat.draw.directives')
                 scope.isPublic = true;
                 scope.buttonText = "Save Cat";
 
-                scope.hashTags = [
-                    'cake',
-                    'hammer',
-                    'earth',
-                    'apple',
-                    'tap'
-                ];
+                scope.hashTags = [];
+                datastore.getTags().then(function(data) {
+                    scope.hashTags = data.data;
+                });
 
                 scope.hideModal = function() {
                     scope.show = false;
