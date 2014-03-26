@@ -92,5 +92,25 @@ describe('datastore service', function() {
         });
     });
 
+    describe('getTags() method', function() {
 
+        var $httpCache;
+        var $cacheFactory;
+
+        beforeEach(inject(function(_$cacheFactory_) {
+            //$httpCache = _$cacheFactory_.get('$http');
+            $cacheFactory = _$cacheFactory_;
+        }));
+
+        it('should make the correct api call', function() {
+            $httpBackend.expectGET(mockApiUrl + 'tags/').respond(200, ['tag1', 'tag2']);
+            datastore.getTags();
+        });
+
+        it('should not call the api the second time it is invoked', function() {
+            $httpBackend.expectGET(mockApiUrl + 'tags/').respond(200, ['tag1', 'tag2']);
+            datastore.getTags();
+            datastore.getTags();
+        });
+    });
 });
