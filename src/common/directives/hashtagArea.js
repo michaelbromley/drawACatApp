@@ -57,7 +57,7 @@ angular.module('drawACat.common.directives')
                 suggestions.css({
                     'position': 'absolute',
                     'width': element[0].offsetWidth + 'px',
-                    'left': element[0].getBoundingClientRect().left + 'px',
+                    'left': element[0].offsetLeft + 'px',
                     'max-height': '200px',
                     'overflow': 'auto',
                     'z-index': 100
@@ -83,6 +83,12 @@ angular.module('drawACat.common.directives')
                     var selectedTag = e.target.innerHTML.substring(1);
                     insertSelectedTag(selectedTag);
                     suggestions.addClass('ng-hide');
+                });
+
+                suggestions.on('mouseover', function() {
+                    scope.$apply(function() {
+                        scope.selectedIndex = null;
+                    });
                 });
 
                 input.on('keyup', function() {
