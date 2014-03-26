@@ -4,8 +4,9 @@
             dac-pointermove="mouseMoveHandler($event)"
             dac-pointerend="mouseUpHandler()">
     </canvas>
-    <div id="canvas-frame"></div>
+    <div id="canvas-frame" ng-class="{ filled: !drawing.showGuide }"></div>
     <div id="draw-guide" ng-show="drawing.showGuide">
         <img ng-src="{{ guideImage }}" />
     </div>
+    <button ng-disabled="lineCollection.count() == 0" ng-click="undo()" class="undo-button btn">Undo</button>
 </div>

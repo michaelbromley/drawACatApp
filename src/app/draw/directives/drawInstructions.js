@@ -7,7 +7,7 @@ angular.module('drawACat.draw.directives')
     .directive('dacDrawInstructions', function(drawHelper) {
 
         var instructions = {
-            head: 'Head instructions',
+            head: 'Try to draw the outline of the head in one go. That way it\'ll get filled in. Don\'t forget the nose and whiskers too!',
             eyesOpen: 'eyes open instructions',
             eyesClosed: 'eyes closed instructions',
             mouthClosed: 'mouth closed instructions',

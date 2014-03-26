@@ -86,6 +86,11 @@ angular.module('drawACat.draw.directives', [])
                 });
 
 
+                scope.undo = function() {
+                    scope.lineCollection.removeLine();
+                };
+
+
                 scope.mouseDownHandler = function(event) {
                     currentLine = primitives.Line();
 

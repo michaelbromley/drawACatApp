@@ -20,6 +20,9 @@
   width: 500px;
   height: 500px;
   border: 1px solid #333;
+  &.filled {
+    background-color: #f5f5f5;
+  }
   z-index: 0;
 }
 #draw-guide {
@@ -29,6 +32,30 @@
   width: 500px;
   height: 500px;
   z-index: -1;
+}
+.undo-button {
+  position: absolute;
+  right: 22px;
+  top: 22px;
+  z-index: 5;
+}
+
+.draw-instructions {
+  ul {
+    padding-left: 0;
+    list-style-type: none;
+    color: #999;
+  }
+  .selected {
+    font-size: 1.6em;
+    color: #333;
+  }
+  .done {
+    color: #393;
+  }
+  .instruction {
+    color: #666;
+  }
 }
 
 .suggestions-container {

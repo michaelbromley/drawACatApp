@@ -43,10 +43,6 @@ angular.module('drawACat.draw', [
         };
         $scope.showSaveDialog = false;
 
-        $scope.undo = function() {
-            $scope.lineCollection.removeLine();
-        };
-
         $scope.nextStep = function() {
             savePart();
             drawHelper.next();

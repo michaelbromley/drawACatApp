@@ -1,10 +1,13 @@
 <div class="draw-instructions">
-    <h3>Instructions:</h3>
-    <input type="checkbox" ng-model="drawing.showGuide" id="showGuideCheckbox"><label for="showGuideCheckbox">Show drawing guide</label>
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" ng-model="drawing.showGuide" id="showGuideCheckbox"> Show drawing guide
+        </label>
+    </div>
     <div class="steps-list">
         <ul>
             <li ng-repeat="step in steps">
-                <span ng-class="{lead: step == currentStep}">{{ catParts[step].label }}</span> <span ng-show="catParts[step].done">done!</span>
+                <span ng-class="{selected: step == currentStep, done: catParts[step].done }">{{ catParts[step].label }}</span> <span ng-show="catParts[step].done">done!</span>
                 <div class="instruction" ng-show="step == currentStep">
                     <p>
                         {{ instruction }}
