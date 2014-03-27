@@ -17,7 +17,7 @@ angular.module('drawACat.cat.directives')
                 /**
                  * Initializations
                  */
-                scope.debugMode = true;
+                scope.debugMode = false;
 
                 var canvas = document.getElementById('stage');
                 var _renderer = renderer.Init(canvas);
