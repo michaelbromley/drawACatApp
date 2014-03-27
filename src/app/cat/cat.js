@@ -23,19 +23,23 @@ angular.module( 'drawACat.cat', [
                     }
                 }
             },
-            data:{ pageTitle: 'Cat' }
+            data: { pageTitle: 'Cat' }
         });
     })
 
 /**
  * And of course we define a controller for our route.
  */
-    .controller( 'CatController', function CatController( $scope, CONFIG, catFactory, serializer, catPromise, ballFactory, emotion ) {
+    .controller( 'CatController', function CatController( $scope, $location, CONFIG, catFactory, serializer, catPromise, ballFactory, emotion ) {
+        $scope.catData = catPromise.data;
         $scope.cat = serializer.unserializeCat(catPromise.data.data);
-        $scope.cat.name = catPromise.data.name;
+        $scope.pageUrl = $location.absUrl();
         $scope.cat.emotion = emotion;
         $scope.cat.emotion.start();
         $scope.ball = ballFactory.newBall(25, CONFIG.BALL_IMAGE_SRC);
+
+        // emit an event to update the page title
+        $scope.$emit('page:title-changed', 'Come and play with ' + $scope.catData.name + '!');
 
         $scope.$on('$destroy', function() {
             emotion.reset();

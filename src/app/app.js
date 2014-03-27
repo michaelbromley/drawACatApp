@@ -35,6 +35,10 @@ angular.module( 'drawACat', [
             }
         });
 
+        $scope.$on('page:title-changed', function(event, title) {
+            $scope.pageTitle = title ;
+        });
+
         $scope.audioSetting = "on";
         $scope.toggleAudio = function() {
             if ($scope.audioSetting == "on") {
