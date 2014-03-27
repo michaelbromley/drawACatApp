@@ -11,10 +11,14 @@ angular.module('drawACat.common.services')
         var context;
         var strokeStyle = '#333333';
         var fillStyle = '#efefef';
+        var lineWidth = 2;
         var debugMode = false;
+        var MAX_RENDER_QUALITY = 10;
+        var renderQuality = 10;
 
         var Renderer = function(canvasElement) {
             context = canvasElement.getContext('2d');
+            context.lineWidth = lineWidth;
         };
 
         Renderer.prototype.strokeStyle = function(value) {
@@ -49,6 +53,7 @@ angular.module('drawACat.common.services')
 
             function renderLine(line) {
                 context.strokeStyle = strokeStyle;
+                context.lineWidth = lineWidth;
                 context.beginPath();
 
                 context.moveTo(line[0][0], line[0][1]);
@@ -99,6 +104,7 @@ angular.module('drawACat.common.services')
             var coords;
 
             context.strokeStyle = strokeStyle;
+            context.lineWidth = lineWidth;
             for (var line = 0; line < path.length; line ++) {
                 if (0 < path[line].length) {
                     context.beginPath();
@@ -106,8 +112,13 @@ angular.module('drawACat.common.services')
                     context.moveTo(coords[0], coords[1]);
 
                     for(var point = 1; point < path[line].length; point ++) {
-                        coords = applyTransformations(path[line][point], transformationData);
-                        context.lineTo(coords[0], coords[1]);
+
+                        // adjust the number of points we draw, depending on the renderQuality setting
+                        var renderEvery = MAX_RENDER_QUALITY + 1 - renderQuality;
+                        if (point % renderEvery === 0) {
+                            coords = applyTransformations(path[line][point], transformationData);
+                            context.lineTo(coords[0], coords[1]);
+                        }
                     }
 
                     if (lineIsABoundary(path[line])) {
@@ -244,6 +255,11 @@ angular.module('drawACat.common.services')
         return {
             Init: function(canvasElement) {
                 return new Renderer(canvasElement);
+            },
+            setRenderQuality: function(quality) {
+                if (0 < quality && quality <= 10) {
+                    renderQuality = parseInt(quality, 10);
+                }
             }
         };
     });

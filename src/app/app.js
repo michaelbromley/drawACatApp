@@ -19,15 +19,16 @@ angular.module( 'drawACat', [
         STROKE_COLOUR: '#333333'
     })
 
-    .config( function myAppConfig ( $stateProvider, $urlRouterProvider ) {
-        $urlRouterProvider.otherwise( '/home' );
+    .config( function myAppConfig ( $stateProvider, $urlRouterProvider, $locationProvider ) {
+        $locationProvider.hashPrefix("!");
+        $urlRouterProvider.otherwise( 'home' );
     })
 
     .run( function run (rafPolyfill) {
         rafPolyfill.run();// polyfill the $window.requestAnimationFrame, cancelAnimationFrame methods
     })
 
-    .controller( 'AppController', function AppController ( $scope, audioPlayer ) {
+    .controller( 'AppController', function AppController ( $scope, $state, audioPlayer, renderer ) {
         $scope.$on('$stateChangeSuccess', function(event, toState){
             if ( angular.isDefined( toState.data.pageTitle ) ) {
                 $scope.pageTitle = toState.data.pageTitle ;
@@ -43,6 +44,10 @@ angular.module( 'drawACat', [
                 audioPlayer.setAudio(true);
                 $scope.audioSetting = "on";
             }
+        };
+        $scope.renderQuality = 10;
+        $scope.setRenderQuality = function(quality) {
+            renderer.setRenderQuality(quality);
         };
     })
 

@@ -1,48 +1,57 @@
 <!DOCTYPE html>
 <!--suppress ALL -->
 <html ng-app="drawACat" ng-controller="AppController">
-  <head>
+<head>
     <title ng-bind="pageTitle"></title>
 
-    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="user-scalable=no, width=540, initial-scale=1, maximum-scale=1">
 
     <!-- social media tags -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="@joshdmiller">
-    <meta name="twitter:title" content="ngBoilerplate">
-    <meta name="twitter:description" content="Non-Trivial AngularJS Made Easy: Everything you need to kickstart AngularJS projects: a best-practice directory structure, an intelligent build system, and the best web design libraries around.">
-    <meta name="twitter:creator" content="@joshdmiller">
+    <meta name="twitter:site" content="drawacat.net">
+    <meta name="twitter:title" content="Draw A Cat">
+    <meta name="twitter:description" content="Draw a cat and play with it. What could be better?">
+    <meta name="twitter:creator" content="@michlbrmly">
     <meta name="twitter:image:src" content="https://a248.e.akamai.net/assets.github.com/images/modules/logos_page/Octocat.png?1366128846">
-    <meta property="og:title" content="ngBoilerplate" />
+    <meta property="og:title" content="Draw A Cat" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="http://bit.ly/ngBoilerplate" />
+    <meta property="og:url" content="http://www.drawacat.net" />
     <meta property="og:image" content="https://a248.e.akamai.net/assets.github.com/images/modules/logos_page/Octocat.png?1366128846" />
-    <meta property="og:description" content="Non-Trivial AngularJS Made Easy: Everything you need to kickstart AngularJS projects: a best-practice directory structure, an intelligent build system, and the best web design libraries around.">
+    <meta property="og:description" content="Draw a cat and play with it. What could be better?">
 
     <!-- compiled CSS --><% styles.forEach( function ( file ) { %>
     <link rel="stylesheet" type="text/css" href="<%= file %>" /><% }); %>
 
     <!-- compiled JavaScript --><% scripts.forEach( function ( file ) { %>
     <script type="text/javascript" src="<%= file %>"></script><% }); %>
-  </head>
-  <body>
+</head>
+<body>
+<div class="header">
     <div class="container">
-      <div class="header">
-        <h1>Draw A Cat
-            <small>
-                v<%= version %>
-            </small>
-        </h1>
-          <button class="btn" ng-click="toggleAudio()">Audio {{ audioSetting }}</button>
-      </div>
+        <div class="col-xs-10">
+            <h1><a href="#!/home">Draw A Cat</a></h1>
+        </div>
+        <div class="col-xs-2">
+            <div class="control-panel-button" ng-class="{ selected: showControlPanel }" ng-click="showControlPanel = !showControlPanel">
+                <i class="icon-cog"></i>
+            </div>
+            <div class="control-panel" ng-show="showControlPanel">
+                <button class="btn btn-regular" ng-click="toggleAudio()">
+                    <i class="icon-volume-medium" class="btn" ng-show="audioSetting == 'on'"></i>
+                    <i class="icon-volume-mute" class="btn" ng-show="audioSetting == 'off'"></i>
+                </button><br>
+                <input type="range" min="1" max="10" step="1" ng-model="renderQuality" ng-change="setRenderQuality(renderQuality)">
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="container" ui-view="main"></div>
+<div class="container" ui-view="main"></div>
 
-    <footer class="footer">
-      <div class="container">
+<footer class="footer">
+    <div class="container">
 
-      </div>
-    </footer>
-  </body>
+    </div>
+</footer>
+</body>
 </html>

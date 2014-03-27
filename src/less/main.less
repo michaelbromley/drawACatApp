@@ -37,6 +37,10 @@
 
 @import 'variables.less';
 
+html {
+  overflow-x: hidden;
+  min-width: 540px;
+}
 
 /**
  * Typography
@@ -67,8 +71,29 @@ pre {
 }
 
 .header {
+  background-color: #ccc;
+  z-index: 1000;
+  position: relative;
+  padding: 5px 10px;
   h1 {
-  font-family: "Comic Sans MS", cursive, sans-serif;
+    margin: 3px 0px;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+  }
+  a:link, a:visited {
+    color: #333;
+  }
+  a:hover, a:active {
+    color: #666;
+    text-decoration: none;
+  }
+  .control-panel-button {
+    font-size: 32px;
+  }
+  .control-panel {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #999;
+    padding: 20px;
   }
 }
 
@@ -139,6 +164,7 @@ canvas {
  * all the submodules and components we are using.
  */
 
+@import 'icons.less';
 @import '../app/home/home.less';
 @import '../app/draw/draw.less';
 @import '../app/cat/cat.less';
