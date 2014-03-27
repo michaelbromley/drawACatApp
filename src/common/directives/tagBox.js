@@ -4,7 +4,7 @@
 
 angular.module('drawACat.common.directives')
 
-    .directive('dacHashtagArea', function($compile) {
+    .directive('dacTagbox', function($compile) {
 
         /**
          * function taken from http://stackoverflow.com/a/263796/772859
@@ -35,7 +35,8 @@ angular.module('drawACat.common.directives')
         return {
             restrict: 'A',
             scope: {
-                tags: '=dacHashtagArea'
+                tags: '=TagBox',
+                useHashTrigger: '=?'
             },
             link: function(scope, element, attrs) {
 

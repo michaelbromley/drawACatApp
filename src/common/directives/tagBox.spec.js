@@ -19,7 +19,7 @@ function __triggerKeyboardEvent(keyCode)
     return eventObj;
 }
 
-describe('hashtagArea directive', function() {
+describe('tagbox directive', function() {
 
     var textarea;
     var suggestions;
@@ -39,7 +39,7 @@ describe('hashtagArea directive', function() {
             'tap'
         ];
 
-        textarea = angular.element('<textarea name="description" id="description" dac-hashtag-area="tags" rows="3"></textarea>');
+        textarea = angular.element('<textarea name="description" id="description" dac-tagbox="tags" rows="3"></textarea>');
         _$compile_(textarea)(scope);
         scope.$apply();
 
@@ -81,6 +81,10 @@ describe('hashtagArea directive', function() {
         textarea.triggerHandler('keyup');
         scope.$apply();
         expect(suggestions.children()[0].innerHTML).toBe('#hammer');
+    });
+
+    describe('specifying the tag', function() {
+
     });
 
     xdescribe('keyboard events', function() {
