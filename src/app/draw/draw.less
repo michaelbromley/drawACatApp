@@ -39,22 +39,42 @@
   top: 22px;
   z-index: 5;
 }
-
 .draw-instructions {
-  ul {
+  .steps-list ul {
+    margin-top: 10px;
+    font-size: 0.85em;
     padding-left: 0;
     list-style-type: none;
     color: #999;
+    li {
+      display: inline-block;
+      margin: 3px 3px;
+      padding: 2px 3px;
+      background-color: #efefef;
+      border-radius: 3px;
+    }
+    .selected {
+      color: #333;
+      background-color: #f5f5f5;
+    }
+    .done {
+      color: #393;
+      background-color: #c2e8b7;
+    }
   }
-  .selected {
-    font-size: 1.6em;
-    color: #333;
+
+  .instruction-container {
+    min-height: 100px;
+    h2 {
+      margin-top: 2px;
+      margin-bottom: 2px;
+    }
+    .instruction {
+      color: #666;
+    }
   }
-  .done {
-    color: #393;
-  }
-  .instruction {
-    color: #666;
+  .nav-buttons {
+
   }
 }
 

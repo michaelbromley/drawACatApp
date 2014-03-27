@@ -3,15 +3,8 @@
         <dac-canvas line-collection="lineCollection" cat-parts="catParts"></dac-canvas>
     </div>
     <div class="col-xs-12 col-sm-3 col-md-5 col-lg-6">
-        <div class="draw-controls">
-
-            <br>
-            <button ng-click="previousStep()" class="btn">Previous</button>
-            <button ng-click="nextStep()" class="btn">Next</button>
-            <button ng-click="showSaveDialog = true" ng-show="drawing.completed" class="btn">Save</button>
-
-        </div>
         <dac-draw-instructions></dac-draw-instructions>
+        <button ng-click="showSaveDialog = true" ng-show="drawing.completed" class="btn btn-default">Save Cat!</button>
     </div>
 </div>
 

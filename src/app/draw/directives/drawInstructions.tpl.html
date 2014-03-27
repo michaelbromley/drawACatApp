@@ -1,18 +1,25 @@
 <div class="draw-instructions">
-    <div class="checkbox">
-        <label>
-            <input type="checkbox" ng-model="drawing.showGuide" id="showGuideCheckbox"> Show drawing guide
-        </label>
+    <div ng-repeat="step in steps" ng-show="step == currentStep" class="instruction-container">
+        <h2>{{ catParts[step].label }}</h2>
+        <div class="instruction">
+            <p>
+                {{ instruction }}
+            </p>
+        </div>
     </div>
+    <div class="nav-buttons">
+        <button ng-click="previousStep()" class="btn">Previous</button>
+        <button ng-click="nextStep()" class="btn">Next</button>
+    </div>
+    <div class="checkbox">
+            <label>
+                <input type="checkbox" ng-model="drawing.showGuide" id="showGuideCheckbox"> Show drawing guide
+            </label>
+        </div>
     <div class="steps-list">
         <ul>
-            <li ng-repeat="step in steps">
-                <span ng-class="{selected: step == currentStep, done: catParts[step].done }">{{ catParts[step].label }}</span> <span ng-show="catParts[step].done">done!</span>
-                <div class="instruction" ng-show="step == currentStep">
-                    <p>
-                        {{ instruction }}
-                    </p>
-                </div>
+            <li ng-repeat="step in steps" ng-class="{selected: step == currentStep, done: catParts[step].done }">
+                {{ catParts[step].label }}
             </li>
         </ul>
     </div>

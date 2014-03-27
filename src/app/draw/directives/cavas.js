@@ -70,6 +70,24 @@ angular.module('drawACat.draw.directives', [])
                     }
                 }
 
+                /**
+                 * The whole drawing is completed if all parts except the current one are set to "done", and the current part has at least one line it its lineCollection
+                 * @returns {boolean}
+                 */
+                function checkCompleted() {
+                    var result = true;
+                    angular.forEach(scope.catParts, function(catPart, partName) {
+                        if (partName === scope.currentStep) {
+                            if (scope.lineCollection.count() === 0) {
+                                result = false;
+                            }
+                        } else if (!catPart.done) {
+                            result =  false;
+                        }
+                    });
+                    return result;
+                }
+
                 scope.$watch(function(scope) {
                     return scope.currentStep;
                 }, function() {
@@ -89,6 +107,7 @@ angular.module('drawACat.draw.directives', [])
 
                 scope.undo = function() {
                     scope.lineCollection.removeLine();
+                    scope.drawing.completed = checkCompleted();
                 };
 
 
@@ -107,7 +126,7 @@ angular.module('drawACat.draw.directives', [])
                     if (mouseIsDown) {
                         // if the pointer has gone off the edge of the canvas, we should treat it like a mouseup
                         if (event.target != canvas) {
-                            scope.mouseUpHandler();
+                            mouseIsDown = false;
                         } else {
                             var mousePosition = getMousePositionFromEvent(event);
                             currentLine.addPoint(mousePosition.x, mousePosition.y);
@@ -119,8 +138,11 @@ angular.module('drawACat.draw.directives', [])
                 scope.mouseUpHandler = function() {
                     mouseIsDown = false;
 
-                    scope.lineCollection.addLine(currentLine);
-                    refreshCanvas();
+                    if (1 < currentLine.getPath().length) {
+                        scope.lineCollection.addLine(currentLine);
+                        refreshCanvas();
+                        scope.drawing.completed = checkCompleted();
+                    }
                 };
 
             }

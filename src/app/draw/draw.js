@@ -56,6 +56,7 @@ angular.module('drawACat.draw', [
         };
 
         $scope.saveCat = function(formData) {
+            savePart();
             var catInfo = makeCatInfoObject(formData);
 
             datastore.saveCat(catInfo).then(
@@ -78,19 +79,9 @@ angular.module('drawACat.draw', [
             if (0 < $scope.lineCollection.count()) {
                 $scope.catParts[partName].lineCollection = $scope.lineCollection;
                 $scope.catParts[partName].done = true;
-                $scope.drawing.completed = checkCompleted();
             } else {
                 $scope.catParts[partName].done = false;
             }
-        }
-        function checkCompleted() {
-            var result = true;
-            angular.forEach($scope.catParts, function(catPart) {
-                if (!catPart.done) {
-                    result =  false;
-                }
-            });
-            return result;
         }
 
         function loadLineCollection() {

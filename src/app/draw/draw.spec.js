@@ -19,7 +19,7 @@ describe('draw page', function() {
         });
 
         it('should route to the correct URL', function() {
-            expect($state.href('draw')).toEqual('#/cat/new');
+            expect($state.href('draw')).toEqual('#!/cat/new');
         });
 
         it('should load the DrawController', function() {
