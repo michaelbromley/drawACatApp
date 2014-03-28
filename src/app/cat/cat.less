@@ -1,9 +1,22 @@
-
-
-
+#stage-container {
+  height:100vh;
+}
 #stage {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: -1;
+  z-index: 100;
+}
+.cat-info-panel {
+  position: absolute;
+  background-color: rgba(123,232,123, 0.2);
+  z-index: 200;
+  padding: 10px;
+  h2 {
+    font-family: @comic-sans;
+    margin: 2px 0px;
+  }
+  p {
+    font-family: @comic-sans;
+  }
 }

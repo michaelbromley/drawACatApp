@@ -71,6 +71,22 @@ $app->get('/cat/:id', function($id) use($app, $db) {
 	}
 });
 
+$app->get('/cat/:id/rated', function($id) use($app, $db) {
+	$sql = "UPDATE cats SET rating = rating + 1 WHERE id = :id";
+
+	try {
+		$stmt = $db->prepare($sql);
+		$stmt->bindParam("id", $id);
+		$stmt->execute();
+
+		$response = $app->response();
+		$response['Content-Type'] = 'application/json';
+		$response->status(200);
+	} catch(PDOException $e) {
+		respondError($e->getMessage());
+	}
+});
+
 $app->post('/cat/', function() use($app, $db) {
 	$request = Slim::getInstance()->request();
 	$data = json_decode($request->getBody());

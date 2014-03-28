@@ -1,4 +1,22 @@
-<a href="#/">Back</a>
-<h2>{{ cat.name }}</h2>
+<div class="cat-info-panel">
+    <div class="share-buttons">
+        <button class="btn btn-default" ng-click="rateCat()">
+            <i class="icon-star" ng-show="!catHasBeenRated"></i>
+            <i class="icon-star2" ng-show="catHasBeenRated"></i>
+            {{ catData.rating }}
+        </button>
+        <button class="btn btn-default" ng-click="scrollTo('comments')"><i class="icon-bubbles"></i> Comments</button>
+        <button class="btn btn-default"><i class="icon-facebook"></i> Share</button>
+        <button class="btn btn-default"><i class="icon-twitter"></i> Tweet</button>
+    </div>
+    <div class="extended-info">
+        <h2>{{ catData.name }} <small>by {{ catData.author }}</small></h2>
+        <p>{{ catData.description }}</p>
+    </div>
+</div>
 
 <dac-stage cat="cat" ball="ball"></dac-stage>
+<dir-disqus disqus-shortname="drawacat"
+            disqus-identifier="{{ catData.id }}-{{ catData.name }}"
+        disqus-url="{{ pageUrl }}" id="comments">
+</dir-disqus>

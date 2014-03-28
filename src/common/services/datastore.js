@@ -36,6 +36,9 @@ angular.module('drawACat.common.services')
             },
             getTags: function() {
                 return $http.get(apiUrl + 'tags/', { cache: true });
+            },
+            rateCat: function(id) {
+                return $http.get(apiUrl + 'cat/' + id + '/rated');
             }
         };
     }

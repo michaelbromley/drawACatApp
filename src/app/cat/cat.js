@@ -30,13 +30,23 @@ angular.module( 'drawACat.cat', [
 /**
  * And of course we define a controller for our route.
  */
-    .controller( 'CatController', function CatController( $scope, $location, CONFIG, catFactory, serializer, catPromise, ballFactory, emotion ) {
+    .controller( 'CatController', function CatController( $scope, $location, CONFIG, catFactory, serializer, catPromise, ballFactory, emotion, ratingService ) {
         $scope.catData = catPromise.data;
         $scope.cat = serializer.unserializeCat(catPromise.data.data);
         $scope.pageUrl = $location.absUrl();
         $scope.cat.emotion = emotion;
         $scope.cat.emotion.start();
         $scope.ball = ballFactory.newBall(25, CONFIG.BALL_IMAGE_SRC);
+
+        $scope.catHasBeenRated = ratingService.hasUserRatedThisCat($scope.catData.id);
+        $scope.rateCat = function() {
+            if (!$scope.catHasBeenRated) {
+                ratingService.setCatAsRated($scope.catData.id);
+                $scope.catHasBeenRated = true;
+                var newRating = parseInt($scope.catData.rating, 10) + 1;
+                $scope.catData.rating = newRating;
+            }
+        };
 
         // emit an event to update the page title
         $scope.$emit('page:title-changed', 'Come and play with ' + $scope.catData.name + '!');
