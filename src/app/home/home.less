@@ -1,8 +1,57 @@
+
+.hero-bar {
+  background-image: -webkit-gradient(
+  	linear,
+  	left top,
+  	left bottom,
+  	color-stop(0, #EBEBEB),
+  	color-stop(1, #FFFFFF)
+  );
+  background-image: -o-linear-gradient(bottom, #EBEBEB 0%, #FFFFFF 100%);
+  background-image: -moz-linear-gradient(bottom, #EBEBEB 0%, #FFFFFF 100%);
+  background-image: -webkit-linear-gradient(bottom, #EBEBEB 0%, #FFFFFF 100%);
+  background-image: -ms-linear-gradient(bottom, #EBEBEB 0%, #FFFFFF 100%);
+  background-image: linear-gradient(to bottom, #EBEBEB 0%, #FFFFFF 100%);
+
+  .huge-cat {
+    background: url("images/cat-big.gif") center no-repeat;
+    height: 500px;
+    text-align: center;
+    .draw-button {
+      font-size: 3em;
+      border: 3px solid #333;
+      font-family: @comic-sans;
+      margin-top: 300px;
+    }
+  }
+}
+.filter-controls {
+  button.selected {
+    background-color: #a6d1ee;
+  }
+}
+
 .preview-pane {
-  width: 200px;
+  font-family: @comic-sans;
+  width: 240px;
   height: 200px;
   float: left;
   margin: 20px;
-  background-color: #efefef;
   padding: 10px;
+  border: 1px solid #666;
+  .image-box, .title-box {
+    width: 104px;
+    float: left;
+    word-break: break-all;
+  }
+  .details-box {
+    float: left;
+    width: 218px;
+    ul.hashtags {
+      list-style-type: none;
+      li {
+        display: inline;
+      }
+    }
+  }
 }

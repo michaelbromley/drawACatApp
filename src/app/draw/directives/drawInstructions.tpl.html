@@ -8,8 +8,8 @@
         </div>
     </div>
     <div class="nav-buttons">
-        <button ng-click="previousStep()" class="btn">Previous</button>
-        <button ng-click="nextStep()" class="btn">Next</button>
+        <button ng-click="previousStep()" class="btn btn-default" ng-disabled="isFirstStep"><i class="icon-arrow-left"></i> Previous</button>
+        <button ng-click="nextStep()" class="btn btn-default" ng-disabled="isLastStep"><i class="icon-arrow-right"></i> Next</button>
     </div>
     <div class="checkbox">
             <label>

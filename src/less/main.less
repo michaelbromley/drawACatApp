@@ -39,12 +39,16 @@
 
 html {
   overflow-x: hidden;
+}
+
+body {
   min-width: 540px;
 }
 
 /**
  * Typography
  */
+@comic-sans : "Comic Sans MS", cursive, sans-serif;
 
 code, pre, .pre {
   padding: 5px;
@@ -62,41 +66,6 @@ pre {
   padding: 5px;
 }
 
-.page-header {
-  margin-top: 60px;
-
-  &:first-child {
-    margin-top: 20px;
-  }
-}
-
-.header {
-  background-color: #ccc;
-  z-index: 1000;
-  position: relative;
-  padding: 5px 10px;
-  h1 {
-    margin: 3px 0px;
-    font-family: "Comic Sans MS", cursive, sans-serif;
-  }
-  a:link, a:visited {
-    color: #333;
-  }
-  a:hover, a:active {
-    color: #666;
-    text-decoration: none;
-  }
-  .control-panel-button {
-    font-size: 32px;
-  }
-  .control-panel {
-    position: absolute;
-    background-color: #fff;
-    border: 1px solid #999;
-    padding: 20px;
-  }
-}
-
 h2 {
   margin: 20px 0;
   color: #666;
@@ -106,11 +75,6 @@ h2 {
 /**
  * Navigation
  */
-
-
-canvas {
-  background-color: #efefef;
-}
 
 /**
  * Directives

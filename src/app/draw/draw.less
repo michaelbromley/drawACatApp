@@ -1,5 +1,6 @@
 .draw-container {
   min-width: 540px;
+  font-family: @comic-sans;
 }
 .canvas-container {
   position: relative;
@@ -12,6 +13,7 @@
   left: 0px;
   z-index: 1;
   background-color: rgba(255,255,255,0.5);
+  cursor: crosshair;
 }
 #canvas-frame {
   position: absolute;
@@ -40,6 +42,8 @@
   z-index: 5;
 }
 .draw-instructions {
+  padding-top: 20px;
+  max-width: 400px;
   .steps-list ul {
     margin-top: 10px;
     font-size: 0.85em;
@@ -52,10 +56,12 @@
       padding: 2px 3px;
       background-color: #efefef;
       border-radius: 3px;
+      border: 1px solid #fff;
     }
     .selected {
       color: #333;
       background-color: #f5f5f5;
+      border-color: #395c34;
     }
     .done {
       color: #393;

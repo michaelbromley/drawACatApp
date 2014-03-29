@@ -22,6 +22,9 @@ angular.module('drawACat.draw.directives')
             templateUrl: 'draw/directives/drawInstructions.tpl.html',
             replace: true,
             link: function(scope) {
+                scope.isFirstStep = true;
+                scope.isLastStep = false;
+
                 var showInstructions = function() {
                     scope.currentStepLabel = drawHelper.getCurrentPartLabel();
                     scope.currentStep = drawHelper.getCurrentPartKey();
@@ -33,6 +36,8 @@ angular.module('drawACat.draw.directives')
                     return drawHelper.getCurrentPartKey();
                 }, function() {
                     showInstructions();
+                    scope.isFirstStep = (drawHelper.getCurrentPartKey() === 'head');
+                    scope.isLastStep = (drawHelper.getCurrentPartKey() === 'rightLeg');
                 });
 
             }
