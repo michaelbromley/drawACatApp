@@ -118,7 +118,7 @@ angular.module('drawACat.draw.directives', [])
                     var mousePosition = getMousePositionFromEvent(event);
                     currentLine.addPoint(mousePosition.x, mousePosition.y);
                     _renderer.strokeStyle(STROKE_ACTIVE);
-                    _renderer.drawStart(mousePosition.x, mousePosition.y);
+                    //_renderer.drawStart(mousePosition.x, mousePosition.y);
 
                     mouseIsDown = true;
                 };
@@ -131,7 +131,12 @@ angular.module('drawACat.draw.directives', [])
                         } else {
                             var mousePosition = getMousePositionFromEvent(event);
                             currentLine.addPoint(mousePosition.x, mousePosition.y);
-                            _renderer.drawMove(mousePosition.x, mousePosition.y);
+                            //_renderer.drawMove(mousePosition.x, mousePosition.y);
+                            if (currentLine.pointWasAdded()) {
+                                _renderer.fillStyle(FILL_TRANSPARENT);
+                                _renderer.renderPath([currentLine.getPath()]);
+                                _renderer.fillStyle(FILL_VISIBLE);
+                            }
                         }
                     }
                 };
