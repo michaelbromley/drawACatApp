@@ -21,6 +21,7 @@ function __triggerKeyboardEvent(keyCode)
 
 describe('tagbox directive', function() {
 
+    var wrapper;
     var textarea;
     var suggestions;
     var scope;
@@ -39,12 +40,14 @@ describe('tagbox directive', function() {
             'tap'
         ];
 
-        textarea = angular.element('<textarea name="description" id="description" dac-tagbox="tags" rows="3"></textarea>');
+        textarea = angular.element('<textarea name="description" id="description" dac-tagbox="tags" dac-tagtoken="#" rows="3"></textarea>');
         _$compile_(textarea)(scope);
         scope.$apply();
 
         suggestions = textarea.next();
         document.body.appendChild(textarea[0]);
+        wrapper = textarea.parent();
+        textarea[0].focus();
     }));
 
     it('should add the suggestions div after the textarea', function() {
@@ -83,7 +86,51 @@ describe('tagbox directive', function() {
         expect(suggestions.children()[0].innerHTML).toBe('#hammer');
     });
 
-    describe('specifying the tag', function() {
+    describe('specifying the tagToken', function() {
+        var input;
+        var suggestions;
+        beforeEach(inject(function(_$compile_) {
+            input = angular.element('<input type="text" name="description" id="description" dac-tagbox="tags" dac-tagtoken="@">');
+            _$compile_(input)(scope);
+            scope.$apply();
+
+            suggestions = input.next();
+            document.body.appendChild(input[0]);
+        }));
+
+        it('should show the correct suggestions with a custom tagToken', function() {
+            input.val('@c');
+            input[0].selectionStart = 2;
+
+            input.triggerHandler('keyup');
+            scope.$apply();
+            expect(suggestions.children()[0].innerHTML).toBe('@cake');
+            expect(suggestions.children()[1].innerHTML).toBe('@cup');
+        });
+
+    });
+
+    describe('specifying no tagToken', function() {
+        var input;
+        var suggestions;
+        beforeEach(inject(function(_$compile_) {
+            input = angular.element('<input type="text" name="description" id="description" dac-tagbox="tags">');
+            _$compile_(input)(scope);
+            scope.$apply();
+
+            suggestions = input.next();
+            document.body.appendChild(input[0]);
+        }));
+
+        it('should show the correct suggestions an empty tagToken', function() {
+            input.val('c');
+            input[0].selectionStart = 1;
+
+            input.triggerHandler('keyup');
+            scope.$apply();
+            expect(suggestions.children()[0].innerHTML).toBe('cake');
+            expect(suggestions.children()[1].innerHTML).toBe('cup');
+        });
 
     });
 
