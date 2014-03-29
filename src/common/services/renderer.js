@@ -53,27 +53,6 @@ angular.module('drawACat.common.services')
                     renderLine(path[line]);
                 }
             }
-
-            function renderLine(line) {
-                context.strokeStyle = strokeStyle;
-                context.lineWidth = lineWidth;
-                context.beginPath();
-
-                context.moveTo(line[0][0], line[0][1]);
-
-                for (var point = 1; point < line.length; point ++) {
-                    context.lineTo(line[point][0], line[point][1]);
-                }
-
-                if (lineIsABoundary(line)) {
-                    context.fillStyle = fillStyle;
-                } else {
-                    context.fillStyle = 'rgba(0,0,0,0)';
-                }
-
-                context.fill();
-                context.stroke();
-            }
         };
 
         Renderer.prototype.renderCat = function(cat) {
@@ -105,24 +84,47 @@ angular.module('drawACat.common.services')
             var path = part.getPath();
             var transformationData = part.getTransformationData();
             var coords;
+            var nextCoords;
 
             context.strokeStyle = strokeStyle;
             context.lineWidth = lineWidth;
             for (var line = 0; line < path.length; line ++) {
                 if (0 < path[line].length) {
-                    context.beginPath();
-                    coords = applyTransformations(path[line][0], transformationData);
-                    context.moveTo(coords[0], coords[1]);
+                    //context.beginPath();
+                    //coords = applyTransformations(path[line][0], transformationData);
+                    //context.moveTo(coords[0], coords[1]);
+                    /*jshint loopfunc: true*/
+                    var transformedLine = path[line].map(function(point) {
+                        return applyTransformations(point, transformationData);
+                    });
+                    renderLine(transformedLine);
 
-                    for(var point = 1; point < path[line].length; point ++) {
+                    /*if (2 < path[line].length) {
+                     for(var point = 1; point < path[line].length - 2; point ++) {
+                     var renderEvery = MAX_RENDER_QUALITY + 1 - renderQuality;
+                     if (point % renderEvery === 0) {
+                     coords = applyTransformations(path[line][point], transformationData);
+                     nextCoords = applyTransformations(path[line][point + 1], transformationData);
 
-                        // adjust the number of points we draw, depending on the renderQuality setting
-                        var renderEvery = MAX_RENDER_QUALITY + 1 - renderQuality;
-                        if (point % renderEvery === 0) {
-                            coords = applyTransformations(path[line][point], transformationData);
-                            context.lineTo(coords[0], coords[1]);
-                        }
-                    }
+                     var c = (coords[0] + nextCoords[0]) / 2,
+                     d = (coords[1] + nextCoords[1]) / 2;
+                     context.quadraticCurveTo(coords[0], coords[1], c, d);
+                     }
+                     }
+                     //context.quadraticCurveTo(coords[0], coords[1], nextCoords[0], nextCoords[1]);
+                     } else {
+                     context.lineTo(coords[0], coords[1]);
+                     }*/
+
+                    /*for(var point = 1; point < path[line].length; point ++) {
+
+                     // adjust the number of points we draw, depending on the renderQuality setting
+                     var renderEvery = MAX_RENDER_QUALITY + 1 - renderQuality;
+                     if (point % renderEvery === 0) {
+                     coords = applyTransformations(path[line][point], transformationData);
+                     context.lineTo(coords[0], coords[1]);
+                     }
+                     }*/
 
                     if (lineIsABoundary(path[line])) {
                         context.fillStyle = fillStyle;
@@ -148,6 +150,75 @@ angular.module('drawACat.common.services')
                 }
             }
         };
+
+        function renderLine(line) {
+            if (line.length < 2) {
+                return;
+            }
+            context.strokeStyle = strokeStyle;
+            context.lineWidth = lineWidth;
+            context.beginPath();
+
+            context.moveTo(line[0][0], line[0][1]);
+
+            //lineLoopQuadratic(line);
+            //lineLoopSimple(line);
+            lineLoopHybrid(line);
+
+            if (lineIsABoundary(line)) {
+                context.fillStyle = fillStyle;
+            } else {
+                context.fillStyle = 'rgba(0,0,0,0)';
+            }
+
+            context.fill();
+            context.stroke();
+        }
+
+        function lineLoopSimple(line) {
+            for (var i = 1; i < line.length; i++) {
+                context.lineTo(line[i][0], line[i][1]);
+            }
+        }
+
+        function lineLoopQuadratic(line) {
+            if (2 < line.length) {
+                for (var i = 1; i < line.length - 2; i++) {
+                    var c = (line[i][0] + line[i + 1][0]) / 2,
+                        d = (line[i][1] + line[i + 1][1]) / 2;
+                    context.quadraticCurveTo(line[i][0], line[i][1], c, d);
+                }
+                context.quadraticCurveTo(line[i][0], line[i][1], line[i + 1][0], line[i + 1][1]);
+            } else {
+                context.lineTo(line[1][0], line[1][1]);
+            }
+        }
+
+        function lineLoopHybrid(line) {
+            if (2 < line.length) {
+                for (var i = 1; i < line.length - 2; i++) {
+
+                    // find the angle between this point and the one after next, with the next point as a vertex
+                    var ANGLE_THRESHHOLD = 0.2;
+                    var startPoint = line[i];
+                    var vertexPoint = line[i+1];
+                    var endPoint = line[i+2];
+
+                    var angle1 = Math.atan2(vertexPoint[1] - startPoint[1], vertexPoint[0] - startPoint[0]);
+                    var angle2 = Math.atan2(endPoint[1] - vertexPoint[1], endPoint[0] - vertexPoint[0]);
+                    var c = (line[i][0] + line[i + 1][0]) / 2,
+                        d = (line[i][1] + line[i + 1][1]) / 2;
+                    if (ANGLE_THRESHHOLD < Math.abs(angle1 - angle2)) {
+                        context.quadraticCurveTo(line[i][0], line[i][1], c, d);
+                    } else {
+                        context.lineTo(c, d);
+                    }
+                }
+                context.lineTo(line[i][0], line[i][1]);
+            } else {
+                context.lineTo(line[1][0], line[1][1]);
+            }
+        }
 
         /**
          * Determine whether this line encloses an area and therefore should be filled in. A line is
