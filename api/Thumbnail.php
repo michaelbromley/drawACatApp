@@ -9,6 +9,8 @@
 class Thumbnail {
 
 	const FILE_PATH = './thumbnails/';
+	const THUMBNAIL_MID_DIMENSIONS = 200;
+	const THUMBNAIL_SMALL_DIMENSIONS = 100;
 	private $thumbnailDataString;
 	private $thumbnailFileName;
 
@@ -20,8 +22,27 @@ class Thumbnail {
 
 	function save() {
 		if (isset($this->thumbnailDataString)) {
-			$this->thumbnailFileName = md5($this->thumbnailDataString).'.png';
-			file_put_contents(self::FILE_PATH.$this->thumbnailFileName, base64_decode($this->thumbnailDataString));
+			$hash = md5($this->thumbnailDataString);
+			$this->thumbnailFileName = $hash;
+
+
+			$original = imagecreatefromstring(base64_decode($this->thumbnailDataString));
+			$originalWidth = imagesx($original);
+			$originalHeight = imagesy($original);
+
+			$thumbMid = imagecreatetruecolor(self::THUMBNAIL_MID_DIMENSIONS, self::THUMBNAIL_MID_DIMENSIONS);
+		    imagecopyresampled($thumbMid, $original, 0, 0, 0, 0, self::THUMBNAIL_MID_DIMENSIONS, self::THUMBNAIL_MID_DIMENSIONS, $originalWidth, $originalHeight);
+
+			$thumbSmall = imagecreatetruecolor(self::THUMBNAIL_SMALL_DIMENSIONS, self::THUMBNAIL_SMALL_DIMENSIONS);
+		    imagecopyresampled($thumbSmall, $original, 0, 0, 0, 0, self::THUMBNAIL_SMALL_DIMENSIONS, self::THUMBNAIL_SMALL_DIMENSIONS, $originalWidth, $originalHeight);
+
+
+			imagetruecolortopalette($original, false, 8);
+			imagetruecolortopalette($thumbMid, false, 8);
+			imagetruecolortopalette($thumbSmall, false, 8);
+			imagegif($original, self::FILE_PATH.$this->thumbnailFileName.'.gif');
+			imagegif($thumbMid, self::FILE_PATH.$this->thumbnailFileName.'_m.gif');
+			imagegif($thumbSmall, self::FILE_PATH.$this->thumbnailFileName.'_s.gif');
 		}
 	}
 
@@ -32,4 +53,4 @@ class Thumbnail {
 			return 'file not saved!';
 		}
 	}
-} 
+}

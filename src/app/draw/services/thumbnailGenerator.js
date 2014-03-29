@@ -6,7 +6,7 @@ angular.module('drawACat.draw.services')
 
     .factory('thumbnailGenerator', function(CONFIG, renderer) {
 
-        var DIMENSION = 100; // thumbnail dimensions in pixels
+        var DIMENSION = 500; // thumbnail dimensions in pixels
         var canvas = angular.element('<canvas></canvas>')[0];
         canvas.width = DIMENSION;
         canvas.height = DIMENSION;
@@ -37,7 +37,7 @@ angular.module('drawACat.draw.services')
             var _renderer = renderer.Init(canvas);
             _renderer.fillStyle(CONFIG.FILL_COLOUR);
             _renderer.strokeStyle(CONFIG.STROKE_COLOUR);
-            _renderer.lineWidth(1);
+            _renderer.lineWidth(2);
 
             fillBackground();
 

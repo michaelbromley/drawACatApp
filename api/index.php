@@ -92,7 +92,12 @@ $app->post('/cat/', function() use($app, $db) {
 	$data = json_decode($request->getBody());
 
 	$thumbnail = new Thumbnail($data->thumbnail);
-	$thumbnail->save();
+	try {
+		$thumbnail->save();
+	}
+	catch(Exception $e) {
+		respondError($e->getMessage());
+	}
 	$thumbnailFileName = $thumbnail->getFileName();
 
 	$sql = "INSERT INTO cats (name, description, data, author, isPublic, thumbnail, created) VALUES (:name, :description, :data, :author, :isPublic, :thumbnail, NOW())";
