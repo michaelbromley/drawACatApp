@@ -15,7 +15,7 @@ angular.module( 'drawACat', [
         THUMBNAILS_URL: 'http://192.168.0.10/GitHub/drawACatApp/api/thumbnails/',
         AUDIO_FILES_URL: 'assets/audio/',
         BALL_IMAGE_SRC: 'assets/images/ball01.gif',
-        FILL_COLOUR: '#efefef',
+        FILL_COLOUR: '#f5f5f5',
         STROKE_COLOUR: '#333333'
     })
 
@@ -28,16 +28,25 @@ angular.module( 'drawACat', [
         rafPolyfill.run();// polyfill the $window.requestAnimationFrame, cancelAnimationFrame methods
     })
 
-    .controller( 'AppController', function AppController ( $scope, $state, audioPlayer, renderer ) {
+    .controller( 'AppController', function AppController ( $scope, $state, $location, $anchorScroll, audioPlayer, renderer ) {
         $scope.$on('$stateChangeSuccess', function(event, toState){
             if ( angular.isDefined( toState.data.pageTitle ) ) {
                 $scope.pageTitle = toState.data.pageTitle ;
             }
+            $anchorScroll();
         });
 
-        $scope.$on('page:title-changed', function(event, title) {
-            $scope.pageTitle = title ;
+        $scope.$on('metadata:updated', function(event, metaData) {
+            $scope.metaData = metaData;
         });
+
+        $scope.scrollTo = function(id) {
+            var old = $location.hash();
+            $location.hash(id);
+            $anchorScroll();
+            //reset to old to keep any additional routing logic from kicking in
+            $location.hash(old);
+        };
 
         $scope.audioSetting = "on";
         $scope.toggleAudio = function() {
@@ -48,10 +57,6 @@ angular.module( 'drawACat', [
                 audioPlayer.setAudio(true);
                 $scope.audioSetting = "on";
             }
-        };
-        $scope.renderQuality = 10;
-        $scope.setRenderQuality = function(quality) {
-            renderer.setRenderQuality(quality);
         };
     })
 

@@ -30,13 +30,22 @@ angular.module( 'drawACat.cat', [
 /**
  * And of course we define a controller for our route.
  */
-    .controller( 'CatController', function CatController( $scope, $location, CONFIG, catFactory, serializer, catPromise, ballFactory, emotion, ratingService ) {
+    .controller( 'CatController', function CatController( $scope, $location, CONFIG, catFactory, serializer, catPromise, ballFactory, emotion, ratingService, renderer ) {
         $scope.catData = catPromise.data;
         $scope.cat = serializer.unserializeCat(catPromise.data.data);
         $scope.pageUrl = $location.absUrl();
         $scope.cat.emotion = emotion;
         $scope.cat.emotion.start();
         $scope.ball = ballFactory.newBall(25, CONFIG.BALL_IMAGE_SRC);
+
+        // emit an event to update the page metadata
+        var metaData = {
+            pageTitle: 'Come and play with ' + $scope.catData.name + '!',
+            title: $scope.catData.name,
+            url: $location.absUrl(),
+            image: CONFIG.THUMBNAILS_URL + $scope.catData.thumbnail
+        };
+        $scope.$emit('metadata:updated', metaData);
 
         $scope.catHasBeenRated = ratingService.hasUserRatedThisCat($scope.catData.id);
         $scope.rateCat = function() {
@@ -48,8 +57,10 @@ angular.module( 'drawACat.cat', [
             }
         };
 
-        // emit an event to update the page title
-        $scope.$emit('page:title-changed', 'Come and play with ' + $scope.catData.name + '!');
+        $scope.renderQuality = renderer.getRenderQuality();
+        $scope.setRenderQuality = function(quality) {
+            renderer.setRenderQuality(quality);
+        };
 
         $scope.$on('$destroy', function() {
             emotion.reset();
