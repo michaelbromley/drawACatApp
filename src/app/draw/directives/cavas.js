@@ -30,6 +30,7 @@ angular.module('drawACat.draw.directives', [])
                 var mouseIsDown = false;
                 var canvas = document.getElementById('canvas');
                 var _renderer = renderer.Init(canvas);
+                _renderer.lineWidth(2);
 
                 function refreshCanvas() {
                     _renderer.clearCanvas();

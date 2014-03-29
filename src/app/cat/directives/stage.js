@@ -23,6 +23,7 @@ angular.module('drawACat.cat.directives')
                 var _renderer = renderer.Init(canvas);
                 _renderer.strokeStyle(CONFIG.STROKE_COLOUR);
                 _renderer.fillStyle(CONFIG.FILL_COLOUR);
+                _renderer.lineWidth(2);
                 var ball = scope.ball;
                 var respondTo = 'ball';
 

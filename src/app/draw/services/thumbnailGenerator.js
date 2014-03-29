@@ -37,6 +37,7 @@ angular.module('drawACat.draw.services')
             var _renderer = renderer.Init(canvas);
             _renderer.fillStyle(CONFIG.FILL_COLOUR);
             _renderer.strokeStyle(CONFIG.STROKE_COLOUR);
+            _renderer.lineWidth(1);
 
             fillBackground();
 

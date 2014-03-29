@@ -28,6 +28,9 @@ angular.module('drawACat.common.services')
         Renderer.prototype.fillStyle = function(value) {
             fillStyle = value;
         };
+        Renderer.prototype.lineWidth = function(value) {
+            lineWidth = value;
+        };
 
         Renderer.prototype.drawStart = function(x, y) {
             context.beginPath();
@@ -260,6 +263,9 @@ angular.module('drawACat.common.services')
                 if (0 < quality && quality <= 10) {
                     renderQuality = parseInt(quality, 10);
                 }
+            },
+            getRenderQuality: function() {
+                return renderQuality;
             }
         };
     });
