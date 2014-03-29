@@ -78,7 +78,7 @@ angular.module('drawACat.draw.services')
 
         /**
          * Make the cat's path origin start from coordinate 0,0. This will allow us to properly position the cat when it is
-         * subsequently rendered. In this step we also halve the number of points in the path.
+         * subsequently rendered.
          *
          * @param partPath
          * @param minX
@@ -88,12 +88,13 @@ angular.module('drawACat.draw.services')
         var normalizePath = function(partPath, minX, minY) {
             return partPath.map(function(line) {
                 return line
-                    .filter(function(point, index) {
+                    // TODO: smart algorithm to smooth line and remove unnecessary points
+                    /*.filter(function(point, index) {
                         // filter out every other element (starting from the second element) to reduce the amount of
                         // data to be stored. Has no visible effect of the rendered shapes, but halves the storage space required
                         // and vastly speeds up rendering.
                         return (index + 1) % 2 === 0;
-                    })
+                    })*/
                     .map(function(point) {
                         // subtract the minX and minY values from each coordinate so that the cat is aligned to the top left
                         // of the x/y origin point.
