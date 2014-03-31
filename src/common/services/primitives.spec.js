@@ -142,7 +142,8 @@ describe( 'primitives service', function() {
                 width: 0,
                 height: 0,
                 centreX: 0,
-                centreY: 0
+                centreY: 0,
+                scale: 1
             };
             expect(part.getTransformationData()).toEqual(expectedResult);
         });

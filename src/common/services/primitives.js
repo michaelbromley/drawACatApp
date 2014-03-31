@@ -23,6 +23,7 @@ angular.module('drawACat.common.services')
             var rotation = 0;
             var xSkew = 0;
             var ySkew = 0;
+            var scale = 1;
             var pivotPointX = 0; // used as the point around which the part may rotate and skew
             var pivotPointY = 0;
             var width = 0;
@@ -105,6 +106,9 @@ angular.module('drawACat.common.services')
             this.setGlobalOffset = function(x, y) {
                 globalOffset = [x, y];
             };
+            this.setScale = function(newScale) {
+                scale = newScale;
+            };
 
 
 
@@ -113,17 +117,18 @@ angular.module('drawACat.common.services')
                     return parentPart.getTransformationData();
                 } else {
                     return {
-                        xOffset: xOffset,
-                        yOffset: yOffset,
-                        pivotPointX: pivotPointX + globalOffset[0],
-                        pivotPointY: pivotPointY + globalOffset[1],
+                        xOffset: xOffset * scale,
+                        yOffset: yOffset * scale,
+                        pivotPointX: (pivotPointX * scale) + globalOffset[0],
+                        pivotPointY: (pivotPointY * scale) + globalOffset[1],
                         rotation: rotation,
-                        xSkew: xSkew,
-                        ySkew: ySkew,
-                        width: width,
-                        height: height,
-                        centreX: centrePoint[0] + globalOffset[0],
-                        centreY: centrePoint[1] + globalOffset[1]
+                        xSkew: xSkew * scale,
+                        ySkew: ySkew * scale,
+                        width: width * scale,
+                        height: height * scale,
+                        centreX: (centrePoint[0] * scale) + globalOffset[0],
+                        centreY: (centrePoint[1] * scale) + globalOffset[1],
+                        scale: scale
                     };
                 }
             };
@@ -133,8 +138,8 @@ angular.module('drawACat.common.services')
                 pathWithOffset = path.map(function (line) {
                     return line.map(function (point) {
                         return [
-                            point[0] + globalOffset[0],
-                            point[1] + globalOffset[1]
+                            (point[0] * scale) + globalOffset[0],
+                            (point[1] * scale) + globalOffset[1]
                         ];
                     });
                 });
@@ -159,10 +164,10 @@ angular.module('drawACat.common.services')
              */
             this.getBoundingBox = function() {
                 return {
-                    x: x + globalOffset[0] + xOffset,
-                    y: y + globalOffset[1] + yOffset,
-                    width: width,
-                    height: height
+                    x: ((x + xOffset) * scale) + globalOffset[0],
+                    y: ((y + yOffset) * scale) + globalOffset[1],
+                    width: width * scale,
+                    height: height * scale
                 };
 
             };

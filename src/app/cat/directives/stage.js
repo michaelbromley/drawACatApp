@@ -40,11 +40,7 @@ angular.module('drawACat.cat.directives')
                     ball.windowResized();
 
                     // move the cat to be in the centre and at the bottom of the canvas
-                    var catWidth = scope.cat.getWidth();
-                    var catHeight = scope.cat.getHeight();
-                    var xAdjustment = (windowWidth / 2) - (catWidth / 2);
-                    var yAdjustment = windowHeight - (catHeight);
-                    scope.cat.adjustPosition(xAdjustment, yAdjustment);
+                    scope.cat.resizeToWindow(canvas.width, canvas.height);
                 }
                 resizeCanvas();
 

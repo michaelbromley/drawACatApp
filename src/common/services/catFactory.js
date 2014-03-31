@@ -72,7 +72,7 @@ angular.module('drawACat.common.services')
         /**
          * Calculate the dimension (x or y - width or height) of the entire cat.
          * @param dimension
-         * @returns {number}
+         * @returns {{max: number, min: number}}
          */
         Cat.prototype.getBoundaries = function(dimension) {
             var xOrY = dimension === 'x' ? 0 : 1;
@@ -102,6 +102,23 @@ angular.module('drawACat.common.services')
                 max: max,
                 min: min
             };
+        };
+
+        Cat.prototype.resizeToWindow = function(windowWidth, windowHeight) {
+            var ORIGINAL_CAT_DIMENSION = 500;
+            var newDimension = Math.min(Math.min(windowWidth, windowHeight), ORIGINAL_CAT_DIMENSION);
+            var scaleFactor = newDimension / ORIGINAL_CAT_DIMENSION;
+            angular.forEach(this.bodyParts, function(bodyPart) {
+                if (bodyPart.part) {
+                    bodyPart.part.setScale(scaleFactor);
+                }
+            });
+
+            var catWidth = this.getWidth();
+            var catHeight = this.getHeight();
+            var xAdjustment = (windowWidth / 2) - (catWidth / 2);
+            var yAdjustment = windowHeight - (catHeight);
+            this.adjustPosition(xAdjustment, yAdjustment);
         };
 
 
