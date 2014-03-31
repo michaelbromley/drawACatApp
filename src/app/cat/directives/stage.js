@@ -133,6 +133,8 @@ angular.module('drawACat.cat.directives')
                     _renderer.renderBall(ball);
                     // debug
                     scope.moodValue = scope.cat.emotion.getMoodValue();
+                    // display fps
+                    _renderer.displayFps();
 
                     rafId = $window.requestAnimationFrame(renderFrame);
                 };

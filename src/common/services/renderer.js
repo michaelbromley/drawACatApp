@@ -161,9 +161,10 @@ angular.module('drawACat.common.services')
 
             context.moveTo(line[0][0], line[0][1]);
 
+            // TODO: pick or write an efficient line rendering algorithm
             //lineLoopQuadratic(line);
-            //lineLoopSimple(line);
-            lineLoopHybrid(line);
+            lineLoopSimple(line);
+            //lineLoopHybrid(line);
 
             if (lineIsABoundary(line)) {
                 context.fillStyle = fillStyle;
@@ -177,7 +178,10 @@ angular.module('drawACat.common.services')
 
         function lineLoopSimple(line) {
             for (var i = 1; i < line.length; i++) {
-                context.lineTo(line[i][0], line[i][1]);
+                var renderEvery = MAX_RENDER_QUALITY + 1 - renderQuality;
+                if (i % renderEvery === 0) {
+                    context.lineTo(line[i][0], line[i][1]);
+                }
             }
         }
 
@@ -199,7 +203,7 @@ angular.module('drawACat.common.services')
                 for (var i = 1; i < line.length - 2; i++) {
 
                     // find the angle between this point and the one after next, with the next point as a vertex
-                    var ANGLE_THRESHHOLD = 0.2;
+                    var ANGLE_THRESHHOLD = 0.25;
                     var startPoint = line[i];
                     var vertexPoint = line[i+1];
                     var endPoint = line[i+2];
@@ -324,6 +328,32 @@ angular.module('drawACat.common.services')
             context.rotate(ball.getAngle());
             context.drawImage(ball.getImage(), -ball.getRadius(), -ball.getRadius());
             context.restore();
+        };
+
+        var frame = 0;
+        var lastTimeMeasure = 0;
+        var fps;
+        Renderer.prototype.displayFps = function() {
+            if (lastTimeMeasure === 0) {
+                lastTimeMeasure = new Date().getTime();
+            }
+
+            if (frame % 60 === 0) {
+                var timeNow = new Date().getTime();
+                var secondsElapsed = (timeNow - lastTimeMeasure) / 1000;
+                fps = 60/secondsElapsed;
+                lastTimeMeasure = timeNow;
+            }
+            frame ++;
+
+
+            // render it
+            var oldFillStyle = context.fillStyle;
+            context.fillStyle = "blue";
+            context.font = "bold 16px Arial";
+            context.fillText(fps.toString(), 100, 300);
+            context.fillStyle = oldFillStyle;
+
         };
 
         return {
