@@ -5,9 +5,9 @@
 angular.module('drawACat.cat.directives')
 
 /**
- * This is a directive to test out the noise service in a visual and interactive way.
+ * This is a directive to test out the noiseFactory service in a visual and interactive way.
  */
-.directive('noiseTester', function(noise) {
+.directive('noiseFactoryTester', function(noiseFactory) {
         var context;
         var width;
         var height;
@@ -55,22 +55,22 @@ angular.module('drawACat.cat.directives')
 
         return {
             restrict: 'E',
-            templateUrl: 'cat/directives/noiseTester.tpl.html',
+            templateUrl: 'cat/directives/noiseFactoryTester.tpl.html',
             replace: true,
             link: function(scope, element) {
                 var canvas = element.children()[0];
                 context = canvas.getContext('2d');
-                var _noise = noise.newGenerator();
+                var _noiseFactory = noiseFactory.newGenerator();
                 scope.amplitude = 1;
                 scope.scale = 1;
                 var numSteps = 800;
 
                 scope.$watch('amplitude', function(val) {
-                    _noise.setAmplitude(val);
+                    _noiseFactory.setAmplitude(val);
                     renderNoise();
                 });
                 scope.$watch('scale', function(val) {
-                    _noise.setScale(val);
+                    _noiseFactory.setScale(val);
                     renderNoise();
                 });
 
@@ -78,7 +78,7 @@ angular.module('drawACat.cat.directives')
                     var points = [];
                     for ( var i = 0; i < numSteps; ++i ) {
                         var x = i/10;
-                        var y = _noise.getVal(x);
+                        var y = _noiseFactory.getVal(x);
                         points.push([x, y]);
                     }
                     drawLine(points);

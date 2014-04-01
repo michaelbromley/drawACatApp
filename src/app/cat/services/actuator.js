@@ -6,7 +6,7 @@ angular.module('drawACat.cat.services')
 /**
  * Te actuator service is responsible for all the macro behaviours of the cat such as blinking, meowing, and so on.
  */
-    .factory('actuator', function($timeout, noise, audioPlayer) {
+    .factory('actuator', function($timeout, noiseFactory, audioPlayer) {
 
         var cat;
         var actuatorFunctions = [];
@@ -94,7 +94,7 @@ angular.module('drawACat.cat.services')
 
 
         /**
-         * Cause the range value of the legs to be randomly modulated according to Perlin noise.
+         * Cause the range value of the legs to be randomly modulated according to the noise generator.
          * This creates the effect of natural movement of the legs.
          */
         var actuateLegs = function() {
@@ -105,9 +105,9 @@ angular.module('drawACat.cat.services')
 
             var i = 1;
 
-            var leftLegNoise = noise.newGenerator();
+            var leftLegNoise = noiseFactory.newGenerator();
             leftLegNoise.setFrequency(0.1);
-            var rightLegNoise = noise.newGenerator();
+            var rightLegNoise = noiseFactory.newGenerator();
             rightLegNoise.setFrequency(0.1);
 
             return {
@@ -123,7 +123,7 @@ angular.module('drawACat.cat.services')
             b('head').rangeOriginal = b('head').range;
             var i = 1;
 
-            var headNoise = noise.newGenerator();
+            var headNoise = noiseFactory.newGenerator();
             headNoise.setFrequency(0.05);
 
             return {

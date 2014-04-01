@@ -2,22 +2,22 @@
  * Created by Michael on 13/03/14.
  */
 
-describe('Perlin noise service', function() {
+describe('Perlin noiseFactory service', function() {
     var generator;
     var generateLotsOfNoise;
 
     beforeEach(module('drawACat.cat.services'));
 
-    beforeEach(inject(function(_noise_) {
-        generator = _noise_.newGenerator();
+    beforeEach(inject(function(_noiseFactory_) {
+        generator = _noiseFactory_.newGenerator();
 
         // generate 10,000 values as a large enough sample to check they fall within the expected bounds.
         generateLotsOfNoise = function(generator) {
-            var noiseValues = [];
+            var noiseFactoryValues = [];
             for (var i = 0; i < 10000; i ++ ) {
-                noiseValues.push(generator.getVal(i));
+                noiseFactoryValues.push(generator.getVal(i));
             }
-            return noiseValues;
+            return noiseFactoryValues;
         };
 
         jasmine.addMatchers({
@@ -78,15 +78,15 @@ describe('Perlin noise service', function() {
     }));
 
     it('should generate values between 0 and 1 on default settings', function() {
-        var noiseValues = generateLotsOfNoise(generator);
-        expect(noiseValues).toAllBeWithinRange(0, 1);
+        var noiseFactoryValues = generateLotsOfNoise(generator);
+        expect(noiseFactoryValues).toAllBeWithinRange(0, 1);
     });
 
     it('should amplify correctly', function() {
         generator.setAmplitude(2);
-        var noiseValues = generateLotsOfNoise(generator);
+        var noiseFactoryValues = generateLotsOfNoise(generator);
 
-        expect(noiseValues).toAllBeWithinRange(0, 2);
-        expect(noiseValues).toIncludeRange(1, 2);
+        expect(noiseFactoryValues).toAllBeWithinRange(0, 2);
+        expect(noiseFactoryValues).toIncludeRange(1, 2);
     });
 });

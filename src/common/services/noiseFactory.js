@@ -2,13 +2,13 @@
  * Created by Michael on 12/03/14.
  */
 
-angular.module('drawACat.cat.services')
+angular.module('drawACat.common.services')
 /**
- * Service to generate 1-dimentional Perlin noise. Based on the excellent article at Scratchapixel:
- * http://www.scratchapixel.com/lessons/3d-advanced-lessons/noise-part-1/creating-a-simple-1d-noise/
+ * Service to generate 1-dimentional Perlin noiseFactory. Based on the excellent article at Scratchapixel:
+ * http://www.scratchapixel.com/lessons/3d-advanced-lessons/noiseFactory-part-1/creating-a-simple-1d-noiseFactory/
  *
  */
-    .factory('noise', function() {
+    .factory('noiseFactory', function() {
 
         var Simple1DNoise = function() {
             var MAX_VERTICES = 256;
