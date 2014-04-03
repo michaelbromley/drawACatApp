@@ -15,10 +15,15 @@ angular.module('drawACat.common.services')
         var debugMode = false;
         var MAX_RENDER_QUALITY = 10;
         var renderQuality = 10;
+        var lineNoiseGenerator;
+        var lineNoiseCounter;
+        var lineNoiseIncrementer = 0;
 
         var Renderer = function(canvasElement) {
             context = canvasElement.getContext('2d');
             context.lineWidth = lineWidth;
+            context.lineCap = 'round';
+            context.lineJoin = 'round';
         };
 
         Renderer.prototype.strokeStyle = function(value) {
@@ -30,17 +35,6 @@ angular.module('drawACat.common.services')
         };
         Renderer.prototype.lineWidth = function(value) {
             lineWidth = value;
-        };
-
-        Renderer.prototype.drawStart = function(x, y) {
-            context.beginPath();
-            context.moveTo(x, y);
-        };
-
-        Renderer.prototype.drawMove = function(x, y) {
-            context.lineTo(x, y);
-            context.strokeStyle = strokeStyle;
-            context.stroke();
         };
 
         Renderer.prototype.clearCanvas = function() {
@@ -56,6 +50,7 @@ angular.module('drawACat.common.services')
         };
 
         Renderer.prototype.renderCat = function(cat) {
+            pointsDrawn = 0;
 
             // cause the parts to be rendered in a specific sequence, so that
             // the body is at the back, the head is on top of the body etc.
@@ -83,55 +78,46 @@ angular.module('drawACat.common.services')
         var renderPartWithTransformations = function(part) {
             var path = part.getPath();
             var transformationData = part.getTransformationData();
-            var coords;
-            var nextCoords;
 
             context.strokeStyle = strokeStyle;
             context.lineWidth = lineWidth;
+
             for (var line = 0; line < path.length; line ++) {
                 if (0 < path[line].length) {
-                    //context.beginPath();
-                    //coords = applyTransformations(path[line][0], transformationData);
-                    //context.moveTo(coords[0], coords[1]);
-                    /*jshint loopfunc: true*/
-                    var transformedLine = path[line].map(function(point) {
-                        return applyTransformations(point, transformationData);
-                    });
-                    renderLine(transformedLine);
+                    var transformedLine = applyTransformationsToLine(path[line], transformationData);
+                    var optimisedLine = optimiseLine(transformedLine);
+                    renderLine(optimisedLine);
 
-                    /*if (2 < path[line].length) {
-                     for(var point = 1; point < path[line].length - 2; point ++) {
-                     var renderEvery = MAX_RENDER_QUALITY + 1 - renderQuality;
-                     if (point % renderEvery === 0) {
-                     coords = applyTransformations(path[line][point], transformationData);
-                     nextCoords = applyTransformations(path[line][point + 1], transformationData);
-
-                     var c = (coords[0] + nextCoords[0]) / 2,
-                     d = (coords[1] + nextCoords[1]) / 2;
-                     context.quadraticCurveTo(coords[0], coords[1], c, d);
-                     }
-                     }
-                     //context.quadraticCurveTo(coords[0], coords[1], nextCoords[0], nextCoords[1]);
-                     } else {
-                     context.lineTo(coords[0], coords[1]);
-                     }*/
-
-                    /*for(var point = 1; point < path[line].length; point ++) {
-
-                     // adjust the number of points we draw, depending on the renderQuality setting
-                     var renderEvery = MAX_RENDER_QUALITY + 1 - renderQuality;
-                     if (point % renderEvery === 0) {
-                     coords = applyTransformations(path[line][point], transformationData);
-                     context.lineTo(coords[0], coords[1]);
-                     }
-                     }*/
-
-                    if (lineIsABoundary(path[line])) {
+                    if (lineIsABoundary(optimisedLine)) {
                         context.fillStyle = fillStyle;
                         context.fill();
                     }
                     context.stroke();
                 }
+            }
+            function optimiseLine(line) {
+                var lineSize = line.length - 1;
+                var lastPoint = [0, 0];
+
+                return line.filter(function(point, i, line) {
+                    var delta = 2;
+                    if (0 < i && i !== lineSize) {
+                        if (Math.abs(lastPoint[0] - point[0]) > delta ||
+                            Math.abs(lastPoint[1] - point[1]) > delta ) {
+                            lastPoint = point;
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return true;
+                    }
+                });
+            }
+            function applyTransformationsToLine(line, transformationData) {
+                return line.map(function(point) {
+                    return applyTransformations(point, transformationData);
+                });
             }
 
             if (debugMode) {
@@ -163,8 +149,8 @@ angular.module('drawACat.common.services')
 
             // TODO: pick or write an efficient line rendering algorithm
             //lineLoopQuadratic(line);
-            lineLoopSimple(line);
-            //lineLoopHybrid(line);
+            //lineLoopSimple(line);
+            lineLoopHybrid(line);
 
             if (lineIsABoundary(line)) {
                 context.fillStyle = fillStyle;
@@ -173,14 +159,20 @@ angular.module('drawACat.common.services')
             }
 
             context.fill();
-            context.stroke();
+            //context.stroke(); // experiment to move stroke to end of whole cat - framerate from ~20 - ~30
         }
 
         function lineLoopSimple(line) {
+            var lastPoint = [0, 0];
             for (var i = 1; i < line.length; i++) {
                 var renderEvery = MAX_RENDER_QUALITY + 1 - renderQuality;
                 if (i % renderEvery === 0) {
-                    context.lineTo(line[i][0], line[i][1]);
+                    //var sketchiness = lineNoiseGenerator.getVal(lineNoiseCounter + lineNoiseIncrementer);
+                    //sketchiness = 0;
+                    sketchiness = Math.random();
+                    context.lineTo(line[i][0] + sketchiness, line[i][1] + sketchiness);
+                    lastPoint = line[i];
+                    pointsDrawn ++; // for debug
                 }
             }
         }
@@ -188,9 +180,15 @@ angular.module('drawACat.common.services')
         function lineLoopQuadratic(line) {
             if (2 < line.length) {
                 for (var i = 1; i < line.length - 2; i++) {
-                    var c = (line[i][0] + line[i + 1][0]) / 2,
-                        d = (line[i][1] + line[i + 1][1]) / 2;
-                    context.quadraticCurveTo(line[i][0], line[i][1], c, d);
+                    var renderEvery = MAX_RENDER_QUALITY + 1 - renderQuality;
+                    if (i % renderEvery === 0) {
+                        var sketchiness = Math.random();
+                        lineNoiseCounter ++;
+                        var c = (line[i][0] + line[i + 1][0]) / 2,
+                            d = (line[i][1] + line[i + 1][1]) / 2;
+                        context.quadraticCurveTo(line[i][0] + sketchiness, line[i][1] + sketchiness, c + sketchiness, d + sketchiness);
+                        pointsDrawn ++; // for debug
+                    }
                 }
                 context.quadraticCurveTo(line[i][0], line[i][1], line[i + 1][0], line[i + 1][1]);
             } else {
@@ -201,21 +199,13 @@ angular.module('drawACat.common.services')
         function lineLoopHybrid(line) {
             if (2 < line.length) {
                 for (var i = 1; i < line.length - 2; i++) {
-
-                    // find the angle between this point and the one after next, with the next point as a vertex
-                    var ANGLE_THRESHHOLD = 0.25;
-                    var startPoint = line[i];
-                    var vertexPoint = line[i+1];
-                    var endPoint = line[i+2];
-
-                    var angle1 = Math.atan2(vertexPoint[1] - startPoint[1], vertexPoint[0] - startPoint[0]);
-                    var angle2 = Math.atan2(endPoint[1] - vertexPoint[1], endPoint[0] - vertexPoint[0]);
-                    var c = (line[i][0] + line[i + 1][0]) / 2,
-                        d = (line[i][1] + line[i + 1][1]) / 2;
-                    if (ANGLE_THRESHHOLD < Math.abs(angle1 - angle2)) {
-                        context.quadraticCurveTo(line[i][0], line[i][1], c, d);
-                    } else {
-                        context.lineTo(c, d);
+                    var renderEvery = MAX_RENDER_QUALITY + 1 - renderQuality;
+                    if (i % renderEvery === 0) {
+                        var c = (line[i][0] + line[i + 1][0]) / 2,
+                            d = (line[i][1] + line[i + 1][1]) / 2;
+                        var sketchiness = Math.random();
+                        context.lineTo(c + sketchiness, d + sketchiness);
+                        pointsDrawn ++; // for debug
                     }
                 }
                 context.lineTo(line[i][0], line[i][1]);
@@ -333,15 +323,16 @@ angular.module('drawACat.common.services')
         var frame = 0;
         var lastTimeMeasure = 0;
         var fps;
+        var pointsDrawn;
         Renderer.prototype.displayFps = function() {
             if (lastTimeMeasure === 0) {
                 lastTimeMeasure = new Date().getTime();
             }
 
-            if (frame % 60 === 0) {
+            if (frame % 10 === 0) {
                 var timeNow = new Date().getTime();
                 var secondsElapsed = (timeNow - lastTimeMeasure) / 1000;
-                fps = 60/secondsElapsed;
+                fps = 10/secondsElapsed;
                 lastTimeMeasure = timeNow;
             }
             frame ++;
@@ -350,8 +341,8 @@ angular.module('drawACat.common.services')
             // render it
             var oldFillStyle = context.fillStyle;
             context.fillStyle = "blue";
-            context.font = "bold 16px Arial";
-            context.fillText(fps.toString(), 100, 300);
+            context.font = "12px Arial";
+            context.fillText("Points drawn: " + pointsDrawn + ", fps: " + fps.toFixed(2).toString(), 10, 500);
             context.fillStyle = oldFillStyle;
 
         };
