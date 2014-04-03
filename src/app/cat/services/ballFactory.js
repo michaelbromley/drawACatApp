@@ -184,6 +184,11 @@ angular.module('drawACat.cat.services')
             var setAngularVelocity = function(v) {
                 angularVelocity = v / FRICTION;
             };
+            this.setAngle = function(a) {
+                // TODO: this method added purely for testing. Should be refactored to make the API easier to test.
+                angle = a;
+            };
+
         };
 
 

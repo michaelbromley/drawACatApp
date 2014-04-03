@@ -52,7 +52,8 @@ angular.module( 'drawACat.cat', [
             if (!$scope.catHasBeenRated) {
                 ratingService.setCatAsRated($scope.catData.id);
                 $scope.catHasBeenRated = true;
-                var newRating = parseInt($scope.catData.rating, 10) + 1;
+                var newRating;
+                newRating = parseInt($scope.catData.rating, 10) + 1;
                 $scope.catData.rating = newRating;
             }
         };

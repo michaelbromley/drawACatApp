@@ -2,11 +2,11 @@
  * Created by Michael on 13/03/14.
  */
 
-describe('Perlin noiseFactory service', function() {
+describe('noiseFactory service', function() {
     var generator;
     var generateLotsOfNoise;
 
-    beforeEach(module('drawACat.cat.services'));
+    beforeEach(module('drawACat.common.services'));
 
     beforeEach(inject(function(_noiseFactory_) {
         generator = _noiseFactory_.newGenerator();

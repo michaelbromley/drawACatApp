@@ -51,6 +51,11 @@ angular.module('drawACat.common.services')
             return path;
         };
 
+        /**
+         * Adjust the position of the cat by setting the globalOffset on each of its parts.
+         * @param x
+         * @param y
+         */
         Cat.prototype.adjustPosition = function(x, y) {
             angular.forEach(this.bodyParts, function(bodyPart) {
                 if (bodyPart.part) {
@@ -104,6 +109,11 @@ angular.module('drawACat.common.services')
             };
         };
 
+        /**
+         * Given window dimensions, resize the cat to fit, and reposition it to the centre of the window.
+         * @param windowWidth
+         * @param windowHeight
+         */
         Cat.prototype.resizeToWindow = function(windowWidth, windowHeight) {
             var ORIGINAL_CAT_DIMENSION = 500;
             var newDimension = Math.min(Math.min(windowWidth, windowHeight), ORIGINAL_CAT_DIMENSION);
