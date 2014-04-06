@@ -4,7 +4,7 @@
 
 angular.module('drawACat.cat.directives')
 
-    .directive('dacStage', function($window, CONFIG,  renderer, transformer, actuator) {
+    .directive('dacStage', function($window, CONFIG, userOptions, catSimplifier, renderer, transformer, actuator) {
         return {
             restrict: 'E',
             templateUrl: 'cat/directives/stage.tpl.html',
@@ -20,10 +20,13 @@ angular.module('drawACat.cat.directives')
                 scope.debugMode = false;
 
                 var canvas = document.getElementById('stage');
-                var _renderer = renderer.Init(canvas);
-                _renderer.strokeStyle(CONFIG.STROKE_COLOUR);
-                _renderer.fillStyle(CONFIG.FILL_COLOUR);
-                _renderer.lineWidth(2);
+                renderer.setCanvas(canvas);
+                renderer.strokeStyle(CONFIG.STROKE_COLOUR);
+                renderer.fillStyle(CONFIG.FILL_COLOUR);
+                renderer.lineWidth(2);
+                var originalCat = scope.cat;
+                scope.cat = catSimplifier.simplifyCat(originalCat, userOptions.getRenderQuality());
+                scope.cat.emotion = originalCat.emotion;
                 var ball = scope.ball;
                 var respondTo = 'ball';
 
@@ -101,6 +104,16 @@ angular.module('drawACat.cat.directives')
                     }
                 };
 
+                scope.$watch(function() {
+                    return userOptions.getRenderQuality();
+                }, function(newVal) {
+                    scope.cat.emotion.stop();
+                    scope.cat = catSimplifier.simplifyCat(originalCat, newVal / 10);
+                    scope.cat.emotion = originalCat.emotion;
+                    scope.cat.emotion.start();
+                    resizeCanvas();
+                });
+
                 scope.$on("$destroy", function() {
                     if (rafId) {
                         $window.cancelAnimationFrame(rafId);
@@ -113,10 +126,10 @@ angular.module('drawACat.cat.directives')
                  */
                 var rafId;
                 var renderFrame = function() {
-                    _renderer.clearCanvas();
+                    renderer.clearCanvas();
                     var input = getInputCoordinates();
                     transformer.transform(scope.cat, input.x, input.y);
-                    _renderer.renderCat(scope.cat);
+                    renderer.renderCat(scope.cat);
 
                     // ball logic
                     ball.updatePosition();
@@ -126,11 +139,11 @@ angular.module('drawACat.cat.directives')
                         scope.cat.emotion.getExcited();
                     }
 
-                    _renderer.renderBall(ball);
+                    renderer.renderBall(ball);
                     // debug
                     scope.moodValue = scope.cat.emotion.getMoodValue();
                     // display fps
-                    _renderer.displayFps();
+                    renderer.displayFps();
 
                     rafId = $window.requestAnimationFrame(renderFrame);
                 };

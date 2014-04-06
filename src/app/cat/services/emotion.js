@@ -137,6 +137,9 @@ angular.module('drawACat.cat.services')
             start: function() {
                 emotionLoop();
             },
+            stop: function() {
+                $timeout.cancel(timerId);
+            },
             reset: function(){
                 $timeout.cancel(timerId);
                 happy = 0;

@@ -88,19 +88,7 @@ angular.module('drawACat.common.services')
             }
 
             if (debugMode) {
-                // debug - draw bounding box
-                var bb = part.getBoundingBox();
-                context.fillStyle = 'rgba(250,200,200,0.3)';
-                context.fillRect(bb.x, bb.y, bb.width, bb.height);
-
-                // draw acceleration vector
-                if (part.vx) {
-                    context.strokeStyle = 'rgba(150, 240, 150, 1)';
-                    context.beginPath();
-                    context.moveTo(transformationData.centreX, transformationData.centreY);
-                    context.lineTo(transformationData.centreX + part.vx, transformationData.centreY + part.vy);
-                    context.stroke();
-                }
+                renderBoundingBox(part);
             }
         };
 
@@ -129,8 +117,9 @@ angular.module('drawACat.common.services')
                 for (var i = 1; i < line.length - 2; i++) {
                     var c = (line[i][0] + line[i + 1][0]) / 2,
                         d = (line[i][1] + line[i + 1][1]) / 2;
-                    var sketchiness = Math.random();
-                    context.lineTo(c + sketchiness, d + sketchiness);
+                    var sketchiness = Math.random() / 1.5;
+                    //context.lineTo(c + sketchiness, d + sketchiness);
+                    context.quadraticCurveTo(line[i][0], line[i][1], c + sketchiness, d + sketchiness);
                     pointsDrawn ++; // for debug
                 }
                 context.lineTo(line[i][0], line[i][1]);
@@ -146,6 +135,22 @@ angular.module('drawACat.common.services')
             context.drawImage(ball.getImage(), -ball.getRadius(), -ball.getRadius());
             context.restore();
         };
+
+        function renderBoundingBox(part) {
+            // debug - draw bounding box
+            var bb = part.getBoundingBox();
+            context.fillStyle = 'rgba(250,200,200,0.3)';
+            context.fillRect(bb.x, bb.y, bb.width, bb.height);
+
+            // draw acceleration vector
+            if (part.vx) {
+                context.strokeStyle = 'rgba(150, 240, 150, 1)';
+                context.beginPath();
+                context.moveTo(transformationData.centreX, transformationData.centreY);
+                context.lineTo(transformationData.centreX + part.vx, transformationData.centreY + part.vy);
+                context.stroke();
+            }
+        }
 
         var frame = 0;
         var lastTimeMeasure = 0;
