@@ -34,15 +34,15 @@ angular.module('drawACat.draw.services')
 
 
         var generateThumbnailFromCat = function(cat) {
-            var _renderer = renderer.Init(canvas);
-            _renderer.fillStyle(CONFIG.FILL_COLOUR);
-            _renderer.strokeStyle(CONFIG.STROKE_COLOUR);
-            _renderer.lineWidth(2);
+            renderer.setCanvas(canvas);
+            renderer.fillStyle(CONFIG.FILL_COLOUR);
+            renderer.strokeStyle(CONFIG.STROKE_COLOUR);
+            renderer.lineWidth(3);
 
             fillBackground();
 
             var path = getScaledCatPath(cat);
-            _renderer.renderPath(path);
+            renderer.renderPath(path);
 
             return  canvas.toDataURL();
         };

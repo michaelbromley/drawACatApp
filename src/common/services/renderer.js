@@ -35,13 +35,20 @@ angular.module('drawACat.common.services')
 
         this.clearCanvas = function() {
             context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+            context.beginPath();
         };
 
         this.renderPath = function(path) {
             for (var line = 0; line < path.length; line ++) {
                 if (0 < path[line].length) {
-                    renderLine(path[line]);
+                    renderLineAndFill(path[line]);
                 }
+            }
+        };
+
+        this.renderSingleLine = function(line) {
+            if (1 < line.length) {
+                this.renderPath([line]);
             }
         };
 
@@ -83,7 +90,7 @@ angular.module('drawACat.common.services')
                 if (0 < path[line].length) {
                     var transformedLine = renderHelper.applyTransformationsToLine(path[line], transformationData, canvasWidth, canvasHeight);
                     renderLineAndFill(transformedLine);
-                    context.stroke();
+                    //context.stroke();
                 }
             }
 
@@ -99,9 +106,7 @@ angular.module('drawACat.common.services')
             context.strokeStyle = strokeStyle;
             context.lineWidth = lineWidth;
             context.beginPath();
-
             context.moveTo(line[0][0], line[0][1]);
-
             renderLine(line);
 
             if (renderHelper.lineIsABoundary(line)) {
@@ -110,6 +115,7 @@ angular.module('drawACat.common.services')
                 context.fillStyle = 'rgba(0,0,0,0)';
             }
             context.fill();
+            context.stroke();
         }
 
         function renderLine(line) {

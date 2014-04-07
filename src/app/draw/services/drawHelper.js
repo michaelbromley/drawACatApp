@@ -21,7 +21,7 @@ angular.module('drawACat.draw.services')
                             xOffset: -0.05,
                             rotation: 0.1
                         },
-                        range: 550
+                        range: 700
                     },
                     done: false
                 },

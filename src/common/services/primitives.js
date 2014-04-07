@@ -179,16 +179,14 @@ angular.module('drawACat.common.services')
          * @constructor
          */
         var Line = function() {
-            var MIN_POINT_PROXIMITY = 5;
+            var MIN_POINT_PROXIMITY = 2;
             var proximityToLastPoint;
             var points = [];
-            var pointWasAdded;
 
             /**
              *  Add a point to the array of points (coordinates) making up the line
              */
             this.addPoint = function(x, y) {
-                pointWasAdded = false;
                 if (0 < points.length) {
                     var lastPoint = points[points.length - 1];
                     var deltaX = Math.abs(x - lastPoint[0]);
@@ -200,12 +198,7 @@ angular.module('drawACat.common.services')
 
                 if (MIN_POINT_PROXIMITY < proximityToLastPoint) {
                     points.push([x, y]);
-                    pointWasAdded = true;
                 }
-            };
-
-            this.pointWasAdded = function() {
-                return pointWasAdded;
             };
 
             this.getPath = function() {

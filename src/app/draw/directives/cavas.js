@@ -4,7 +4,7 @@
 
 angular.module('drawACat.draw.directives', [])
 
-    .directive('dacCanvas', function(primitives, renderer, DRAW_GUIDE_IMAGES) {
+    .directive('dacCanvas', function($window, primitives, renderer, DRAW_GUIDE_IMAGES) {
 
         var getMousePositionFromEvent = function(event) {
             var x = event.pageX - event.target.getBoundingClientRect().left;
@@ -26,14 +26,15 @@ angular.module('drawACat.draw.directives', [])
                 var FILL_VISIBLE = 'rgba(204, 51, 51, 0.2)';
                 var FILL_TRANSPARENT = 'rgba(0, 0, 0, 0)';
 
+                var rafId;
                 var currentLine;
                 var mouseIsDown = false;
                 var canvas = document.getElementById('canvas');
-                var _renderer = renderer.Init(canvas);
-                _renderer.lineWidth(2);
+                renderer.setCanvas(canvas);
+                renderer.lineWidth(2);
 
                 function refreshCanvas() {
-                    _renderer.clearCanvas();
+                    renderer.clearCanvas();
 
                     // render the parts that have already been saved
                     angular.forEach(scope.catParts, function(part, partName) {
@@ -41,33 +42,46 @@ angular.module('drawACat.draw.directives', [])
                         if (!isCurrentStep && part.lineCollection) {
                             setStrokeStyle(partName);
                             setFillStyle(partName);
-                            _renderer.renderPath(part.lineCollection.getPath());
+                            renderer.renderPath(part.lineCollection.getPath());
                         }
                     });
 
+                    if (currentLine) {
+                        var lineBeingDrawn = currentLine.getPath();
+                        if (0 < lineBeingDrawn.length) {
+                            renderer.strokeStyle(STROKE_ACTIVE);
+                            renderer.fillStyle(FILL_TRANSPARENT);
+                            renderer.renderSingleLine(lineBeingDrawn);
+                            renderer.fillStyle(FILL_VISIBLE);
+                        }
+                    }
+
                     // render the current step being drawn
-                    _renderer.strokeStyle(STROKE_ACTIVE);
+                    renderer.strokeStyle(STROKE_ACTIVE);
                     setFillStyle(scope.currentStep);
-                    _renderer.renderPath(scope.lineCollection.getPath());
+                    renderer.renderPath(scope.lineCollection.getPath());
+
+                    rafId = $window.requestAnimationFrame(refreshCanvas);
                 }
+                refreshCanvas();
 
                 function setStrokeStyle(partName) {
                     // control the dimming of eyes and mouth when drawing the open/closed counterparts
                     var dimOpenEyes = (scope.currentStep === 'eyesClosed' && partName == 'eyesOpen');
                     var dimClosedMouth = (scope.currentStep === 'mouthOpen' && partName == 'mouthClosed');
                     if (dimOpenEyes || dimClosedMouth || partName === 'eyesClosed' || partName == 'mouthOpen') {
-                        _renderer.strokeStyle(STROKE_DIMMED);
+                        renderer.strokeStyle(STROKE_DIMMED);
                     } else {
-                        _renderer.strokeStyle(STROKE_REGULAR);
+                        renderer.strokeStyle(STROKE_REGULAR);
                     }
                 }
                 function setFillStyle(partName) {
                     // show a fill when drawing parts that should ideally be filled - head and legs
                     var shouldBeFilled = (partName === 'head' || partName === 'leftLeg' || partName === 'rightLeg');
                     if (shouldBeFilled && scope.currentStep === partName) {
-                        _renderer.fillStyle(FILL_VISIBLE);
+                        renderer.fillStyle(FILL_VISIBLE);
                     } else {
-                        _renderer.fillStyle(FILL_TRANSPARENT);
+                        renderer.fillStyle(FILL_TRANSPARENT);
                     }
                 }
 
@@ -92,7 +106,6 @@ angular.module('drawACat.draw.directives', [])
                 scope.$watch(function(scope) {
                     return scope.currentStep;
                 }, function() {
-                    refreshCanvas();
                     scope.guideImage = DRAW_GUIDE_IMAGES[scope.currentStep];
                 });
 
@@ -101,7 +114,6 @@ angular.module('drawACat.draw.directives', [])
                     return scope.lineCollection.count();
                 }, function(newVal, oldVal) {
                     if (newVal < oldVal) {
-                        refreshCanvas();
                     }
                 });
 
@@ -117,9 +129,6 @@ angular.module('drawACat.draw.directives', [])
 
                     var mousePosition = getMousePositionFromEvent(event);
                     currentLine.addPoint(mousePosition.x, mousePosition.y);
-                    _renderer.strokeStyle(STROKE_ACTIVE);
-                    //_renderer.drawStart(mousePosition.x, mousePosition.y);
-
                     mouseIsDown = true;
                 };
 
@@ -131,12 +140,6 @@ angular.module('drawACat.draw.directives', [])
                         } else {
                             var mousePosition = getMousePositionFromEvent(event);
                             currentLine.addPoint(mousePosition.x, mousePosition.y);
-                            //_renderer.drawMove(mousePosition.x, mousePosition.y);
-                            if (currentLine.pointWasAdded()) {
-                                _renderer.fillStyle(FILL_TRANSPARENT);
-                                _renderer.renderPath([currentLine.getPath()]);
-                                _renderer.fillStyle(FILL_VISIBLE);
-                            }
                         }
                     }
                 };
@@ -146,10 +149,16 @@ angular.module('drawACat.draw.directives', [])
 
                     if (1 < currentLine.getPath().length) {
                         scope.lineCollection.addLine(currentLine);
-                        refreshCanvas();
+                        currentLine = null;
                         scope.drawing.completed = checkCompleted();
                     }
                 };
+
+                scope.$on("$destroy", function() {
+                    if (rafId) {
+                        $window.cancelAnimationFrame(rafId);
+                    }
+                });
 
             }
         };
