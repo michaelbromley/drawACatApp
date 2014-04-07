@@ -30,14 +30,14 @@ angular.module( 'drawACat.cat', [
 /**
  * And of course we define a controller for our route.
  */
-    .controller( 'CatController', function CatController( $scope, $location, CONFIG, serializer, catPromise, ballFactory, emotion, ratingService, userOptions ) {
+    .controller( 'CatController', function CatController( $scope, $location, CONFIG, serializer, catPromise, Ball, emotion, ratingService, userOptions ) {
         // TODO: refactor all those dependencies above into helper services
         $scope.pageUrl = $location.absUrl();
         $scope.catData = catPromise.data;
         $scope.cat = serializer.unserializeCat(catPromise.data.data);
         $scope.cat.emotion = emotion;
         $scope.cat.emotion.start();
-        $scope.ball = ballFactory.newBall(25, CONFIG.BALL_IMAGE_SRC);
+        $scope.ball = new Ball(25, CONFIG.BALL_IMAGE_SRC);
         $scope.renderQuality = userOptions.getRenderQuality();
 
         // emit an event to update the page metadata

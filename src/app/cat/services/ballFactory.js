@@ -3,7 +3,7 @@
  */
 angular.module('drawACat.cat.services')
 
-    .factory('ballFactory', function($window, $timeout, audioPlayer) {
+    .factory('Ball', function($window, $timeout, audioPlayer) {
 
         var Ball = function(newRadius, imageUrl) {
             var image = new Image();
@@ -191,10 +191,5 @@ angular.module('drawACat.cat.services')
 
         };
 
-
-        return {
-            newBall: function(radius, imageUrl) {
-                return new Ball(radius, imageUrl);
-            }
-        };
+        return Ball;
     });
