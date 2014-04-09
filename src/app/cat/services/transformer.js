@@ -13,6 +13,7 @@ angular.module('drawACat.cat.services')
         var sensitivity;
         var range;
         var rangeFactor;
+        var lastInput = [0, 0];
 
         /**
          * The range factor is a value between 0 and 1 that describes how strongly the behaviour should
@@ -106,10 +107,22 @@ angular.module('drawACat.cat.services')
             sensitivity = behaviour.sensitivity;
             range = behaviour.range;
 
+            // dampen the movement to that, when the x, y input values change rapidly (such as cat's attention going from one ball to another),
+            // the movement does not suddenly jump in an unnatural way
+            var MAX_STEP = 10;
+            if(MAX_STEP < Math.abs(x - lastInput[0])) {
+                x = (lastInput[0] < x) ? lastInput[0] + MAX_STEP : lastInput[0] - MAX_STEP;
+            }
+            if(MAX_STEP < Math.abs(y - lastInput[1])) {
+                y = (lastInput[1] < y) ? lastInput[1] + MAX_STEP : lastInput[1] - MAX_STEP;
+            }
+
             calculateRangeFactor(x, y);
             setOffset(x, y);
             setSkew(x, y);
             setRotation(x, y);
+
+            lastInput = [x, y];
         };
 
 

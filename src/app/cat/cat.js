@@ -37,7 +37,7 @@ angular.module( 'drawACat.cat', [
         $scope.cat = serializer.unserializeCat(catPromise.data.data);
         $scope.cat.emotion = emotion;
         $scope.cat.emotion.start();
-        $scope.ball = new Ball(25, CONFIG.BALL_IMAGE_SRC);
+        $scope.ball = [new Ball(25, CONFIG.BALL_IMAGE_SRC)];
         $scope.renderQuality = userOptions.getRenderQuality();
 
         // emit an event to update the page metadata
@@ -62,6 +62,10 @@ angular.module( 'drawACat.cat', [
 
         $scope.setRenderQuality = function(value) {
            userOptions.setRenderQuality(parseInt(value, 10));
+        };
+
+        $scope.addBall = function() {
+            $scope.ball.push(new Ball(25, CONFIG.BALL_IMAGE_SRC));
         };
 
         $scope.$on('$destroy', function() {
