@@ -5,23 +5,56 @@ angular.module('drawACat.cat.services')
 
     .factory('Ball', function($window, $timeout, audioPlayer) {
 
-        var Ball = function(newRadius, imageUrl) {
+        var BALLS = [
+            {
+                src: 'assets/images/ball01.png',
+                radius: 34
+            },
+            {
+                src: 'assets/images/ball02.png',
+                radius: 29
+            },
+            {
+                src: 'assets/images/ball03.png',
+                radius: 25
+            },
+            {
+                src: 'assets/images/ball04.png',
+                radius: 24
+            },
+            {
+                src: 'assets/images/ball05.png',
+                radius: 43
+            },
+            {
+                src: 'assets/images/ball06.png',
+                radius: 36
+            },
+            {
+                src: 'assets/images/ball07.png',
+                radius: 44
+            }
+        ];
+
+        var Ball = function() {
             var image = new Image();
-            image.src = imageUrl;
+            var ballSource = BALLS[Math.floor(Math.random()*BALLS.length)];
+            image.src = ballSource.src;
+            var radius = ballSource.radius;
             var windowHeight = $window.innerHeight;
             var windowWidth = $window.innerWidth;
             var ballDamping = 0.7;
-            var G = 0.5; // gravity
+            var G = 0.6; // gravity
+            var mass = radius / 25;
             var MAX_VELOCITY = 40;
             var FRICTION = 30; // higher is more slippery
 
             var dragMode = false;
-            var radius = newRadius;
             var x = 100;
             var y = windowHeight - 100;
             var vx = 0;
             var vy = 0;
-            var angle = 0;
+            var angleInRadians = 0;
             var angularVelocity = 0.01;
 
             this.windowResized = function() {
@@ -34,6 +67,9 @@ angular.module('drawACat.cat.services')
             };
             this.getRadius = function() {
                 return radius;
+            };
+            this.getMass = function() {
+                return mass;
             };
             this.getX = function() {
                 return x;
@@ -51,7 +87,7 @@ angular.module('drawACat.cat.services')
                 return vx;
             };
             this.setVx = function(newVx) {
-               setVx(newVx);
+                setVx(newVx);
             };
             var setVx = function(newVx) {
                 if (0 < newVx) {
@@ -74,7 +110,7 @@ angular.module('drawACat.cat.services')
                 }
             };
             this.getAngle = function() {
-                return angle;
+                return angleInRadians;
             };
             this.getAngularVelocity = function() {
                 return angularVelocity;
@@ -109,7 +145,9 @@ angular.module('drawACat.cat.services')
                             setVy(vy + part.vy);
                             // add some occasional extra -vy to make the ball more bouncy and fun
                             if (Math.random() < 0.8) {
-                                setVy(vy - Math.random() * 20);
+                                if (0 < part.vy) {
+                                    setVy(vy - Math.random() * 20);
+                                }
                             }
                             disableCollisions = true;
                             $timeout(function() {
@@ -134,17 +172,56 @@ angular.module('drawACat.cat.services')
                 dragMode = false;
             };
 
+            /**
+             * Based on http://gamedev.stackexchange.com/a/20525
+             * @param balls
+             */
+            this.checkOtherBallCollision = function(balls) {
+                // TODO: perhaps only need to check half the balls. Maybe best to move this out of the Ball class. Currently optimization does not seem called for.
+                angular.forEach(balls, function(ball, index) {
+                    if (!(x === ball.getX() && y == ball.getY())) { // rule out this ball itself
+                        var xDist = x - ball.getX();
+                        var yDist = y - ball.getY();
+                        var distSquared = xDist*xDist + yDist*yDist;
+                        //Check the squared distances instead of the the distances, same result, but avoids a square root.
+                        if(distSquared <= (radius + ball.getRadius())*(radius + ball.getRadius())){
+
+                            var xVelocity = ball.getVx() - vx;
+                            var yVelocity = ball.getVy() - vy;
+                            var dotProduct = xDist*xVelocity + yDist*yVelocity;
+                            //Neat vector maths, used for checking if the objects moves towards one another.
+                            if(dotProduct > 0){
+                                var collisionScale = dotProduct / distSquared;
+                                var xCollision = xDist * collisionScale;
+                                var yCollision = yDist * collisionScale;
+                                //The Collision vector is the speed difference projected on the Dist vector,
+                                //thus it is the component of the speed difference needed for the collision.
+                                var combinedMass = mass + ball.getMass();
+                                var collisionWeightA = 2 * ball.getMass() / combinedMass;
+                                var collisionWeightB = 2 * mass / combinedMass;
+                                vx += collisionWeightA * xCollision * 0.9;
+                                vy += collisionWeightA * yCollision * 0.9;
+                                ball.setVx(ball.getVx() - collisionWeightB * xCollision * 0.9);
+                                ball.setVy(ball.getVy() - collisionWeightB * yCollision * 0.9);
+
+                                // alter the rotations
+                                angularVelocity = ball.getAngularVelocity() * - 0.9;
+                            }
+                        }
+                    }
+                });
+            };
+
             this.updatePosition = function() {
                 if (!dragMode) {
-
                     // update the position
-                    vy += G;
+                    vy += G * mass;
                     y += Math.round(vy);
                     vx *= 0.995;
                     x += vx;
 
                     // update the rotation
-                    angle += angularVelocity;
+                    angleInRadians = (angleInRadians + angularVelocity) % (2 * Math.PI);
 
                     var strikeVelocity = 0;
                     // hit the floor
@@ -182,11 +259,7 @@ angular.module('drawACat.cat.services')
             };
 
             var setAngularVelocity = function(v) {
-                angularVelocity = v / FRICTION;
-            };
-            this.setAngle = function(a) {
-                // TODO: this method added purely for testing. Should be refactored to make the API easier to test.
-                angle = a;
+                angularVelocity = v / FRICTION / (radius / 25);
             };
 
         };

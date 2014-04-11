@@ -14,7 +14,6 @@ angular.module( 'drawACat', [
         API_URL: 'http://192.168.0.10/GitHub/drawACatApp/api/',
         THUMBNAILS_URL: 'http://192.168.0.10/GitHub/drawACatApp/api/thumbnails/',
         AUDIO_FILES_URL: 'assets/audio/',
-        BALL_IMAGE_SRC: 'assets/images/ball01.gif',
         FILL_COLOUR: '#f5f5f5',
         STROKE_COLOUR: '#333333'
     })
