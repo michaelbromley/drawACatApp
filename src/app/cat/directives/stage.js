@@ -4,7 +4,7 @@
 
 angular.module('drawACat.cat.directives')
 
-    .directive('dacStage', function($window, CONFIG, userOptions, catSimplifier, renderer, transformer, actuator) {
+    .directive('dacStage', function($window, $timeout, CONFIG, userOptions, catSimplifier, renderer, transformer, actuator) {
         return {
             restrict: 'E',
             templateUrl: 'cat/directives/stage.tpl.html',
@@ -130,22 +130,35 @@ angular.module('drawACat.cat.directives')
                 });
 
                 scope.$on("$destroy", function() {
-                    if (rafId) {
-                        $window.cancelAnimationFrame(rafId);
-                        actuator.destroy();
-                    }
+                    //$window.cancelAnimationFrame(rafId);
+                    $window.cancelAnimationFrame(renderLoopId);
+                    $timeout.cancel(logicLoopId);
+                    actuator.destroy();
                 });
 
                 /**
                  * The main animation loop
                  */
-                var rafId;
-                var renderFrame = function() {
+                var renderLoopId;
+                var renderLoop = function() {
+                    renderLoopId = $window.requestAnimationFrame(renderLoop);
+
                     renderer.clearCanvas();
+                    renderer.renderCat(scope.cat);
+                    angular.forEach(balls, function(ball) {
+                        renderer.renderBall(ball);
+                    });
+                    // display fps
+                    renderer.displayFps();
+                };
+                renderLoop();
+
+                var logicLoopId;
+                var logicLoop = function() {
+                    logicLoopId = $timeout(logicLoop, 1000 / 60, false);
+
                     var input = getInputCoordinates();
                     transformer.transform(scope.cat, input.x, input.y);
-                    renderer.renderCat(scope.cat);
-
                     // ball logic
                     angular.forEach(balls, function(ball) {
                         ball.checkOtherBallCollision(balls);
@@ -155,18 +168,11 @@ angular.module('drawACat.cat.directives')
                         if (touchedBallLeft || touchedBallRight) {
                             scope.cat.emotion.getExcited();
                         }
-                        renderer.renderBall(ball);
                     });
-
-
                     // debug
                     scope.moodValue = scope.cat.emotion.getMoodValue();
-                    // display fps
-                    renderer.displayFps();
-
-                    rafId = $window.requestAnimationFrame(renderFrame);
                 };
-                renderFrame();
+                logicLoop();
 
                 function getInputCoordinates() {
                     var inputX, inputY;
