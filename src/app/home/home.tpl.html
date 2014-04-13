@@ -9,7 +9,7 @@
 
     <div class="filter-controls row">
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="searchInput" ng-model="searchInput" dac-tagbox="tags" dac-tagtoken="" placeholder="Search by tag">
+            <tag-selector></tag-selector>
         </div>
         <div class="col-sm-6">
             Order by:
@@ -26,26 +26,27 @@
         </div>
     </div>
 
-    <div class="row" style="min-width: 540px">
+    <div class="row">
         <div class="col-xs-12">
 
             <div class="preview-pane" ng-repeat="cat in cats | byTag: tagsArray | orderBy: predicate:reverse">
-
                 <div class="image-box">
-                    <a href="#!/cat/{{ cat.id }}/{{ cat.name | urlFriendlyName }}"><img ng-src="{{ cat.thumbnail }}_s.gif" width="100" height="100" class="img-thumbnail"></a>
+                    <a href="#!/cat/{{ cat.id }}/{{ cat.name | urlFriendlyName }}"><img ng-src="{{ cat.thumbnail }}_m.gif"></a>
                 </div>
                 <div class="title-box">
-                    <h3>
-                        <a href="#!/cat/{{ cat.id }}/{{ cat.name | urlFriendlyName }}">{{ cat.name }}</a>
-                        <small>by {{ cat.author }}</small>
-                    </h3>
+                    <h3><a href="#!/cat/{{ cat.id }}/{{ cat.name | urlFriendlyName }}">{{ cat.name }}</a></h3>
+                    <h4>by {{ cat.author }}</h4>
                 </div>
+                <ul class="hashtags">
+                    <li ng-repeat="tag in cat.tags" class="tag">#{{ tag }}</li>
+                </ul>
                 <div class="details-box">
-                    created {{ cat.created | timeAgo }}<br>
-                    rating: {{ cat.rating }}
-                    <ul class="hashtags">
-                        <li ng-repeat="tag in cat.tags">#{{ tag }}</li>
-                    </ul>
+                    <div class="detail-created">
+                        <i class="icon-calendar"></i> {{ cat.created | timeAgo }}
+                    </div>
+                    <div class="detail-rating">
+                        <i class="icon-star2"></i> {{ cat.rating }}
+                    </div>
                 </div>
             </div>
 

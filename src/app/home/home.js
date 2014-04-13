@@ -1,6 +1,7 @@
 
 angular.module( 'drawACat.home', [
         'drawACat.home.filters',
+        'drawACat.home.tagSelector',
         'ui.router'
 ])
 
@@ -21,7 +22,7 @@ angular.module( 'drawACat.home', [
 /**
  * And of course we define a controller for our route.
  */
-.controller( 'HomeController', function HomeController( $scope, datastore ) {
+.controller( 'HomeController', function HomeController( $scope, $location, datastore ) {
 
         datastore.listCats().success(function(data) {
             $scope.cats = data;
@@ -33,16 +34,22 @@ angular.module( 'drawACat.home', [
         });
 
         $scope.searchInput = "";
-        $scope.tagsArray = [];
+        if ($location.search().tags) {
+            $scope.tagsArray = $location.search().tags.split(' ');
+        } else {
+            $scope.tagsArray = [];
+        }
         $scope.predicate = "created";
         $scope.reverse = true;
-        $scope.$watch('searchInput', function() {
-            var regexp = /([a-zA-Z0-9_]+)/g;
-            $scope.tagsArray = [];
-            var match;
-            while (match = regexp.exec($scope.searchInput)) {
-                $scope.tagsArray.push(match[1]);
+
+        $scope.$watchCollection('tagsArray', function(tagsArray) {
+            var search;
+            if (0 < tagsArray.length) {
+                search = tagsArray.join(' ');
+            } else {
+                search = null;
             }
+            $location.search('tags', search);
         });
     })
 
