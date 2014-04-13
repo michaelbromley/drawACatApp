@@ -48,12 +48,14 @@
                 <div class="col-xs-6">
                     <input type="range" min="1" max="10" step="1" ng-model="renderQuality" ng-change="setRenderQuality(renderQuality)">
                 </div>
-                <button class="btn btn-default" ng-click="addBall()">Add Ball</button>
             </div>
         </div>
     </div>
 
+    <button class="btn add-ball-button" ng-click="addBall()"><img src="assets/images/add-ball-button.png"><br>Add Ball</button>
+
     <dac-stage cat="cat" ball="ball"></dac-stage>
+
     <dir-disqus disqus-shortname="drawacat"
                 disqus-identifier="{{ catData.id }}-{{ catData.name }}"
                 disqus-url="{{ pageUrl }}" id="comments">
