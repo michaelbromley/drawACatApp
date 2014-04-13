@@ -4,11 +4,12 @@
 
 angular.module('drawACat.common.directives')
 
-    .directive('dacTagbox', function($compile) {
+    .directive('dacTagbox', function($compile, $parse) {
         return {
             restrict: 'A',
             scope: {
-                tags: '=dacTagbox'
+                tags: '=dacTagbox',
+                callback: '&dacOnTagSelect'
             },
             link: function(scope, element, attrs) {
                 var TOKEN = attrs.dacTagtoken !== undefined ? attrs.dacTagtoken : '';
@@ -143,9 +144,16 @@ angular.module('drawACat.common.directives')
                     var output = inputVal.substring(0, scope.candidate.start) + TOKEN + selectedTag + inputVal.substring(scope.candidate.end);
 
                     scope.$parent.$apply(function() {
-                        scope.$parent[attrs.ngModel] = output;
+                        if (attrs.ngModel) {
+                            var setter = $parse(attrs.ngModel).assign;
+                            setter(scope.$parent, output);
+                        }
                         input.val(output);
                     });
+
+                    if(scope.callback) {
+                        scope.callback();
+                    }
                 }
 
                 /**
