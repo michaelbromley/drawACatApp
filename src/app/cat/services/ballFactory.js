@@ -50,8 +50,8 @@ angular.module('drawACat.cat.services')
             var FRICTION = 30; // higher is more slippery
 
             var dragMode = false;
-            var x = 100;
-            var y = windowHeight - 100;
+            var x = 100 + Math.random() * 10;
+            var y = windowHeight - 200;
             var vx = 0;
             var vy = 0;
             var angleInRadians = 0;
@@ -178,7 +178,7 @@ angular.module('drawACat.cat.services')
              */
             this.checkOtherBallCollision = function(balls) {
                 // TODO: perhaps only need to check half the balls. Maybe best to move this out of the Ball class. Currently optimization does not seem called for.
-                angular.forEach(balls, function(ball, index) {
+                angular.forEach(balls, function(ball) {
                     if (!(x === ball.getX() && y == ball.getY())) { // rule out this ball itself
                         var xDist = x - ball.getX();
                         var yDist = y - ball.getY();
