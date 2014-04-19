@@ -13,6 +13,12 @@ angular.module('drawACat.common.services')
         var fillStyle = '#efefef';
         var lineWidth = 2;
         var debugMode = false;
+        var profiler = {
+            fps: 0,
+            pointsDrawn: 0,
+            frame: 0,
+            lastTimeMeasure: 0
+        };
 
         this.setCanvas = function(canvasElement) {
             context = canvasElement.getContext('2d');
@@ -53,7 +59,7 @@ angular.module('drawACat.common.services')
         };
 
         this.renderCat = function(cat) {
-            pointsDrawn = 0;
+            profiler.pointsDrawn = 0;
 
             // cause the parts to be rendered in a specific sequence, so that
             // the body is at the back, the head is on top of the body etc.
@@ -126,7 +132,7 @@ angular.module('drawACat.common.services')
                     var sketchiness = Math.random() / 1.5;
                     //context.lineTo(c + sketchiness, d + sketchiness);
                     context.quadraticCurveTo(line[i][0], line[i][1], c + sketchiness, d + sketchiness);
-                    pointsDrawn ++; // for debug
+                    profiler.pointsDrawn ++;
                 }
                 context.lineTo(line[i][0], line[i][1]);
             } else {
@@ -158,29 +164,19 @@ angular.module('drawACat.common.services')
             }
         }
 
-        var frame = 0;
-        var lastTimeMeasure = 0;
-        var fps;
-        var pointsDrawn;
-        this.displayFps = function() {
-            if (lastTimeMeasure === 0) {
-                lastTimeMeasure = new Date().getTime();
+        this.profilePerformance = function() {
+            if (profiler.lastTimeMeasure === 0) {
+                profiler.lastTimeMeasure = new Date().getTime();
             }
 
-            if (frame % 10 === 0) {
+            if (profiler.frame % 10 === 0) {
                 var timeNow = new Date().getTime();
                 var secondsElapsed = (timeNow - lastTimeMeasure) / 1000;
-                fps = 10/secondsElapsed;
-                lastTimeMeasure = timeNow;
+                profiler.fps = 10/secondsElapsed;
+                profiler.lastTimeMeasure = timeNow;
             }
-            frame ++;
+            profiler.frame ++;
 
-            // render it
-            var oldFillStyle = context.fillStyle;
-            context.fillStyle = "blue";
-            context.font = "12px Arial";
-            context.fillText("Points drawn: " + pointsDrawn + ", fps: " + fps.toFixed(2).toString(), 10, 500);
-            context.fillStyle = oldFillStyle;
-
+            return profiler;
         };
     });

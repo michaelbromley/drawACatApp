@@ -38,6 +38,7 @@ angular.module('drawACat.cat.directives')
                 actuator.init(scope.cat);
                 scope.pointerX = 0; // mouse pointer location
                 scope.pointerY = 0;
+                scope.profileData = {}; // contains performance data from the renderer.
 
                 function resizeCanvas() {
                     var windowWidth = $window.innerWidth;
@@ -148,8 +149,8 @@ angular.module('drawACat.cat.directives')
                     angular.forEach(balls, function(ball) {
                         renderer.renderBall(ball);
                     });
-                    // display fps
-                    renderer.displayFps();
+
+                    scope.profileData = renderer.profilePerformance();
                 };
                 renderLoop();
 
