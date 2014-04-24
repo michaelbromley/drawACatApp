@@ -36,7 +36,7 @@ angular.module('drawACat.cat.services')
             }
         ];
 
-        var Ball = function() {
+        var Ball = function(initX, initY) {
             var image = new Image();
             var ballSource = BALLS[Math.floor(Math.random()*BALLS.length)];
             image.src = ballSource.src;
@@ -50,8 +50,15 @@ angular.module('drawACat.cat.services')
             var FRICTION = 30; // higher is more slippery
 
             var dragMode = false;
-            var x = 100 + Math.random() * 10;
-            var y = windowHeight - 200;
+
+            var x, y;
+            if (typeof initX !== 'undefined' && typeof initY !== 'undefined') {
+                x = initX;
+                y = initY;
+            } else {
+                x = 100 + Math.random() * 10;
+                y = windowHeight - 200;
+            }
             var vx = 0;
             var vy = 0;
             var angleInRadians = 0;
@@ -197,8 +204,8 @@ angular.module('drawACat.cat.services')
                                 //The Collision vector is the speed difference projected on the Dist vector,
                                 //thus it is the component of the speed difference needed for the collision.
                                 var combinedMass = mass + ball.getMass();
-                                var collisionWeightA = 2 * ball.getMass() / combinedMass;
-                                var collisionWeightB = 2 * mass / combinedMass;
+                                var collisionWeightA = 1.7 * Math.pow(ball.getMass(), 1.5) / combinedMass;
+                                var collisionWeightB = 1.7 * Math.pow(mass, 1.5) / combinedMass;
                                 vx += collisionWeightA * xCollision * 0.9;
                                 vy += collisionWeightA * yCollision * 0.9;
                                 ball.setVx(ball.getVx() - collisionWeightB * xCollision * 0.9);

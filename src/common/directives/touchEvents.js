@@ -34,7 +34,7 @@ angular.module('drawACat.common.directives')
             }
         };
     })
- .directive('dacPointermove', function($parse) {
+    .directive('dacPointermove', function($parse) {
         return {
             restrict: 'A',
             compile: function($element, attr) {
@@ -63,13 +63,43 @@ angular.module('drawACat.common.directives')
             }
         };
     })
- .directive('dacPointerend', function($parse) {
+    .directive('dacPointerend', function($parse) {
         return {
             restrict: 'A',
             compile: function($element, attr) {
                 var fn = $parse(attr['dacPointerend']);
                 return function(scope, element) {
                     Hammer(element[0], { prevent_default: true }).on('release', function(event) {
+                        scope.$apply(function() {
+                            fn(scope, {$event:event});
+                        });
+                    });
+                };
+            }
+        };
+    })
+
+    .directive('dacDoubletap', function($parse) {
+        return {
+            restrict: 'A',
+            compile: function($element, attr) {
+                var fn = $parse(attr['dacDoubletap']);
+                return function(scope, element) {
+                    Hammer(element[0], { prevent_default: true }).on('doubletap', function(event) {
+                        event = event.gesture;
+                        if (!event.clientX && event.touches) {
+                            var propertiesToCopy = [
+                                'clientX',
+                                'clientY',
+                                'screenX',
+                                'screenY',
+                                'pageX',
+                                'pageY'
+                            ];
+                            for (var prop = 0; prop < propertiesToCopy.length; prop ++) {
+                                event[propertiesToCopy[prop]] = event.touches[0][propertiesToCopy[prop]];
+                            }
+                        }
                         scope.$apply(function() {
                             fn(scope, {$event:event});
                         });

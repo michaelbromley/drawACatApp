@@ -27,6 +27,12 @@ angular.module( 'drawACat.cat', [
         });
     })
 
+    .config(function (ezfbProvider) {
+      ezfbProvider.setInitParams({
+        appId: '459619084171176'
+      });
+    })
+
 /**
  * And of course we define a controller for our route.
  */
@@ -64,8 +70,8 @@ angular.module( 'drawACat.cat', [
            userOptions.setRenderQuality(parseInt(value, 10));
         };
 
-        $scope.addBall = function() {
-            $scope.ball.push(new Ball());
+        $scope.addBall = function(e) {
+            $scope.ball.push(new Ball(e.clientX, e.clientY));
         };
 
         $scope.$on('$destroy', function() {
