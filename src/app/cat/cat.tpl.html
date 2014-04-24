@@ -1,61 +1,58 @@
-<div class="header">
-    <div class="container">
-        <div class="col-xs-10">
-            <h1> <a class="btn btn-default" href="#!/home"><i class="icon-home"></i></a> {{ catData.name }} <small>by {{ catData.author }}</small></h1>
-        </div>
-        <div class="col-xs-2 text-right">
-            <div class="control-panel-button" ng-click="showControlPanel = !showControlPanel">
-                <button class="btn btn-default" ng-class="{ selected: showControlPanel }"><i class="icon-cog"></i></button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="container">
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="cat-info-panel">
-                <div class="extended-info" ng-hide="hideInfoPanel">
-                    <p>{{ catData.description }}</p>
-                </div>
-                <div class="share-buttons">
-                    <button class="btn btn-default" ng-click="rateCat()">
+<div id="stage-container">
+    <div class="header">
+        <div class="container">
+            <div class="col-xs-10">
+                <a class="btn btn-default" href="#!/home"><i class="icon-home"></i></a>
+                <div class="cat-info-panel">
+                    <h1 class="title">
+                        {{ catData.name }} <small>by {{ catData.author }}</small>
+                    </h1>
+                    <div class="extended-info" ng-hide="hideInfoPanel">
+                        <p>{{ catData.description }}</p>
+                    </div>
+                    <facebook-button></facebook-button>
+                    <twitter-button></twitter-button>
+                    <button class="rate-cat-button" ng-click="rateCat()">
                         <i class="icon-star" ng-show="!catHasBeenRated"></i>
                         <i class="icon-star2" ng-show="catHasBeenRated"></i>
                         {{ catData.rating }}
                     </button>
-                    <button class="btn btn-default" ng-click="scrollTo('comments')"><i class="icon-bubbles"></i> Comments</button>
-                    <a class="btn btn-default" facebook-button><i class="icon-facebook"></i> Share</a>
-                    <a class="btn btn-default" twitter-button><i class="icon-twitter"></i> Tweet</a>
-                    <button class="btn btn-default toggle" ng-click="hideInfoPanel = !hideInfoPanel">
-                        <i class="icon-caret-up" ng-show="!hideInfoPanel"></i>
-                        <i class="icon-caret-down" ng-show="hideInfoPanel"></i>
-                    </button>
+                    <a href="" ng-click="scrollTo('comments')" class="comments-link"><i class="icon-bubbles"></i> Comments</a>
                 </div>
-            </div>
-        </div>
 
-        <div class="col-sm-6 text-right">
-            <div class="control-panel" ng-show="showControlPanel">
-                <label class="col-xs-6 control-label">Sound</label>
-                <div class="col-xs-6">
-                    <button class="btn" ng-click="toggleAudio()">
-                        <i class="icon-volume-medium" ng-show="audioSetting == 'on'"></i>
-                        <i class="icon-volume-mute" ng-show="audioSetting == 'off'"></i>
-                    </button>
-                </div>
-                <label class="col-xs-6 control-label">Render Quality: {{ renderQuality }}</label>
-                <div class="col-xs-6">
-                    <input type="range" min="1" max="10" step="1" ng-model="renderQuality" ng-change="setRenderQuality(renderQuality)">
+            </div>
+            <div class="col-xs-2 text-right">
+                <div class="control-panel-button" ng-click="showControlPanel = !showControlPanel">
+                    <button class="btn btn-default" ng-class="{ selected: showControlPanel }"><i class="icon-cog"></i></button>
                 </div>
             </div>
         </div>
     </div>
 
-    <button class="btn add-ball-button" ng-click="addBall()"><img src="assets/images/add-ball-button.png"><br>Add Ball</button>
+    <div class="container">
+        <div class="row">
 
-    <dac-stage cat="cat" ball="ball"></dac-stage>
+            <div class="col-sm-6 text-right">
+                <div class="control-panel" ng-show="showControlPanel">
+                    <label class="col-xs-6 control-label">Sound</label>
+                    <div class="col-xs-6">
+                        <button class="btn" ng-click="toggleAudio()">
+                            <i class="icon-volume-medium" ng-show="audioSetting == 'on'"></i>
+                            <i class="icon-volume-mute" ng-show="audioSetting == 'off'"></i>
+                        </button>
+                    </div>
+                    <label class="col-xs-6 control-label">Render Quality: {{ renderQuality }}</label>
+                    <div class="col-xs-6">
+                        <input type="range" min="1" max="10" step="1" ng-model="renderQuality" ng-change="setRenderQuality(renderQuality)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <dac-stage cat="cat" ball="ball" dac-doubletap="addBall($event)"></dac-stage>
+</div>
 
+<div class="container">
     <dir-disqus disqus-shortname="drawacat"
                 disqus-identifier="{{ catData.id }}-{{ catData.name }}"
                 disqus-url="{{ pageUrl }}" id="comments">

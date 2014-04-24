@@ -7,7 +7,7 @@ angular.module('drawACat.cat.directives')
 
         // load the Twitter button script
         // https://dev.twitter.com/docs/intents/events#events
-        /*$window.twttr = (function (d,s,id) {
+        $window.twttr = (function (d,s,id) {
             var t, js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) {
                 return;
@@ -20,7 +20,7 @@ angular.module('drawACat.cat.directives')
         }(document, "script", "twitter-wjs"));
 
         return {
-            restrict: 'A',
+            restrict: 'AE',
             link: function(scope, element) {
 
                 var url = $location.absUrl();
@@ -41,22 +41,8 @@ angular.module('drawACat.cat.directives')
                             }
                         );
                     }
-         });
-
-         }
-         };*/
-
-        return {
-            restrict: 'A',
-            link: function(scope, element) {
-                element.on('click', function() {
-                    var text = document.title;
-                    var url = 'https://twitter.com/intent/tweet?url=' + encodeURIComponent($location.absUrl()) + '&hashtags=drawacat&text=' + text;
-                    var twWindow = $window.open(url,'name','height=258,width=550');
-                    if ($window.focus) {
-                        twWindow.focus();
-                    }
                 });
+
             }
         };
     });

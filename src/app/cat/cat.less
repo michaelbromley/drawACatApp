@@ -1,11 +1,11 @@
 .header {
-  background-color: #fff;
   z-index: 1000;
   position: relative;
   padding: 5px 10px;
   h1 {
     margin: 3px 0px;
     font-family: @comic-sans;
+    display: inline-block;
   }
   a:link, a:visited {
     color: #333;
@@ -23,7 +23,10 @@
 }
 
 #stage-container {
-  height:100vh;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  width: 100vw;
 }
 canvas {
   background-color: #f5f5f5;
@@ -35,10 +38,11 @@ canvas {
   z-index: 100;
 }
 .cat-info-panel {
-  position: relative;
+  position: absolute;
   margin-left: 50px;
+  top: 0px;
   z-index: 200;
-  padding: 10px;
+  padding: 0px 0px 5px 0px;
   h2 {
     font-family: @comic-sans;
     margin: 2px 0px;
@@ -52,15 +56,16 @@ canvas {
       background: none;
     }
   }
+  twitter-button iframe {
+    margin-bottom: -5px;
+  }
+  .rate-cat-button {
+    border: none;
+    background: none;
+  }
 }
 .control-panel {
   padding-top: 10px;
   position: relative;
   z-index: 210;
-}
-.add-ball-button {
-  position: absolute;
-  z-index: 300;
-  background: none;
-  border: 1px solid #ccc;
 }
