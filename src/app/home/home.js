@@ -39,8 +39,7 @@ angular.module( 'drawACat.home', [
         } else {
             $scope.tagsArray = [];
         }
-        $scope.predicate = "created";
-        $scope.reverse = true;
+        $scope.predicate = "trendingScore";
 
         $scope.$watchCollection('tagsArray', function(tagsArray) {
             var search;
@@ -51,6 +50,12 @@ angular.module( 'drawACat.home', [
             }
             $location.search('tags', search);
         });
+
+        $scope.tagLinkClicked = function(tag) {
+            if ($scope.tagsArray.indexOf(tag) === -1) {
+                $scope.tagsArray.push(tag);
+            }
+        };
     })
 
 ;

@@ -13,16 +13,12 @@
   background-image: -ms-linear-gradient(bottom, #EBEBEB 0%, #FFFFFF 100%);
   background-image: linear-gradient(to bottom, #EBEBEB 0%, #FFFFFF 100%);
 
-  .huge-cat {
-    background: url("images/cat-big.gif") center no-repeat;
-    height: 500px;
-    text-align: center;
-    .draw-button {
-      font-size: 3em;
-      border: 3px solid #333;
-      font-family: @comic-sans;
-      margin-top: 300px;
-    }
+  text-align: center;
+  .draw-button {
+    font-size: 3em;
+    font-family: @comic-sans;
+    margin: 30px;
+    border: 3px solid #666;
   }
 }
 .filter-controls {
@@ -32,8 +28,6 @@
 }
 
 .tag-selector-container {
-
-
   .input-container {
     position: relative;
     display: inline-table;
@@ -67,6 +61,25 @@
   ul.hashtags {
     display: inline-block;
     padding-left: 8px;
+  }
+}
+
+ul.sort-mode {
+  display: inline-block;
+  padding: 0px;
+  li {
+    border-radius: 4px;
+    display: inline-block;
+    padding: 10px 15px;
+    a:link, a:visited {
+      color: #666;
+    }
+    a:hover, a:active {
+      text-decoration: none;
+    }
+    &.active {
+      background-color: #efefef;
+    }
   }
 }
 
@@ -135,7 +148,7 @@
   line-height: 26px;
   padding: 0 17px 0 5px;
   position: relative;
-  margin: 0 10px 10px 0;
+  margin: 0 5px 3px 0;
   text-decoration: none;
   -webkit-transition: color 0.2s;
 }

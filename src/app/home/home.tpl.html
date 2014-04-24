@@ -1,7 +1,5 @@
 <div class="hero-bar">
-    <div class="huge-cat">
         <a href="#!/cat/new" class="btn btn-default draw-button">Draw a cat!</a>
-    </div>
 </div>
 <div class="container">
 
@@ -11,25 +9,19 @@
         <div class="col-sm-6">
             <tag-selector></tag-selector>
         </div>
-        <div class="col-sm-6">
-            Order by:
-            <button class="btn btn-default" ng-click="predicate = 'rating'; reverse = !reverse" ng-class="{ selected: predicate == 'rating'} ">
-                rating
-                <i class="icon-caret-down" ng-show="!reverse"></i>
-                <i class="icon-caret-up" ng-show="reverse"></i>
-            </button>
-            <button class="btn btn-default" ng-click="predicate = 'created'; reverse = !reverse" ng-class="{ selected: predicate == 'created'} ">
-                created
-                <i class="icon-caret-down" ng-show="!reverse"></i>
-                <i class="icon-caret-up" ng-show="reverse"></i>
-            </button>
+        <div class="col-sm-6 text-right">
+            <ul class="sort-mode">
+                <li ng-class="{ active : predicate === 'trendingScore' }"><a href="" ng-click="predicate = 'trendingScore'">Trending</a></li>
+                <li ng-class="{ active : predicate === 'created' }"><a href="" ng-click="predicate = 'created'">Newest</a></li>
+                <li ng-class="{ active : predicate === 'rating' }"><a href="" ng-click="predicate = 'rating'">Top Rated</a></li>
+            </ul>
         </div>
     </div>
 
     <div class="row">
         <div class="col-xs-12">
 
-            <div class="preview-pane" ng-repeat="cat in cats | byTag: tagsArray | orderBy: predicate:reverse">
+            <div class="preview-pane" ng-repeat="cat in cats | byTag: tagsArray | orderBy: predicate:true">
                 <div class="image-box">
                     <a href="#!/cat/{{ cat.id }}/{{ cat.name | urlFriendlyName }}"><img ng-src="{{ cat.thumbnail }}_m.gif"></a>
                 </div>
@@ -38,7 +30,9 @@
                     <h4>by {{ cat.author }}</h4>
                 </div>
                 <ul class="hashtags">
-                    <li ng-repeat="tag in cat.tags" class="tag">#{{ tag }}</li>
+                    <li ng-repeat="tag in cat.tags" class="tag">
+                        <a href="" ng-click="tagLinkClicked(tag)">#{{ tag }}</a>
+                    </li>
                 </ul>
                 <div class="details-box">
                     <div class="detail-created">
