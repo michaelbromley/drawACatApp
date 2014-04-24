@@ -35,7 +35,7 @@ angular.module('drawACat.common.directives')
                 };
                 scope.selectedIndex = null;
                 scope.filteredTags = [];
-                scope.isFocussed = false;
+                scope.isFocussed = ('autofocus' in input[0]);
                 var mouseIsOverSuggestions = false;
 
                 suggestions.on('click', function(e) {
