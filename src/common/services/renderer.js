@@ -171,7 +171,7 @@ angular.module('drawACat.common.services')
 
             if (profiler.frame % 10 === 0) {
                 var timeNow = new Date().getTime();
-                var secondsElapsed = (timeNow - lastTimeMeasure) / 1000;
+                var secondsElapsed = (timeNow - profiler.lastTimeMeasure) / 1000;
                 profiler.fps = 10/secondsElapsed;
                 profiler.lastTimeMeasure = timeNow;
             }
