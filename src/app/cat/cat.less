@@ -14,10 +14,42 @@
     color: #666;
     text-decoration: none;
   }
+
+  .comments-link {
+    position: fixed;
+    z-index: 500;
+    top: -15px;
+    padding-top: 20px;
+    width: 40px;
+    text-align: center;
+    font-size: 24px;
+    &.floating {
+      background-color: #f7f7f7;
+      border-radius: 5px;
+      -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
+      -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
+      box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
+    }
+  }
   .control-panel-button {
-    font-size: 32px;
+    font-size: 24px;
+    color: #999;
+    button:focus {
+      outline: none;
+      color: #555;
+    }
+    button {
+      border: none;
+      background: none;
+      border-top-right-radius: 3px;
+      border-top-left-radius: 3px;
+    }
     button.selected {
-      background-color: #ccc;
+      color: #555;
+      background-color: #fff;
+      -webkit-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.15);
+      -moz-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.15);
+      box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.15);
     }
   }
 }
@@ -37,18 +69,27 @@ canvas {
   left: 0;
   z-index: 100;
 }
-.cat-info-panel {
+.info-panel-container {
   position: absolute;
+  border-radius: 5px;
+  background-color: #f7f7f7;
   margin-left: 50px;
-  top: 0px;
+  min-width: 300px;
+  top: -5px;
   z-index: 200;
-  padding: 0px 0px 5px 0px;
+  padding: 10px;
+  -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
   h2 {
     font-family: @comic-sans;
     margin: 2px 0px;
   }
   p {
     font-family: @comic-sans;
+  }
+  .extended-info {
+    padding: 5px 0px;
   }
   .share-buttons {
     .btn {
@@ -63,9 +104,27 @@ canvas {
     border: none;
     background: none;
   }
+  button.toggle-info-panel {
+    margin-top: -20px;
+    border: none;
+    background: none;
+    &:focus {
+      outline: none;
+      color: #555;
+    }
+  }
 }
 .control-panel {
-  padding-top: 10px;
-  position: relative;
+  padding: 10px;
+  position: absolute;
   z-index: 210;
+  min-width: 350px;
+  right: 15px;
+  background-color: #fff;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-top-left-radius: 5px;
+  -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
 }
