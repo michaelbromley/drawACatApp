@@ -84,23 +84,26 @@ ul.sort-mode {
 }
 
 .preview-pane {
-  font-family: @comic-sans;
+  font-family: verdana, arial;
   position: relative;
-  width: 220px;
-  height: 350px;
-  float: left;
-  margin: 20px;
+  width: 200px;
+  height: 400px;
+  overflow: hidden;
+  display: inline-block;
+  margin: 5px;
   text-align: center;
   background-color: #fff;
   padding: 10px;
-  -webkit-box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.36);
-  -moz-box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.36);
-  box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.36);
+  -webkit-box-shadow: 0px 1px 15px -4px rgba(0, 0, 0, 0.36);
+  -moz-box-shadow: 0px 1px 15px -4px rgba(0, 0, 0, 0.36);
+  box-shadow: 0px 1px 15px -4px rgba(0, 0, 0, 0.36);
   .image-box {
   }
   .title-box {
+    font-family: @comic-sans;
     h3 {
       margin: 5px;
+      font-size: 14px;
       a:link, a:visited {
         color: #666;
       }
@@ -111,6 +114,7 @@ ul.sort-mode {
     h4 {
       margin: 5px;
       color: #888;
+      font-size: 12px;
     }
   }
   ul.hashtags {

@@ -1,5 +1,5 @@
 <div class="hero-bar">
-        <a href="#!/cat/new" class="btn btn-default draw-button">Draw a cat!</a>
+    <a href="#!/cat/new" class="btn btn-default draw-button">Draw a cat!</a>
 </div>
 <div class="container">
 
@@ -19,31 +19,33 @@
     </div>
 
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-xs-12 text-center">
 
-            <div class="preview-pane" ng-repeat="cat in cats | byTag: tagsArray | orderBy: predicate:true">
-                <div class="image-box">
-                    <a href="#!/cat/{{ cat.id }}/{{ cat.name | urlFriendlyName }}"><img ng-src="{{ cat.thumbnail }}_m.gif"></a>
-                </div>
-                <div class="title-box">
-                    <h3><a href="#!/cat/{{ cat.id }}/{{ cat.name | urlFriendlyName }}">{{ cat.name }}</a></h3>
-                    <h4>by {{ cat.author }}</h4>
-                </div>
-                <ul class="hashtags">
-                    <li ng-repeat="tag in cat.tags" class="tag">
-                        <a href="" ng-click="tagLinkClicked(tag)">#{{ tag }}</a>
-                    </li>
-                </ul>
-                <div class="details-box">
-                    <div class="detail-created">
-                        <i class="icon-calendar"></i> {{ cat.created | timeAgo }}
+            <div id="preview-container">
+
+                <div class="preview-pane" ng-repeat="cat in cats | byTag: tagsArray | orderBy: predicate:true">
+                    <div class="image-box">
+                        <a href="#!/cat/{{ cat.id }}/{{ cat.name | urlFriendlyName }}"><img ng-src="{{ cat.thumbnail }}_m.gif"></a>
                     </div>
-                    <div class="detail-rating">
-                        <i class="icon-star2"></i> {{ cat.rating }}
+                    <div class="title-box">
+                        <h3><a href="#!/cat/{{ cat.id }}/{{ cat.name | urlFriendlyName }}">{{ cat.name }}</a></h3>
+                        <h4>by {{ cat.author }}</h4>
+                    </div>
+                    <ul class="hashtags">
+                        <li ng-repeat="tag in cat.tags" class="tag">
+                            <a href="" ng-click="tagLinkClicked(tag)">#{{ tag }}</a>
+                        </li>
+                    </ul>
+                    <div class="details-box">
+                        <div class="detail-created">
+                            <i class="icon-calendar"></i> {{ cat.created | timeAgo }}
+                        </div>
+                        <div class="detail-rating">
+                            <i class="icon-star2"></i> {{ cat.rating }}
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

@@ -3,26 +3,26 @@ angular.module( 'drawACat.home', [
         'drawACat.home.filters',
         'drawACat.home.tagSelector',
         'ui.router'
-])
+    ])
 
 
-.config(function config( $stateProvider ) {
-  $stateProvider.state( 'home', {
-    url: '/home',
-    views: {
-      "main": {
-        controller: 'HomeController',
-        templateUrl: 'home/home.tpl.html'
-      }
-    },
-    data:{ pageTitle: 'Draw A Cat!' }
-  });
-})
+    .config(function config( $stateProvider ) {
+        $stateProvider.state( 'home', {
+            url: '/home',
+            views: {
+                "main": {
+                    controller: 'HomeController',
+                    templateUrl: 'home/home.tpl.html'
+                }
+            },
+            data:{ pageTitle: 'Draw A Cat!' }
+        });
+    })
 
 /**
  * And of course we define a controller for our route.
  */
-.controller( 'HomeController', function HomeController( $scope, $location, datastore ) {
+    .controller( 'HomeController', function HomeController( $scope, $location, datastore ) {
 
         datastore.listCats().success(function(data) {
             $scope.cats = data;
@@ -56,7 +56,4 @@ angular.module( 'drawACat.home', [
                 $scope.tagsArray.push(tag);
             }
         };
-    })
-
-;
-
+    });
