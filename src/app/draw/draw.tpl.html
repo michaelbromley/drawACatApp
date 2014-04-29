@@ -1,3 +1,15 @@
+<div class="header">
+    <div class="container">
+        <div class="col-xs-2 col-sm-1">
+            <div class="control-panel-button">
+                <a ui-sref="home"><i class="icon-home"></i></a>
+            </div>
+        </div>
+        <div class="col-xs-10 col-sm-11">
+            <h1>Draw A Cat</h1>
+        </div>
+    </div>
+</div>
 <div class="container">
     <div class="row draw-container">
         <div class="col-xs-12 col-sm-9 col-md-7 col-lg-6">
@@ -5,7 +17,7 @@
         </div>
         <div class="col-xs-12 col-sm-3 col-md-5 col-lg-6">
             <dac-draw-instructions></dac-draw-instructions>
-            <button ng-click="showSaveDialog = true" ng-show="drawing.completed" class="btn btn-default">Save Cat!</button>
+            <button ng-click="showSaveDialog = true" ng-show="drawing.completed" class="btn btn-primary btn-lg">Save Cat!</button>
         </div>
     </div>
 

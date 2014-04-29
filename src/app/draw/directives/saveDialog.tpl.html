@@ -6,20 +6,20 @@
             <form role="form" name="saveForm" ng-submit="submitForm()">
                 <div class="form-group">
                     <label for="catName">Name of your cat:</label>
-                    <input type="text" class="form-control" id="catName" ng-model="name" ng-required="true">
+                    <input type="text" class="form-control" id="catName" ng-model="name" ng-required="true" maxlength="35">
                 </div>
                 <div class="form-group">
-                    <label for="description">Description (optional):</label>
+                    <label for="description">Description (you can use #hashtags to make your cat discoverable!):</label>
                     <textarea id="description" ng-model="description" class="form-control" rows="4" dac-tagbox="hashTags" dac-tagtoken="#"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="author">Your name:</label>
-                    <input type="text" class="form-control" id="author" ng-model="author" ng-required="true">
+                    <input type="text" class="form-control" id="author" ng-model="author" ng-required="true" maxlength="35">
                 </div>
                 <div class="radio">
                     <label>
                         <input type="radio" ng-model="isPublic" id="public-true" ng-value="true">
-                        Make Public&mdash;you cat will appear on the site's home page.
+                        Make Public&mdash;you cat will appear on the home page.
                     </label>
                 </div>
                 <div class="radio">
