@@ -2,7 +2,7 @@
     <div class="header">
         <div class="container">
             <div class="col-xs-10">
-                <div class="control-panel-button">
+                <div class="home-button">
                     <a ui-sref="home"><i class="icon-home"></i></a>
                 </div>
 
@@ -24,22 +24,25 @@
             </div>
 
             <div class="col-xs-2 text-right">
-                <dac-comments-link></dac-comments-link>
-                <div class="control-panel-button" ng-click="showControlPanel = !showControlPanel">
-                    <button ng-class="{ selected: showControlPanel }"><i class="icon-cog"></i></button>
-                </div>
+                <ul class="button-bar">
+                    <li>
+                        <dac-comments-link></dac-comments-link>
+                    </li>
+                    <li>
+                        <a href="" class="toggle-audio-button" ng-click="toggleAudio()">
+                            <i class="icon-volume-medium" ng-show="audioSetting == 'on'"></i>
+                            <i class="icon-volume-mute" ng-show="audioSetting == 'off'"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="control-panel-button" ng-click="showControlPanel = !showControlPanel">
+                            <button ng-class="{ selected: showControlPanel }"><i class="icon-cog"></i></button>
+                        </div>
+                    </li>
+                </ul>
 
                 <div class="control-panel" ng-show="showControlPanel">
                     <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <label class="col-xs-6 control-label">Sound</label>
-                            <div class="col-xs-6 text-left">
-                                <button class="btn" ng-click="toggleAudio()">
-                                    <i class="icon-volume-medium" ng-show="audioSetting == 'on'"></i>
-                                    <i class="icon-volume-mute" ng-show="audioSetting == 'off'"></i>
-                                </button>
-                            </div>
-                        </div>
                         <div class="form-group">
                             <label class="col-xs-6 control-label">Render Quality: {{ renderQuality }}</label>
                             <div class="col-xs-6">

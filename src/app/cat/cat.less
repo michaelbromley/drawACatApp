@@ -8,22 +8,40 @@
     display: inline-block;
   }
   a:link, a:visited {
-    color: #333;
+    color: #999;
   }
   a:hover, a:active {
     color: #666;
     text-decoration: none;
   }
 
+  .home-button {
+    font-size: 24px;
+  }
+  .button-bar {
+    font-size: 16px;
+    @media (min-width: @screen-sm-min) {
+      font-size: 24px;
+    }
+    list-style-type: none;
+    padding: 0;
+    li {
+      display: table-cell;
+      margin: 0px 3px;
+    }
+  }
+
   .comments-link {
-    position: fixed;
-    z-index: 500;
-    top: -15px;
-    padding-top: 20px;
+    a:link, a:hover, a:visited {
+      color: #00b3ee;
+    }
     width: 40px;
     text-align: center;
-    font-size: 24px;
     &.floating {
+      position: fixed;
+      z-index: 500;
+      top: -15px;
+      padding-top: 20px;
       background-color: #f7f7f7;
       border-radius: 5px;
       -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
@@ -31,8 +49,11 @@
       box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
     }
   }
+
+  .toggle-audio-button {
+    color: #999;
+  }
   .control-panel-button {
-    font-size: 24px;
     color: #999;
     button:focus {
       outline: none;
@@ -81,6 +102,7 @@ canvas {
   -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
   -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
+  transition: top 0.5s;
   h2 {
     font-family: @comic-sans;
     margin: 2px 0px;
@@ -119,11 +141,13 @@ canvas {
   position: absolute;
   z-index: 210;
   min-width: 350px;
-  right: 15px;
+  right: 0px;
+  top: 24px;
+  @media (min-width: @screen-sm-min) {
+    top: 35px;
+  }
   background-color: #fff;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  border-top-left-radius: 5px;
+  border-radius: 5px;
   -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
   -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
