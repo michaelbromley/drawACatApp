@@ -2,6 +2,7 @@
 angular.module( 'drawACat.home', [
         'drawACat.home.filters',
         'drawACat.home.tagSelector',
+        'drawACat.home.previewPanel',
         'ui.router'
     ])
 
