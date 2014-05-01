@@ -1,22 +1,27 @@
 <div class="preview-panel">
-    <div class="image-box">
-        <a href="#!/cat/{{ cat.id }}/{{ cat.name | urlFriendlyName }}"><img ng-src="{{ cat.thumbnail }}_m.gif"></a>
-    </div>
-    <div class="title-box">
-        <h3><a href="#!/cat/{{ cat.id }}/{{ cat.name | urlFriendlyName }}">{{ cat.name }}</a></h3>
-        <h4>by {{ cat.author }}</h4>
-    </div>
-    <ul class="hashtags">
-        <li ng-repeat="tag in cat.tags" class="tag">
-            <a href="" ng-click="tagLinkClicked(tag)">#{{ tag }}</a>
-        </li>
-    </ul>
-    <div class="details-box">
-        <div class="detail-created">
-            <i class="icon-calendar"></i> {{ cat.created | timeAgo }}
+    <div class="floater">
+        <div class="click-box" ng-click="clickHandler()"></div>
+        <div class="image-box">
+            <a><img ng-src="{{ cat.thumbnail }}_m.gif"></a>
+            <div class="details-box">
+                <div class="detail-created">
+                    <i class="icon-calendar"></i> {{ cat.created | timeAgo }}
+                </div>
+                <div class="detail-rating">
+                    <i class="icon-star2"></i> {{ cat.rating }}
+                </div>
+            </div>
         </div>
-        <div class="detail-rating">
-            <i class="icon-star2"></i> {{ cat.rating }}
+        <div class="additional-info" ng-class="showInfo">
+            <div class="title-box">
+                <h3><a href="#!/cat/{{ cat.id }}/{{ cat.name | urlFriendlyName }}">{{ cat.name }}</a></h3>
+                <h4>by {{ cat.author }}</h4>
+            </div>
+            <ul class="hashtags">
+                <li ng-repeat="tag in cat.tags" class="tag">
+                    <a href="" ng-click="tagLinkClicked(tag)">#{{ tag }}</a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
