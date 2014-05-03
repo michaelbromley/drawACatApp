@@ -20,11 +20,8 @@
 
     <div class="row">
         <div class="col-xs-12 text-center">
-
-            <div id="preview-container">
-                <dac-preview-panel cat="cat" ng-repeat="cat in cats | byTag: tagsArray | orderBy: predicate:true"></dac-preview-panel>
-            </div>
-            <div id="overlay"></div>
+            <dac-preview-panel class="panel-container" cat="cat" ng-repeat="cat in cats | byTag: tagsArray | orderBy: predicate:true"></dac-preview-panel>
+            <div id="overlay" ng-click="closeOverlay()"></div>
         </div>
     </div>
 </div>

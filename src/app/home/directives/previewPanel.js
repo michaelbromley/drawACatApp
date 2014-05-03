@@ -6,7 +6,7 @@
 
 angular.module('drawACat.home.previewPanel', [])
 
-    .directive('dacPreviewPanel', function($rootScope) {
+    .directive('dacPreviewPanel', function($rootScope, $timeout, previewPanelService) {
 
         return {
             restrict: 'AE',
@@ -15,40 +15,55 @@ angular.module('drawACat.home.previewPanel', [])
                 cat: '='
             },
             link: function(scope, element, attrs) {
-                var container = angular.element(document.getElementById('preview-container'));
-                var floater = angular.element(element[0].querySelector('.floater'));
+                var previewPanel = angular.element(element[0].querySelector('.preview-panel'));
                 var overlay = angular.element(document.getElementById('overlay'));
 
                 scope.showInfo = "";
+                scope.isSelected = false;
 
                 scope.clickHandler = function() {
-                    $rootScope.$broadcast('preview-click', scope.cat.id);
-                    if (scope.showInfo === "") {
-                        enable();
+                    previewPanelService.currentlySelected = scope.cat.id;
+                    $rootScope.$broadcast('preview-click');
+
+                    if (!scope.isSelected) {
+                        if (previewPanelService.switching) {
+                            $timeout(enable, 600);
+                        } else {
+                            enable();
+                        }
                     } else {
                         disable();
                     }
                 };
 
-                scope.$on('preview-click', function(event, id) {
-                    if (scope.showInfo !== "" && id !== scope.cat.id) {
-                        disable();
+                scope.$on('preview-click', function(event, closeAll) {
+                    if (scope.isSelected) {
+                        if (scope.cat.id !== previewPanelService.currentlySelected || closeAll){
+                            previewPanelService.switching = true;
+                            disable();
+                        }
                     }
                 });
 
                 function enable() {
+                    previewPanelService.switching = false;
+                    scope.isSelected = true;
                     scope.showInfo = "show-info";
-                    container.addClass('recessed');
-                    floater.addClass('float');
+                    previewPanel.addClass('selected');
                     overlay.addClass('displaying');
                 }
 
                 function disable() {
+                    scope.isSelected = false;
                     scope.showInfo = "";
-                    container.removeClass('recessed');
-                    floater.removeClass('float');
+                    previewPanel.removeClass('selected');
                     overlay.removeClass('displaying');
                 }
             }
         };
-    });
+    })
+    .service('previewPanelService', function() {
+        this.switching = false;
+        this.currentlySelected = null;
+    })
+;

@@ -57,4 +57,8 @@ angular.module( 'drawACat.home', [
                 $scope.tagsArray.push(tag);
             }
         };
+
+        $scope.closeOverlay = function() {
+            $scope.$broadcast('preview-click', true);
+        };
     });

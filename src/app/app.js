@@ -7,7 +7,8 @@ angular.module( 'drawACat', [
         'drawACat.draw',
         'drawACat.common.services',
         'drawACat.common.directives',
-        'drawACat.common.filters'
+        'drawACat.common.filters',
+        'ngAnimate'
     ])
 
     .value('CONFIG', {
