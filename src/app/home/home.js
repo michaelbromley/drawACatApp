@@ -35,11 +35,16 @@ angular.module( 'drawACat.home', [
         });
 
         $scope.searchInput = "";
-        if ($location.search().tags) {
-            $scope.tagsArray = $location.search().tags.split(' ');
-        } else {
-            $scope.tagsArray = [];
-        }
+
+        $scope.$watch(function() {
+            return $location.search().tags;
+        }, function(tags) {
+            if (tags) {
+                $scope.tagsArray = tags.split(' ');
+            } else {
+                $scope.tagsArray = [];
+            }
+        });
         $scope.predicate = "trendingScore";
 
         $scope.$watchCollection('tagsArray', function(tagsArray) {

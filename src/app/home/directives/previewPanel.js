@@ -6,7 +6,7 @@
 
 angular.module('drawACat.home.previewPanel', [])
 
-    .directive('dacPreviewPanel', function($rootScope, $timeout, previewPanelService) {
+    .directive('dacPreviewPanel', function($rootScope, $location, $timeout, previewPanelService) {
 
         return {
             restrict: 'AE',
@@ -44,6 +44,10 @@ angular.module('drawACat.home.previewPanel', [])
                         }
                     }
                 });
+
+                scope.tagClick = function(tag) {
+                    $location.search('tags', tag);
+                };
 
                 function enable() {
                     previewPanelService.switching = false;

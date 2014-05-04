@@ -9,7 +9,8 @@
     </div>
     <ul class="hashtags">
         <li ng-repeat="tag in tagsArray" class="tag">
+            {{ tag }}
             <a href="" class="remove-tag" ng-click="removeTag($index)"><i class="icon-close"></i></a>
-            #{{ tag }}</li>
+        </li>
     </ul>
 </div>
