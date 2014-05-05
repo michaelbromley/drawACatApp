@@ -33,7 +33,7 @@
 
   .comments-link {
     a:link, a:hover, a:visited {
-      color: #00b3ee;
+      color: @highlight-colour;
     }
     width: 40px;
     text-align: center;
@@ -113,10 +113,13 @@ canvas {
   .extended-info {
     padding: 5px 0px;
   }
-  .share-buttons {
-    .btn {
-      padding: 2px 6px;
-      background: none;
+  ul.share-buttons {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    li {
+      display: table-cell;
+      padding-right: 5px;
     }
   }
   twitter-button iframe {

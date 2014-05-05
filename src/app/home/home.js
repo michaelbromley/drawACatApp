@@ -3,6 +3,7 @@ angular.module( 'drawACat.home', [
         'drawACat.home.filters',
         'drawACat.home.tagSelector',
         'drawACat.home.previewPanel',
+        'drawACat.home.pagination',
         'ui.router'
     ])
 
@@ -23,11 +24,16 @@ angular.module( 'drawACat.home', [
 /**
  * And of course we define a controller for our route.
  */
-    .controller( 'HomeController', function HomeController( $scope, $location, datastore ) {
+    .controller( 'HomeController', function HomeController( $scope, $location, $filter, datastore ) {
 
         datastore.listCats().success(function(data) {
             $scope.cats = data;
+            $scope.filteredCats = data;
         });
+
+        $scope.currentPage = 1;
+        $scope.itemsPerPage = 20;
+        $scope.numberOfPages = 0;
 
         $scope.tags = [];
         datastore.getTags().then(function(data) {
@@ -55,6 +61,11 @@ angular.module( 'drawACat.home', [
                 search = null;
             }
             $location.search('tags', search);
+            $scope.filteredCats = $filter('byTag')($scope.cats, tagsArray);
+        });
+
+        $scope.$watch('filteredCats.length', function(val) {
+            $scope.numberOfPages =  Math.ceil(val / $scope.itemsPerPage);
         });
 
         $scope.tagLinkClicked = function(tag) {
@@ -65,5 +76,14 @@ angular.module( 'drawACat.home', [
 
         $scope.closeOverlay = function() {
             $scope.$broadcast('preview-click', true);
+        };
+    })
+
+    .filter('startFrom', function() {
+        return function(input, start) {
+            if (typeof input !== 'undefined' && 0 < input.length) {
+                start = +start; //parse to int
+                return input.slice(start);
+            }
         };
     });

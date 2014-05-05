@@ -10,7 +10,6 @@
 }
 .filter-controls {
   position: relative;
-  z-index: 250;
   button.selected {
     background-color: #a6d1ee;
   }
@@ -62,6 +61,7 @@ ul.sort-mode {
   padding: 0px;
   li {
     border-radius: 4px;
+    font-weight: bold;
     display: inline-block;
     padding: 10px 15px;
     a:link, a:visited {
@@ -71,12 +71,13 @@ ul.sort-mode {
       text-decoration: none;
     }
     &.active {
-      background-color: #efefef;
+      background-color: @highlight-colour;
+      a:link, a:visited {color: #fff;}
     }
   }
 }
 
-@overlay-colour:  rgba(0,0,0,0.1);
+@overlay-colour:  rgba(200,200,200,0.7);
 #overlay {
   opacity: 0;
   transition: max-height 0s ease 1s, opacity 0.8s;
@@ -144,6 +145,7 @@ ul.sort-mode {
     width: 200px;
     height: 200px;
     transition: box-shadow 0.5s;
+    cursor: pointer;
     &:hover {
       .image-drop-shadow();
     }
@@ -158,6 +160,13 @@ ul.sort-mode {
       margin-top: -30px;
       visibility: visible;
       transition: margin 0.5s,  opacity 0.5s, visibility 0s;
+      a:link, a:visited {
+        color: @highlight-colour;
+      }
+      a:hover, a:active {
+        color: lighten(@highlight-colour, 10%);
+        text-decoration: none;
+      }
     }
     .click-box {
       .image-drop-shadow();
@@ -255,7 +264,7 @@ ul.sort-mode {
   background: @tag-colour;
   border: #dcdcdc;
   border-radius: 0 2px 2px 0;
-  color: #23bbce;
+  color: @highlight-colour;
   display: inline-block;
   height: 20px;
   left: 0;
@@ -291,7 +300,26 @@ ul.sort-mode {
   top: 6px;
 }
 
+.pagination > li > a, .pagination > li > span, .pagination > .disabled > a {
+  font-family: @comic-sans;
+  position: relative;
+  float: left;
+  padding: 6px 12px;
+  line-height: 1.42857143;
+  text-decoration: none;
+  color: #666;
+  border-radius: 3px;
+  background: none;
+  border: none;
+  margin-left: -1px;
+}
+.pagination > .active > a, .pagination > .active > a:hover,  {
+  background-color: @highlight-colour;
+  font-weight: bold;
+}
+
 // animations
+/*
 .panel-container.ng-enter,
 .panel-container.ng-leave,
 .panel-container.ng-move {
@@ -320,3 +348,4 @@ ul.sort-mode {
 .panel-container.ng-move.ng-move-active {
   opacity:1;
 }
+*/

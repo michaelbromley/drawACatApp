@@ -1,6 +1,5 @@
 .draw-container {
   min-width: 540px;
-  font-family: @comic-sans;
 }
 .canvas-container {
   position: relative;
@@ -11,7 +10,7 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  z-index: 1;
+  z-index: 10;
   background-color: rgba(255,255,255,0.5);
   cursor: crosshair;
 }
@@ -25,7 +24,7 @@
   &.filled {
     background-color: #f5f5f5;
   }
-  z-index: 0;
+  z-index: 9;
 }
 #draw-guide {
   position: absolute;
@@ -33,28 +32,30 @@
   left: 20px;
   width: 500px;
   height: 500px;
-  z-index: -1;
+  z-index: 8;
 }
 .undo-button {
   position: absolute;
   right: 22px;
   top: 22px;
-  z-index: 5;
+  z-index: 15;
 }
 .draw-instructions {
   margin: auto;
   max-width: 400px;
   position: relative;
   background: #fff;
-  border: 4px solid #999;
+  border: 4px solid @highlight-colour;
   border-radius: 5px;
-  padding: 10px;
-  z-index: 10;
+  z-index: 20;
   margin-bottom: 20px;
   .steps-list ul {
+    border-top: 1px solid lighten(@highlight-colour, 20%);
+    background: lighten(@highlight-colour, 50%);
+    padding: 10px;
+    margin-bottom: 0;
     margin-top: 10px;
     font-size: 0.85em;
-    padding-left: 0;
     list-style-type: none;
     color: #999;
     li {
@@ -78,6 +79,7 @@
 
   .instruction-container {
     min-height: 100px;
+    padding: 10px;
     h2 {
       margin-top: 2px;
       margin-bottom: 2px;
@@ -86,8 +88,11 @@
       color: #666;
     }
   }
+  .checkbox {
+    padding-left: 30px;
+  }
   .nav-buttons {
-
+    padding: 10px
   }
 }
 
@@ -112,7 +117,7 @@
   }
   .draw-instructions:before {
     border-color: rgba(153, 153, 153, 0);
-    border-bottom-color: #999;
+    border-bottom-color: @highlight-colour;
     border-width: 36px;
     margin-left: -36px;
   }
@@ -142,10 +147,15 @@
   }
   .draw-instructions:before {
     border-color: rgba(153, 153, 153, 0);
-    border-right-color: #999;
+    border-right-color: @highlight-colour;
     border-width: 36px;
     margin-top: -36px;
   }
+}
+
+.save-button {
+  background-color: @highlight-colour;
+  color: #fff;
 }
 
 

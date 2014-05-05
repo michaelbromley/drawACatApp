@@ -13,13 +13,15 @@
                     <div class="extended-info" ng-hide="hideInfoPanel">
                         <p>{{ catData.description }}</p>
                     </div>
-                    <button class="rate-cat-button" ng-click="rateCat()">
-                        <i class="icon-star" ng-show="!catHasBeenRated"></i>
-                        <i class="icon-star2" ng-show="catHasBeenRated"></i>
-                        {{ catData.rating }}
-                    </button>
-                    <facebook-button></facebook-button>
-                    <twitter-button></twitter-button>
+                    <ul class="share-buttons">
+                        <li><button class="rate-cat-button" ng-click="rateCat()">
+                            <i class="icon-star" ng-show="!catHasBeenRated"></i>
+                            <i class="icon-star2" ng-show="catHasBeenRated"></i>
+                            {{ catData.rating }}
+                        </button></li>
+                        <li><facebook-button></facebook-button></li>
+                        <li><twitter-button></twitter-button></li>
+                    </ul>
                 </dac-info-panel>
             </div>
 
