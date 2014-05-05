@@ -1,11 +1,14 @@
 
 .hero-bar {
   text-align: center;
-  .draw-button {
+  a.draw-button {
     font-size: 3em;
     font-family: @comic-sans;
     margin: 30px;
     border: 3px solid #666;
+    &:link, &:visited {
+      color: #444;
+    }
   }
 }
 .filter-controls {
@@ -77,7 +80,7 @@ ul.sort-mode {
   }
 }
 
-@overlay-colour:  rgba(200,200,200,0.7);
+@overlay-colour:  rgba(100,100,100,0.5);
 #overlay {
   opacity: 0;
   transition: max-height 0s ease 1s, opacity 0.8s;
@@ -236,7 +239,6 @@ ul.sort-mode {
   ul.hashtags {
     list-style-type: none;
     font-size: 12px;
-    text-align: left;
     padding: 0px;
     text-align: center;
     li {

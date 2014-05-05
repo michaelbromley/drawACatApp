@@ -26,6 +26,15 @@ angular.module( 'drawACat.home', [
  */
     .controller( 'HomeController', function HomeController( $scope, $location, $filter, datastore ) {
 
+        // emit an event to update the page metadata
+        var metaData = {
+            pageTitle: 'Draw A Cat!',
+            title: 'Draw A Cat!',
+            url: $location.absUrl(),
+            image: 'assets/cat-big.gif'
+        };
+        $scope.$emit('metadata:updated', metaData);
+
         datastore.listCats().success(function(data) {
             $scope.cats = data;
             $scope.filteredCats = data;

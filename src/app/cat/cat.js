@@ -49,7 +49,7 @@ angular.module( 'drawACat.cat', [
 
         // emit an event to update the page metadata
         var metaData = {
-            pageTitle: 'Come and play with ' + $scope.catData.name + '!',
+            pageTitle:$scope.catData.name + ': Draw A Cat!',
             title: $scope.catData.name,
             url: $location.absUrl(),
             image: CONFIG.THUMBNAILS_URL + $scope.catData.thumbnail
