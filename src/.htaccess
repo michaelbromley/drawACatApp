@@ -1,0 +1,15 @@
+<ifModule mod_rewrite.c>
+ RewriteEngine On
+
+# Required to allow direct-linking of pages so they can be processed by Angular
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !index
+    RewriteRule (.*) index.html [L]
+
+    #RewriteCond %{HTTP_HOST} ^michaelbromley\.co.uk$
+    #RewriteRule ^(.*) http://www.michaelbromley.co.uk/$1 [R=301]
+    RewriteCond %{HTTP_HOST} ^.$
+    RewriteRule ^(.*) GitHub/drawACatApp/build/$1 [R=301]
+</ifModule>

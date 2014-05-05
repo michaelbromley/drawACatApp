@@ -20,7 +20,7 @@ angular.module( 'drawACat', [
     })
 
     .config( function myAppConfig ( $stateProvider, $urlRouterProvider, $locationProvider ) {
-        $locationProvider.hashPrefix("!");
+        $locationProvider.html5Mode(true).hashPrefix('!');
         $urlRouterProvider.otherwise( 'home' );
     })
 

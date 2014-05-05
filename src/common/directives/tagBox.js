@@ -133,7 +133,7 @@ angular.module('drawACat.common.directives')
                         'left': input[0].offsetLeft + 'px',
                         'max-height': '200px',
                         'overflow': 'auto',
-                        'z-index': 100
+                        'z-index': 300
                     });
                     $compile(suggestions)(scope);
                     return suggestions;
