@@ -1,48 +1,33 @@
 <div id="stage-container">
     <div class="header">
         <div class="container">
-            <div class="col-xs-10">
-                <div class="home-button">
+            <div class="row control-panel-row">
+                <div class="col-xs-3 home-button">
                     <a ui-sref="home"><i class="icon-home"></i></a>
                 </div>
-
-                <dac-info-panel>
-                    <h1 class="title">
-                        {{ catData.name }} <small>by {{ catData.author }}</small>
-                    </h1>
-                    <div class="extended-info" ng-hide="hideInfoPanel">
-                        <p>{{ catData.description }}</p>
-                    </div>
-                    <ul class="share-buttons">
-                        <li><button class="rate-cat-button" ng-click="rateCat()">
-                            <i class="icon-star" ng-show="!catHasBeenRated"></i>
-                            <i class="icon-star2" ng-show="catHasBeenRated"></i>
-                            {{ catData.rating }}
-                        </button></li>
-                        <li><facebook-button></facebook-button></li>
-                        <li><twitter-button></twitter-button></li>
+                <div class="col-xs-9">
+                    <ul class="button-bar">
+                        <li title="Comments">
+                            <dac-comments-link></dac-comments-link>
+                        </li>
+                        <li title="Audio on/off">
+                            <a href="" class="toggle-audio-button" ng-click="toggleAudio()">
+                                <i class="icon-volume-medium" ng-show="audioSetting == 'on'"></i>
+                                <i class="icon-volume-mute" ng-show="audioSetting == 'off'"></i>
+                            </a>
+                        </li>
+                        <li title="Embed">
+                            <a href="">
+                                <i class="icon-code"></i>
+                            </a>
+                        </li>
+                        <li title="Settings">
+                            <div class="control-panel-button" ng-click="showControlPanel = !showControlPanel">
+                                <button ng-class="{ selected: showControlPanel }"><i class="icon-cog"></i></button>
+                            </div>
+                        </li>
                     </ul>
-                </dac-info-panel>
-            </div>
-
-            <div class="col-xs-2 text-right">
-                <ul class="button-bar">
-                    <li>
-                        <dac-comments-link></dac-comments-link>
-                    </li>
-                    <li>
-                        <a href="" class="toggle-audio-button" ng-click="toggleAudio()">
-                            <i class="icon-volume-medium" ng-show="audioSetting == 'on'"></i>
-                            <i class="icon-volume-mute" ng-show="audioSetting == 'off'"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <div class="control-panel-button" ng-click="showControlPanel = !showControlPanel">
-                            <button ng-class="{ selected: showControlPanel }"><i class="icon-cog"></i></button>
-                        </div>
-                    </li>
-                </ul>
-
+                </div>
                 <div class="control-panel" ng-show="showControlPanel">
                     <form class="form-horizontal" role="form">
                         <div class="form-group">
@@ -54,10 +39,32 @@
                     </form>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <dac-info-panel>
+                        <h1 class="title">
+                            {{ catData.name }} <small>by {{ catData.author }}</small>
+                        </h1>
+                        <div class="extended-info" ng-hide="hideInfoPanel">
+                            <p>{{ catData.description }}</p>
+                        </div>
+                        <ul class="share-buttons">
+                            <li><button class="rate-cat-button" ng-click="rateCat()">
+                                <i class="icon-star" ng-show="!catHasBeenRated"></i>
+                                <i class="icon-star2" ng-show="catHasBeenRated"></i>
+                                {{ catData.rating }}
+                            </button></li>
+                            <li><facebook-button></facebook-button></li>
+                            <li><twitter-button></twitter-button></li>
+                        </ul>
+                    </dac-info-panel>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 
-    <dac-stage cat="cat" ball="ball" dac-doubletap="addBall($event)"></dac-stage>
+<dac-stage cat="cat" ball="ball" dac-doubletap="addBall($event)"></dac-stage>
 </div>
 
 <div class="container">
