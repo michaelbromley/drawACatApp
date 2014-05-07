@@ -109,6 +109,17 @@ module.exports = function ( grunt ) {
                     }
                 ]
             },
+            build_htaccess: {
+                files: [
+                    {
+                        src: [ 'src/.htaccess' ],
+                        dest: '<%= build_dir %>/',
+                        cwd: '.',
+                        expand: true,
+                        flatten: true
+                    }
+                ]
+            },
             build_vendor_assets: {
                 files: [
                     {
@@ -583,7 +594,7 @@ module.exports = function ( grunt ) {
      */
     grunt.registerTask( 'build', [
         'clean', 'html2js', 'jshint', 'coffeelint', 'coffee', 'less:build',
-        'concat:build_css', 'copy:build_app_assets', 'copy:build_vendor_assets',
+        'concat:build_css', 'copy:build_htaccess', 'copy:build_app_assets', 'copy:build_vendor_assets',
         'copy:build_appjs', 'copy:build_vendorjs', 'index:build', 'karmaconfig',
         'karma:continuous'
     ]);
