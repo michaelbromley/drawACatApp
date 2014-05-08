@@ -73,5 +73,17 @@ module.exports = {
         ],
         assets: [
         ]
+    },
+    api_path: {
+        local: 'http://192.168.1.21/GitHub/drawACatApp/api/',
+        remote: 'http://www.drawacat.net/api/'
+    },
+    thumbnails_path: {
+        local: 'http://192.168.1.21/GitHub/drawACatApp/api/thumbnails/',
+        remote: 'http://www.drawacat.net/api/thumbnails'
+    },
+    htaccess_root: {
+        local: 'GitHub/drawACatApp/build',
+        remote: ''
     }
 };

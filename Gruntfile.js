@@ -19,6 +19,7 @@ module.exports = function ( grunt ) {
     grunt.loadNpmTasks('grunt-ngmin');
     grunt.loadNpmTasks('grunt-html2js');
     grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-string-replace');
 
     /**
      * Load in our build configuration file.
@@ -433,6 +434,45 @@ module.exports = function ( grunt ) {
             }
         },
 
+        'string-replace': {
+            build: {
+                files:  {
+                    '<%= build_dir %>/src/app/app.js' : '<%= build_dir %>/src/app/app.js',
+                    '<%= build_dir %>/' : '<%= build_dir %>/.htaccess'
+                },
+                options: {
+                    replacements: [{
+                        pattern: '%THUMBNAILS_PATH%',
+                        replacement: '<%= thumbnails_path.local %>'
+                    }, {
+                        pattern: '%API_PATH%',
+                        replacement: '<%= api_path.local %>'
+                    }, {
+                        pattern: '%HTACCESS_ROOT%',
+                        replacement: '<%= htaccess_root.local %>'
+                    }]
+                }
+            },
+            compile: {
+                files:  {
+                    '<%= concat.compile_js.dest %>' : '<%= concat.compile_js.dest %>',
+                    '<%= compile_dir %>/.htaccess' : '<%= build_dir %>/.htaccess'
+                },
+                options: {
+                    replacements: [{
+                        pattern: '<%= thumbnails_path.local %>',
+                        replacement: '<%= thumbnails_path.remote %>'
+                    }, {
+                        pattern: '<%= api_path.local %>',
+                        replacement: '<%= api_path.remote %>'
+                    }, {
+                        pattern: '<%= htaccess_root.local %>',
+                        replacement: '<%= htaccess_root.remote %>'
+                    }]
+                }
+            }
+        },
+
         /**
          * This task compiles the karma template so that changes to its file array
          * don't have to be managed manually.
@@ -594,8 +634,8 @@ module.exports = function ( grunt ) {
      */
     grunt.registerTask( 'build', [
         'clean', 'html2js', 'jshint', 'coffeelint', 'coffee', 'less:build',
-        'concat:build_css', 'copy:build_htaccess', 'copy:build_app_assets', 'copy:build_vendor_assets',
-        'copy:build_appjs', 'copy:build_vendorjs', 'index:build', 'karmaconfig',
+        'concat:build_css', 'copy:build_app_assets', 'copy:build_vendor_assets',
+        'copy:build_appjs', 'copy:build_vendorjs', 'copy:build_htaccess', 'index:build', 'string-replace:build', 'karmaconfig',
         'karma:continuous'
     ]);
 
@@ -604,7 +644,8 @@ module.exports = function ( grunt ) {
      * minifying your code.
      */
     grunt.registerTask( 'compile', [
-        'recess:compile', 'copy:compile_assets', 'ngmin', 'concat:compile_js', 'uglify', 'index:compile'
+        'recess:compile', 'copy:compile_assets', 'ngmin', 'concat:compile_js', 'uglify', 'index:compile',
+        'string-replace:compile'
     ]);
 
     /**

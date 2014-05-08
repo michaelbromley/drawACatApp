@@ -8,8 +8,6 @@
     RewriteCond %{REQUEST_URI} !index
     RewriteRule (.*) index.html [L]
 
-    #RewriteCond %{HTTP_HOST} ^michaelbromley\.co.uk$
-    #RewriteRule ^(.*) http://www.michaelbromley.co.uk/$1 [R=301]
     RewriteCond %{HTTP_HOST} ^.$
-    RewriteRule ^(.*) GitHub/drawACatApp/build/$1 [R=301]
+    RewriteRule ^(.*) %HTACCESS_ROOT%/$1 [R=301]
 </ifModule>

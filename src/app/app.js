@@ -12,8 +12,8 @@ angular.module( 'drawACat', [
     ])
 
     .value('CONFIG', {
-        API_URL: 'http://192.168.1.21/GitHub/drawACatApp/api/',
-        THUMBNAILS_URL: 'http://192.168.1.21/GitHub/drawACatApp/api/thumbnails/',
+        API_URL: '%API_PATH%',
+        THUMBNAILS_URL: '%THUMBNAILS_PATH%',
         AUDIO_FILES_URL: 'assets/audio/',
         FILL_COLOUR: '#f5f5f5',
         STROKE_COLOUR: '#333333'
