@@ -1,5 +1,13 @@
+.control-panel {
+  h1 {
+    font-family: @comic-sans;
+    margin-top: 5px;
+  }
+}
+
 .draw-container {
   min-width: 540px;
+  padding-top: 40px;
 }
 .canvas-container {
   position: relative;
@@ -49,6 +57,9 @@
   border-radius: 5px;
   z-index: 20;
   margin-bottom: 20px;
+  h2 {
+    font-family: @comic-sans;
+  }
   .steps-list ul {
     border-top: 1px solid lighten(@highlight-colour, 20%);
     background: lighten(@highlight-colour, 50%);
@@ -157,7 +168,6 @@
   background-color: @highlight-colour;
   color: #fff;
 }
-
 
 .suggestions-container {
   background-color: rgba(255,255,255,0.95);

@@ -2,13 +2,13 @@
  * Created by Michael on 26/04/14.
  */
 
-angular.module('drawACat.cat.directives')
+angular.module('drawACat.common.directives')
 
     .directive('dacInfoPanel', function($timeout, $window) {
 
         return {
             restrict: 'AE',
-            templateUrl: 'cat/directives/infoPanel.tpl.html',
+            templateUrl: 'directives/infoPanel.tpl.html',
             replace: true,
             transclude: true,
             scope: true,

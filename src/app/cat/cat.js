@@ -6,7 +6,8 @@ angular.module( 'drawACat.cat', [
         'ui.router',
         'drawACat.cat.directives',
         'drawACat.cat.services',
-        'ezfb'
+        'ezfb',
+        'ngAnimate'
     ])
 
 

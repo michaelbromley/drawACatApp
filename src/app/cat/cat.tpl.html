@@ -1,7 +1,7 @@
 <div id="stage-container">
     <div class="header">
         <div class="container">
-            <div class="row control-panel-row">
+            <div class="row control-panel">
                 <div class="col-xs-3 home-button">
                     <a ui-sref="home"><i class="icon-home"></i></a>
                 </div>
@@ -11,7 +11,7 @@
                             <dac-comments-link></dac-comments-link>
                         </li>
                         <li title="Audio on/off">
-                            <a href="" class="toggle-audio-button" ng-click="toggleAudio()">
+                            <a href="" ng-click="toggleAudio()">
                                 <i class="icon-volume-medium" ng-show="audioSetting == 'on'"></i>
                                 <i class="icon-volume-mute" ng-show="audioSetting == 'off'"></i>
                             </a>
@@ -22,13 +22,13 @@
                             </a>
                         </li>
                         <li title="Settings">
-                            <div class="control-panel-button" ng-click="showControlPanel = !showControlPanel">
-                                <button ng-class="{ selected: showControlPanel }"><i class="icon-cog"></i></button>
+                            <div ng-click="showSettingsPanel = !showSettingsPanel">
+                                <a href="" ng-class="{ selected: showSettingsPanel }"><i class="icon-cog"></i></a>
                             </div>
                         </li>
                     </ul>
                 </div>
-                <div class="control-panel" ng-show="showControlPanel">
+                <div class="settings-panel" ng-show="showSettingsPanel">
                     <form class="form-horizontal" role="form">
                         <div class="form-group">
                             <label class="col-xs-6 control-label">Render Quality: {{ renderQuality }}</label>

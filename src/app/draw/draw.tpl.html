@@ -1,12 +1,30 @@
 <div class="header">
     <div class="container">
-        <div class="col-xs-2 col-sm-1">
-            <div class="home-button">
-                <a ui-sref="home"><i class="icon-home"></i></a>
+        <div class="row control-panel">
+            <div class="col-xs-12">
+                <div class="home-button">
+                    <a ui-sref="home"><i class="icon-home"></i></a>
+                </div>
             </div>
         </div>
-        <div class="col-xs-10 col-sm-11">
-            <h1>Draw A Cat</h1>
+        <div class="row">
+            <div class="col-xs-12">
+                <dac-info-panel>
+                    <h1>Draw A Cat</h1>
+                    <p>
+                        Draw your own cat using your mouse or finger! Each part of the cat is drawn separately so that it can come to life when you're done.
+                        Follow the instructions below, and use the blueprint as a guide.
+                    </p>
+                    <p>
+                        If your hand slips, you can undo the last line you drew by pressing the
+                        "undo" button in the top right of the canvas.
+                    </p>
+                    <p>
+                        When you've drawn all the parts, you'll be able to save your cat and share it with the world. Have fun!
+                        <br><br>
+                    </p>
+                </dac-info-panel>
+            </div>
         </div>
     </div>
 </div>

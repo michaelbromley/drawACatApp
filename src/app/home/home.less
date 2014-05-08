@@ -16,6 +16,16 @@
   button.selected {
     background-color: #a6d1ee;
   }
+  -webkit-box-shadow: 0px 5px 8px -7px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 5px 8px -7px rgba(0,0,0,0.75);
+  box-shadow: 0px 5px 8px -7px rgba(0,0,0,0.75);
+
+  .sort-row {
+    text-align: center;
+    @media (min-width: @screen-sm-min) {
+      text-align: right;
+    }
+  }
 }
 
 .tag-selector-container {
@@ -62,11 +72,11 @@
 ul.sort-mode {
   display: inline-block;
   padding: 0px;
+  margin-bottom: 3px;
   li {
-    border-radius: 4px;
     font-weight: bold;
     display: inline-block;
-    padding: 10px 15px;
+    padding: 10px 6px 0px 6px;
     a:link, a:visited {
       color: #666;
     }
@@ -74,8 +84,10 @@ ul.sort-mode {
       text-decoration: none;
     }
     &.active {
-      background-color: @highlight-colour;
-      a:link, a:visited {color: #fff;}
+      border-bottom: 3px solid @highlight-colour;
+      a:link, a:visited {
+        color: #333;
+      }
     }
   }
 }
@@ -164,10 +176,10 @@ ul.sort-mode {
       visibility: visible;
       transition: margin 0.5s,  opacity 0.5s, visibility 0s;
       a:link, a:visited {
-        color: @highlight-colour;
+        color: darken(@highlight-colour, 10%);
       }
       a:hover, a:active {
-        color: lighten(@highlight-colour, 10%);
+        color: @highlight-colour;
         text-decoration: none;
       }
     }
@@ -310,13 +322,14 @@ ul.sort-mode {
   line-height: 1.42857143;
   text-decoration: none;
   color: #666;
-  border-radius: 3px;
   background: none;
   border: none;
   margin-left: -1px;
 }
 .pagination > .active > a, .pagination > .active > a:hover,  {
-  background-color: @highlight-colour;
+  background: none;
+  color: #333;
+  border-bottom: 3px solid @highlight-colour;
   font-weight: bold;
 }
 
@@ -326,7 +339,7 @@ ul.sort-mode {
 .panel-container.ng-leave,
 .panel-container.ng-move {
   -webkit-transition: 0.5s linear all;
-  transition: 0.5s linear all;
+    transition: 0.5s linear all;
   position:relative;
 }
 
