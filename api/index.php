@@ -5,15 +5,14 @@
  * Date: 08/03/14
  * Time: 22:19
  */
-
 include('Slim/Slim.php');
 include('thumbnail.php');
-
 use Slim\Slim;
 \Slim\Slim::registerAutoloader();
 
 $app = new Slim();
 $db = getConnection();
+
 
 /**
  * Define the routes of the API
@@ -178,11 +177,19 @@ function respondError($errorMessage) {
 }
 
 function getConnection() {
-	$dbhost="127.0.0.1";
-	$dbuser="root";
-	$dbpass="";
-	$dbname="drawacat";
-	$dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);
-	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	return $dbh;
+    if (strstr($_SERVER['DOCUMENT_ROOT'], 'E:/')) {
+        $dbhost="127.0.0.1";
+        $dbuser="root";
+        $dbpass="";
+        $dbname="drawacat";
+    } else {
+        $dbhost="mysql2109int.cp.blacknight.com";
+        $dbuser="u1190953_drawcat";
+        $dbpass="shim38LSdw00002233";
+        $dbname="db1190953_drawacat";
+    }
+    // 500 error caused by next line on live server
+    $dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);
+    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    return $dbh;
 }
