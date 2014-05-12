@@ -20,11 +20,11 @@
 
     <div class="row">
         <div class="col-xs-12 text-center">
-            <dac-preview-panel class="panel-container" cat="cat" ng-repeat="cat in filteredCats | orderBy: predicate:true | startFrom: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage"></dac-preview-panel>
+            <dac-preview-panel class="panel-container" cat="cat" dir-paginate="cat in cats | byTag: tagsArray |  orderBy: predicate:true | itemsPerPage: 15" current-page="currentPage"></dac-preview-panel>
             <div id="overlay" ng-click="closeOverlay()"></div>
         </div>
     </div>
     <div class="row text-center ">
-        <pagination number-of-pages="numberOfPages" current-page="currentPage"></pagination>
+        <dir-pagination-controls></dir-pagination-controls>
     </div>
 </div>

@@ -24,7 +24,7 @@ angular.module( 'drawACat.home', [
 /**
  * And of course we define a controller for our route.
  */
-    .controller( 'HomeController', function HomeController( $scope, $location, $filter, datastore ) {
+    .controller( 'HomeController', function HomeController( $scope, $location, datastore ) {
 
         // emit an event to update the page metadata
         var metaData = {
@@ -37,12 +37,9 @@ angular.module( 'drawACat.home', [
 
         datastore.listCats().success(function(data) {
             $scope.cats = data;
-            $scope.filteredCats = data;
         });
 
         $scope.currentPage = 1;
-        $scope.itemsPerPage = 20;
-        $scope.numberOfPages = 0;
 
         $scope.tags = [];
         datastore.getTags().then(function(data) {
@@ -70,11 +67,6 @@ angular.module( 'drawACat.home', [
                 search = null;
             }
             $location.search('tags', search);
-            $scope.filteredCats = $filter('byTag')($scope.cats, tagsArray);
-        });
-
-        $scope.$watch('filteredCats.length', function(val) {
-            $scope.numberOfPages =  Math.ceil(val / $scope.itemsPerPage);
         });
 
         $scope.tagLinkClicked = function(tag) {
