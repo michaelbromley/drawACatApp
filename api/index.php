@@ -6,7 +6,8 @@
  * Time: 22:19
  */
 include('Slim/Slim.php');
-include('thumbnail.php');
+include('db.php');
+include('Thumbnail.php');
 use Slim\Slim;
 \Slim\Slim::registerAutoloader();
 
@@ -174,22 +175,4 @@ function respondError($errorMessage) {
 	$response['Content-Type'] = 'application/json';
 	$response->status(400);
 	$response->body(json_encode($errorMessage));
-}
-
-function getConnection() {
-    if (strstr($_SERVER['DOCUMENT_ROOT'], 'E:/')) {
-        $dbhost="127.0.0.1";
-        $dbuser="root";
-        $dbpass="";
-        $dbname="drawacat";
-    } else {
-        $dbhost="mysql2109int.cp.blacknight.com";
-        $dbuser="u1190953_drawcat";
-        $dbpass="shim38LSdw00002233";
-        $dbname="db1190953_drawacat";
-    }
-    // 500 error caused by next line on live server
-    $dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);
-    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    return $dbh;
 }
