@@ -33,13 +33,15 @@ angular.module('drawACat.cat.directives')
                             url,
                             element[0],
                             function (el) {
-                                console.log("Button created.");
                             },
                             {
                                 count: 'horizontal',
                                 hashtags: 'drawacat'
                             }
                         );
+                        $window.twttr.events.bind('tweet', function (event) {
+                            scope.rateCat();
+                        });
                     }
                 });
 
