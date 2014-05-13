@@ -6,7 +6,7 @@
 
 angular.module('drawACat.home.previewPanel', [])
 
-    .directive('dacPreviewPanel', function($rootScope, $location, $timeout, previewPanelService) {
+    .directive('dacPreviewPanel', function($rootScope, $location, $timeout, $filter, previewPanelService) {
 
         return {
             restrict: 'AE',
@@ -20,6 +20,7 @@ angular.module('drawACat.home.previewPanel', [])
 
                 scope.showInfo = "";
                 scope.isSelected = false;
+                scope.urlFriendlyName = $filter('urlFriendlyName')(scope.cat.name);
 
                 scope.clickHandler = function() {
                     previewPanelService.currentlySelected = scope.cat.id;

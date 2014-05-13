@@ -3,7 +3,7 @@
     <div class="click-box" ng-click="clickHandler()"></div>
     <div class="contents"  ng-click="clickHandler()">
         <h3 class="cat-name">
-            <a href="#!/cat/{{ cat.id }}/{{ cat.name | urlFriendlyName }}">
+            <a ui-sref="cat({id : cat.id, name: urlFriendlyName })">
                 Play with
                 {{ cat.name }}
             </a>
