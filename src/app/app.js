@@ -29,6 +29,7 @@ angular.module( 'drawACat', [
     })
 
     .controller( 'AppController', function AppController ( $scope, $state, $location, $anchorScroll, audioPlayer, renderer ) {
+        $scope.embed = $location.search().embed;
         $scope.$on('$stateChangeSuccess', function(event, toState){
             if ( angular.isDefined( toState.data.pageTitle ) ) {
                 $scope.pageTitle = toState.data.pageTitle ;

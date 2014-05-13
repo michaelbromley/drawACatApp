@@ -59,7 +59,7 @@ angular.module('drawACat.cat.services')
                 x = 100 + Math.random() * 10;
                 y = windowHeight - 200;
             }
-            var vx = 0;
+            var vx = (Math.random() * 2) - 1;
             var vy = 0;
             var angleInRadians = 0;
             var angularVelocity = 0.01;
