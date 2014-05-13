@@ -11,7 +11,8 @@ angular.module('drawACat.cat.directives')
             replace: true,
             scope: {
                 cat: '=',
-                ball: '='
+                ball: '=',
+                profileData: '=?'
             },
             link: function(scope) {
                 /**
