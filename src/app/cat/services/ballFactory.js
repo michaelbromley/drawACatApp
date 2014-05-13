@@ -12,7 +12,8 @@ angular.module('drawACat.cat.services')
             },
             {
                 src: 'assets/images/ball02.png',
-                radius: 29
+                radius: 29,
+                massFactor: 0.7
             },
             {
                 src: 'assets/images/ball03.png',
@@ -33,6 +34,33 @@ angular.module('drawACat.cat.services')
             {
                 src: 'assets/images/ball07.png',
                 radius: 44
+            },
+            {
+                src: 'assets/images/ball08.png',
+                radius: 60
+            },
+            {
+                src: 'assets/images/ball09.png',
+                radius: 72
+            },
+            {
+                src: 'assets/images/ball10.png',
+                radius: 33
+            },
+            {
+                src: 'assets/images/ball11.png',
+                radius: 94,
+                massFactor: 0.35
+            },
+            {
+                src: 'assets/images/ball12.png',
+                radius: 53,
+                massFactor: 2
+            },
+            {
+                src: 'assets/images/ball13.png',
+                radius: 32,
+                massFactor: 1.3
             }
         ];
 
@@ -45,8 +73,9 @@ angular.module('drawACat.cat.services')
             var windowWidth = $window.innerWidth;
             var ballDamping = 0.7;
             var G = 0.6; // gravity
-            var mass = radius / 25;
-            var MAX_VELOCITY = 40;
+            var massFactor = ballSource.massFactor || 1;
+            var mass = radius / 25 * massFactor;
+            var MAX_VELOCITY = 100;
             var FRICTION = 30; // higher is more slippery
 
             var dragMode = false;
@@ -204,15 +233,15 @@ angular.module('drawACat.cat.services')
                                 //The Collision vector is the speed difference projected on the Dist vector,
                                 //thus it is the component of the speed difference needed for the collision.
                                 var combinedMass = mass + ball.getMass();
-                                var collisionWeightA = 1.7 * Math.pow(ball.getMass(), 1.5) / combinedMass;
-                                var collisionWeightB = 1.7 * Math.pow(mass, 1.5) / combinedMass;
+                                var collisionWeightA = 1.7 * Math.pow(ball.getMass(), 1.3) / combinedMass;
+                                var collisionWeightB = 1.7 * Math.pow(mass, 1.3) / combinedMass;
                                 vx += collisionWeightA * xCollision * 0.9;
                                 vy += collisionWeightA * yCollision * 0.9;
-                                ball.setVx(ball.getVx() - collisionWeightB * xCollision * 0.9);
-                                ball.setVy(ball.getVy() - collisionWeightB * yCollision * 0.9);
+                                ball.setVx(ball.getVx() - collisionWeightB * xCollision * 0.5);
+                                ball.setVy(ball.getVy() - collisionWeightB * yCollision * 0.5);
 
                                 // alter the rotations
-                                angularVelocity = ball.getAngularVelocity() * - 0.9;
+                                angularVelocity = ball.getAngularVelocity() * - 0.9 / mass;
                             }
                         }
                     }
