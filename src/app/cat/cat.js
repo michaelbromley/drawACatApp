@@ -43,6 +43,7 @@ angular.module( 'drawACat.cat', [
     .controller( 'CatController', function CatController( $scope, $location, CONFIG, serializer, catPromise, Ball, emotion, ratingService, userOptions ) {
         console.log('CatController loaded');
         // TODO: refactor all those dependencies above into helper services
+        $scope.embed = $location.search().embed;
         $scope.pageUrl = $location.absUrl();
         $scope.catData = catPromise.data;
         $scope.cat = serializer.unserializeCat(catPromise.data.data);

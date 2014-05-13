@@ -1,7 +1,7 @@
 <div id="stage-container">
     <div class="header">
         <div class="container">
-            <div class="row control-panel">
+            <div class="row control-panel" ng-if="!embed">
                 <div class="col-xs-3 home-button">
                     <a ui-sref="home"><i class="icon-home"></i></a>
                 </div>
@@ -17,26 +17,46 @@
                             </a>
                         </li>
                         <li title="Embed">
-                            <a href="">
+                            <a href="" ng-click="showEmbedPanel = !showEmbedPanel; showSettingsPanel = false" ng-class="{ selected: showEmbedPanel }">
                                 <i class="icon-code"></i>
                             </a>
                         </li>
                         <li title="Settings">
-                            <div ng-click="showSettingsPanel = !showSettingsPanel">
+                            <div ng-click="showSettingsPanel = !showSettingsPanel; showEmbedPanel = false">
                                 <a href="" ng-class="{ selected: showSettingsPanel }"><i class="icon-cog"></i></a>
                             </div>
                         </li>
                     </ul>
                 </div>
-                <div class="settings-panel" ng-show="showSettingsPanel">
-                    <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <label class="col-xs-6 control-label">Render Quality: {{ renderQuality }}</label>
-                            <div class="col-xs-6">
-                                <input type="range" min="1" max="10" step="1" ng-model="renderQuality" ng-change="setRenderQuality(renderQuality)">
-                            </div>
+                <div class="embed-panel" ng-show="showEmbedPanel">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h3>Embed This Cat</h3>
+                            <p>
+                                Use the following code to embed {{ cat.name }} in another web page:
+                            </p>
+                            <textarea class="form-control" readonly><iframe style="border: 1px solid #999; width: 100%; height: 500px; background-color: #fff;" src="{{ pageUrl }}?embed=true" height="240" width="320" allowfullscreen="allowfullscreen" frameborder="0"></iframe></textarea>
                         </div>
-                    </form>
+                    </div>
+                </div>
+                <div class="settings-panel" ng-show="showSettingsPanel">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3>Set Render Quality</h3>
+                            <p>
+                                If the animation is not smooth, try lowering the render quality. More complex cats consist of more lines and points, and can require faster
+                                hardware to run at full speed.
+                            </p>
+                            <ul>
+                                <li>Frames Per Second: <b>{{ profileData.fps | number:2 }}</b></li>
+                                <li> Points Drawn: <b>{{ profileData.pointsDrawn }}</b></li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-6 render-quality">
+                            <label class="control-label" for="quality">Render Quality: {{ renderQuality }}</label>
+                            <input type="range" id="quality" min="1" max="10" step="1" ng-model="renderQuality" ng-change="setRenderQuality(renderQuality)">
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -47,9 +67,10 @@
                         </h1>
                         <div class="extended-info" ng-hide="hideInfoPanel">
                             <p>{{ catData.description }}</p>
+                            <div class="embed-site-link" ng-if="embed"><a href="http://www.drawacat.net" target="_blank">meet my friends at www.drawacat.net!</a></div>
                         </div>
                         <ul class="share-buttons">
-                            <li><button class="rate-cat-button" ng-click="rateCat()">
+                            <li><button class="rate-cat-button" ng-click="rateCat()" title="I LIKE THIS CAT!!!1">
                                 <i class="icon-star" ng-show="!catHasBeenRated"></i>
                                 <i class="icon-star2" ng-show="catHasBeenRated"></i>
                                 {{ catData.rating }}
@@ -62,12 +83,11 @@
             </div>
         </div>
     </div>
+
+    <dac-stage cat="cat" ball="ball" profile-data="profileData" dac-doubletap="addBall($event)"></dac-stage>
 </div>
 
-<dac-stage cat="cat" ball="ball" dac-doubletap="addBall($event)"></dac-stage>
-</div>
-
-<div class="container">
+<div class="container" ng-if="!embed">
     <dir-disqus disqus-shortname="drawacat"
                 disqus-identifier="{{ catData.id }}-{{ catData.name }}"
                 disqus-url="{{ pageUrl }}" id="comments">
