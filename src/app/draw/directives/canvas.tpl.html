@@ -1,12 +1,14 @@
 <div class="canvas-container">
     <canvas id="canvas" width="540" height="540"
-            dac-pointerstart="mouseDownHandler($event)"
+            dac-pointerstart="mouseDownHandler($event); lightenDrawGuide = true"
             dac-pointermove="mouseMoveHandler($event)"
-            dac-pointerend="mouseUpHandler()">
+            dac-pointerend="mouseUpHandler(); lightenDrawGuide = false"
+            ng-mouseenter="lightenDrawGuide = true"
+            ng-mouseleave="lightenDrawGuide = false">
     </canvas>
     <div id="canvas-frame" ng-class="{ filled: !drawing.showGuide }"></div>
     <div id="draw-guide" ng-show="drawing.showGuide">
-        <img ng-src="{{ guideImage }}" />
+        <img ng-src="{{ guideImage }}" ng-class="{ lighten : lightenDrawGuide }" />
     </div>
     <button ng-disabled="lineCollection.count() == 0" ng-click="undo()" class="undo-button btn btn-default"><i class="icon-undo"></i> Undo</button>
 </div>
