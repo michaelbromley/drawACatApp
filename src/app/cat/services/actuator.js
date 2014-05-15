@@ -142,7 +142,7 @@ angular.module('drawACat.cat.services')
         var yawn = function() {
             closeEyes();
             openMouth();
-            audioPlayer.yawn(cat.emotion.getMoodValue().bored);
+            //audioPlayer.yawn(cat.emotion.getMoodValue().bored); // sounds weird to hear a cat yawn.
         };
         var angryMeow = function() {
             openEyes();

@@ -3,7 +3,7 @@
  */
 angular.module('drawACat.cat.services')
 
-.factory('emotion', function($timeout) {
+    .factory('emotion', function($timeout) {
         // emotional constants
         var MAX_MOOD = 20;
         var MIN_MOOD = -20;
@@ -28,17 +28,20 @@ angular.module('drawACat.cat.services')
                 calmDown();
             }
             if (EXCITED_THRESHOLD < excited) {
-                // being excited also makes a cat feel happy too
-                getHappier();
+                // being excited also sometimes makes a cat feel happy too
+                var happyVal = (happy - HAPPY_THRESHOLD) / (MAX_MOOD - HAPPY_THRESHOLD);
+                if (Math.random() > happyVal / 2 + 0.5) {
+                    getHappier();
+                }
             }
             if (HAPPY_THRESHOLD < happy) {
                 // cat constantly gets less happy slowly
-                if ((timeSinceAnythingHappened + 1) % 2 === 0) {
+                if (Math.random() < 0.4) {
                     calmDown();
                 }
             } else if (0 < happy) {
                 // cat constantly gets less happy slowly
-                if ((timeSinceAnythingHappened + 1) % 3 === 0) {
+                if (Math.random() < 0.3) {
                     calmDown();
                 }
             }
@@ -80,7 +83,7 @@ angular.module('drawACat.cat.services')
             if (excited < 0) {
                 excited += 2;
             } else if (excited < MAX_MOOD) {
-                excited ++;
+                excited += 0.5;
             }
             if (happy < 0) {
                 happy += 3;
