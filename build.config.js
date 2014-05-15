@@ -75,11 +75,11 @@ module.exports = {
         ]
     },
     api_path: {
-        local: 'http://192.168.1.21/GitHub/drawACatApp/api/',
+        local: 'http://192.168.0.10/GitHub/drawACatApp/api/',
         remote: 'http://www.drawacat.net/api/'
     },
     thumbnails_path: {
-        local: 'http://192.168.1.21/GitHub/drawACatApp/api/thumbnails/',
+        local: 'http://192.168.0.10/GitHub/drawACatApp/api/thumbnails/',
         remote: 'http://www.drawacat.net/api/thumbnails/'
     },
     htaccess_root: {

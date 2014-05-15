@@ -205,11 +205,11 @@ angular.module('drawACat.cat.directives')
                         var catPosition = [catBody.centreX, catBody.centreY];
                         var maxInterestVal = 0;
                         angular.forEach(balls, function(ball, index) {
-                            var velocityVal = Math.abs(ball.getVx() * ball.getVy());
+                            var velocityVal = Math.abs(ball.getVx() * ball.getVy()) + 1;
                             var xProximity = Math.abs(ball.getX() - catPosition[0]);
                             var yProximity = Math.abs(ball.getY() - catPosition[1]);
                             var proximityVal = xProximity + yProximity;
-                            var interestValue = velocityVal * 100/proximityVal;
+                            var interestValue = velocityVal * 1/(proximityVal * proximityVal);
 
                             if (maxInterestVal < interestValue) {
                                 ballOfInterest.ballIndex = index;

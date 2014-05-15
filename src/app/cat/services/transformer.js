@@ -107,9 +107,9 @@ angular.module('drawACat.cat.services')
             sensitivity = behaviour.sensitivity;
             range = behaviour.range;
 
-            // dampen the movement to that, when the x, y input values change rapidly (such as cat's attention going from one ball to another),
+            // dampen the movement so that, when the x, y input values change rapidly (such as cat's attention going from one ball to another),
             // the movement does not suddenly jump in an unnatural way
-            var MAX_STEP = 10;
+            var MAX_STEP = 6;
             if(MAX_STEP < Math.abs(x - lastInput[0])) {
                 x = (lastInput[0] < x) ? lastInput[0] + MAX_STEP : lastInput[0] - MAX_STEP;
             }
