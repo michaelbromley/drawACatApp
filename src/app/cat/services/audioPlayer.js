@@ -23,9 +23,9 @@ angular.module('drawACat.cat.services')
                 loadAudioFile(CONFIG.AUDIO_FILES_URL + 'angry-meow-03.mp3', false),
                 loadAudioFile(CONFIG.AUDIO_FILES_URL + 'angry-meow-04.mp3', false)
                 ];
-            catSounds.bored = [
+            /*catSounds.bored = [
                 loadAudioFile(CONFIG.AUDIO_FILES_URL + 'yawn-01.mp3', false)
-                ];
+                ];*/
             catSounds.purr = [
                 loadAudioFile(CONFIG.AUDIO_FILES_URL + 'purr-01.mp3', true)
                 ];
@@ -60,9 +60,12 @@ angular.module('drawACat.cat.services')
             if (!isMuted) {
                 var filesCount = fileArray.length;
                 var selectedFile = Math.floor(Math.random() * (filesCount));
-                fileArray[selectedFile].currentTime = 0;
-                fileArray[selectedFile].volume = volume;
-                fileArray[selectedFile].play();
+
+                if (fileArray[selectedFile].currentTime > 0.1 || fileArray[selectedFile].currentTime === 0) {
+                    fileArray[selectedFile].currentTime = 0;
+                    fileArray[selectedFile].volume = volume;
+                    fileArray[selectedFile].play();
+                }
             }
         }
 
@@ -117,12 +120,17 @@ angular.module('drawACat.cat.services')
                 }
             },
             ballBounceSoft: function(velocity) {
-                var volume = Math.min(velocity, 10) / 10;
+                var volume = Math.min(velocity, 50) / 50;
                 playAudioFile(ballSounds.soft, volume);
             },
-            ballBounceHard: function(velocity) {
-                var volume = Math.min(velocity, 10) / 10;
-                playAudioFile(ballSounds.hard, volume);
+            loadBallSound: function(filename) {
+                if (typeof ballSounds[filename] === 'undefined') {
+                    ballSounds[filename] = [loadAudioFile(CONFIG.AUDIO_FILES_URL + filename, false)];
+                }
+            },
+            ballBounce: function(filename, velocity) {
+                var volume = Math.min(velocity, 50) / 50;
+                playAudioFile(ballSounds[filename], volume);
             },
             setAudio: function(val) {
                 isMuted = (val !== true);

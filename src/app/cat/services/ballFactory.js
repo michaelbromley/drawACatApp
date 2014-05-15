@@ -11,13 +11,16 @@ angular.module('drawACat.cat.services')
                 radius: 34
             },
             {
+                // ball of wool
                 src: 'assets/images/ball02.png',
                 radius: 29,
                 massFactor: 0.7
             },
             {
+                // ping pong ball
                 src: 'assets/images/ball03.png',
-                radius: 25
+                radius: 25,
+                sound: 'ball-bounce-pingpong-01.mp3'
             },
             {
                 src: 'assets/images/ball04.png',
@@ -28,36 +31,49 @@ angular.module('drawACat.cat.services')
                 radius: 43
             },
             {
+                // juggling ball
                 src: 'assets/images/ball06.png',
                 radius: 36
             },
             {
+                // dog's head
                 src: 'assets/images/ball07.png',
                 radius: 44
             },
             {
+                // volleyball
                 src: 'assets/images/ball08.png',
-                radius: 60
+                radius: 60,
+                sound: 'ball-bounce-football-01.mp3'
             },
             {
+                // football
                 src: 'assets/images/ball09.png',
-                radius: 72
+                radius: 72,
+                sound: 'ball-bounce-football-01.mp3'
+
             },
             {
+                // baseball
                 src: 'assets/images/ball10.png',
                 radius: 33
             },
             {
+                // beach ball
                 src: 'assets/images/ball11.png',
                 radius: 94,
-                massFactor: 0.35
+                massFactor: 0.35,
+                sound: 'ball-bounce-hollow-01.mp3'
             },
             {
+                // bowling ball
                 src: 'assets/images/ball12.png',
                 radius: 53,
-                massFactor: 2
+                massFactor: 2,
+                sound: 'ball-bounce-bowlingball-01.mp3'
             },
             {
+                // cricket ball
                 src: 'assets/images/ball13.png',
                 radius: 32,
                 massFactor: 1.3
@@ -68,6 +84,8 @@ angular.module('drawACat.cat.services')
             var image = new Image();
             var ballSource = BALLS[Math.floor(Math.random()*BALLS.length)];
             image.src = ballSource.src;
+            var ballSound = ballSource.sound || 'ball-bounce-default-01.mp3';
+            audioPlayer.loadBallSound(ballSound);
             var radius = ballSource.radius;
             var windowHeight = $window.innerHeight;
             var windowWidth = $window.innerWidth;
@@ -289,7 +307,7 @@ angular.module('drawACat.cat.services')
                     }
 
                     if (2 < Math.abs(strikeVelocity)) {
-                        audioPlayer.ballBounceHard(Math.abs(strikeVelocity));
+                        audioPlayer.ballBounce(ballSound, Math.abs(strikeVelocity));
                     }
                 }
             };
