@@ -28,13 +28,15 @@ angular.module( 'drawACat', [
         rafPolyfill.run();// polyfill the $window.requestAnimationFrame, cancelAnimationFrame methods
     })
 
-    .controller( 'AppController', function AppController ( $scope, $state, $location, $anchorScroll, audioPlayer, renderer ) {
+    .controller( 'AppController', function AppController ( $scope, $window, $state, $location, $anchorScroll, audioPlayer ) {
         $scope.embed = $location.search().embed;
         $scope.$on('$stateChangeSuccess', function(event, toState){
             if ( angular.isDefined( toState.data.pageTitle ) ) {
                 $scope.pageTitle = toState.data.pageTitle ;
             }
             $anchorScroll();
+            // push event to google analytics
+            $window.ga('send', 'pageview', { page: $location.path() });
         });
 
         $scope.$on('metadata:updated', function(event, metaData) {
