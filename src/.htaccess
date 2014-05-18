@@ -1,6 +1,10 @@
 <ifModule mod_rewrite.c>
  RewriteEngine On
 
+# www is the canonical URL
+RewriteCond %{HTTP_HOST} ^drawacat.net$
+RewriteRule (.*) http://www.drawacat.net/$1 [R=301,L]
+
 # allow facebook & twitter crawler to work by redirecting it to a server-rendered static version on the page
 RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit/[0-9]|Twitterbot)
 RewriteRule cat/(.*) http://www.drawacat.net/api/staticPage.php/$1 [L]
