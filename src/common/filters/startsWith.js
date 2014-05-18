@@ -7,7 +7,7 @@ angular.module('drawACat.common.filters')
         return function(array, search) {
             var matches = [];
             for(var i = 0; i < array.length; i++) {
-                if (array[i].indexOf(search) === 0 &&
+                if (array[i].toLowerCase().indexOf(search.toLowerCase()) === 0 &&
                     search.length < array[i].length) {
                     matches.push(array[i]);
                 }

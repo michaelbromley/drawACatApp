@@ -120,7 +120,7 @@ $app->post('/cat/', function() use($app, $db) {
 		foreach($data->tags as $tag) {
 			$sql = "INSERT IGNORE INTO tags (label) VALUES (:label)";
 			$stmt = $db->prepare($sql);
-			$stmt->bindParam("label", $tag);
+			$stmt->bindParam("label", strtolower($tag));
 			$stmt->execute();
 
 			if ($db->lastInsertId() == "0") {

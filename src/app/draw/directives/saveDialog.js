@@ -10,7 +10,9 @@ angular.module('drawACat.draw.directives')
             var tags = [];
             var match;
             while (match = regexp.exec(description)) {
-                tags.push(match[1]);
+                if (tags.indexOf(match[1].toLowerCase()) === -1) {
+                    tags.push(match[1].toLowerCase());
+                }
             }
             return tags;
         }
