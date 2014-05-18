@@ -4,8 +4,8 @@
             dac-pointermove="mouseMoveHandler($event)"
             dac-pointerend="mouseUpHandler()">
     </canvas>
-    <div style="position: relative; z-index: 1000; width: 400px; border: 1px solid #f59;">
-        <div ng-show="debugMode">
+    <div ng-show="debugMode" style="position: relative; z-index: 1000; width: 400px; border: 1px solid #f59;">
+        <div>
             <p>Mouse coordinates: {{ x }}, {{ y }}</p>
             <p>In drag mode?: {{ ball.isInDragMode() }}</p>
             <p>Happy: {{ moodValue.happy }}</p>

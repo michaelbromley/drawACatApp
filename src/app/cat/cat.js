@@ -21,7 +21,6 @@ angular.module( 'drawACat.cat', [
                     templateUrl: 'cat/cat.tpl.html',
                     resolve: {
                         catPromise: ['$stateParams', 'datastore', function($stateParams, datastore) {
-                            console.log('catPromise being resolved: ' + $stateParams.id + ', ' + $stateParams.name);
                             return datastore.loadCat($stateParams.id);
                         }]
                     }
@@ -41,7 +40,6 @@ angular.module( 'drawACat.cat', [
  * And of course we define a controller for our route.
  */
     .controller( 'CatController', function CatController( $scope, $location, CONFIG, serializer, catPromise, Ball, emotion, ratingService, userOptions ) {
-        console.log('CatController loaded');
         // TODO: refactor all those dependencies above into helper services
         $scope.embed = $location.search().embed;
         $scope.pageUrl = $location.absUrl();
