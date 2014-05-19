@@ -3,22 +3,22 @@
 <html ng-app="drawACat" ng-controller="AppController">
 <head>
     <base href="/GitHub/drawACatApp/build/">
-    <title ng-bind="metaData.pageTitle"></title>
+    <title ng-bind="metaData.pageTitle">Draw A Cat</title>
+    <meta name="description" content="The world's no. 1 digital cat drawing community.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="shortcut icon" href="icon.png" />
 
-    <!-- social media tags -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="drawacat.net">
-    <meta name="twitter:title" content="{{ metaData.pageTitle }}">
-    <meta name="twitter:description" content="Draw a cat and share it with the world!">
-    <meta name="twitter:creator" content="@michlbrmly">
-    <meta name="twitter:image:src" content="{{ metaData.image }}">
-    <meta property="og:title" content="{{ metaData.title }}" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="{{ metaData.url }}" />
-    <meta property="og:image" content="{{ metaData.image }}" />
-    <meta property="og:description" content="Draw a cat and share it with the world!">
+    <meta name="{{ 'twitter:card' }}" content="summary">
+    <meta name="{{ 'twitter:site' }}" content="drawacat.net">
+    <meta name="{{ 'twitter:title' }}" content="{{ metaData.pageTitle }}">
+    <meta name="{{ 'twitter:description' }}" content="The world's no. 1 digital cat drawing community.">
+    <meta name="{{ 'twitter:creator' }}" content="@michlbrmly">
+    <meta name="{{ 'twitter:image:src' }}" content="{{ metaData.image }}">
+    <meta property="{{ 'og:title' }}" content="{{ metaData.title }}" />
+    <meta property="{{ 'og:type' }}" content="website" />
+    <meta property="{{ 'og:url' }}" content="{{ metaData.url }}" />
+    <meta property="{{ 'og:image' }}" content="{{ metaData.image }}" />
+    <meta property="{{ 'og:description' }}" content="The world's no. 1 digital cat drawing community.">
 
     <!-- compiled CSS --><% styles.forEach( function ( file ) { %>
     <link rel="stylesheet" type="text/css" href="<%= file %>" /><% }); %>
@@ -26,17 +26,17 @@
     <!-- compiled JavaScript --><% scripts.forEach( function ( file ) { %>
     <script type="text/javascript" src="<%= file %>"></script><% }); %>
 </head>
-<body>
+<body ng-class="{ 'min-width' : isDrawState }">
 
+<img src="assets/images/default-image.gif" ng-if="false" />
 <div ui-view="main" class="main"></div>
 
 <footer class="footer" ng-if="!embed">
     <div class="container">
         <div class="row text-center">
             <div class="col-xs-12">
-                Draw A Cat: a sketch by Michael Bromley<br>
-                www.michaelbromley.co.uk<br>
-                @michlbrmly<br>
+                Draw A Cat: a sketch by <a href="http://www.michaelbromley.co.uk" target="_blank">Michael Bromley</a><br>
+                <a href="https://twitter.com/DrawACat" target="_blank">@DrawACat</a><br>
             </div>
         </div>
     </div>
@@ -48,8 +48,7 @@
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
   ga('create', 'UA-51038470-1', 'drawacat.net');
-  ga('send', 'pageview');
-
+  ga('require', 'displayfeatures');
 </script>
 </body>
 </html>

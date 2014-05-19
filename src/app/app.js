@@ -35,6 +35,12 @@ angular.module( 'drawACat', [
                 $scope.pageTitle = toState.data.pageTitle ;
             }
             $anchorScroll();
+            if ($state.current.name === 'draw') {
+                $scope.isDrawState = true;
+            } else {
+                $scope.isDrawState = false;
+            }
+
             // push event to google analytics
             $window.ga('send', 'pageview', { page: $location.path() });
         });
