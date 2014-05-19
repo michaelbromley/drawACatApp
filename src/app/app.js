@@ -28,8 +28,9 @@ angular.module( 'drawACat', [
         rafPolyfill.run();// polyfill the $window.requestAnimationFrame, cancelAnimationFrame methods
     })
 
-    .controller( 'AppController', function AppController ( $scope, $window, $state, $location, $anchorScroll, audioPlayer ) {
+    .controller( 'AppController', function AppController ( $scope, $window, $state, $location, $anchorScroll ) {
         $scope.embed = $location.search().embed;
+
         $scope.$on('$stateChangeSuccess', function(event, toState){
             if ( angular.isDefined( toState.data.pageTitle ) ) {
                 $scope.pageTitle = toState.data.pageTitle ;
@@ -55,17 +56,6 @@ angular.module( 'drawACat', [
             $anchorScroll();
             //reset to old to keep any additional routing logic from kicking in
             $location.hash(old);
-        };
-
-        $scope.audioSetting = "on";
-        $scope.toggleAudio = function() {
-            if ($scope.audioSetting == "on") {
-                audioPlayer.setAudio(false);
-                $scope.audioSetting = "off";
-            } else {
-                audioPlayer.setAudio(true);
-                $scope.audioSetting = "on";
-            }
         };
     })
 

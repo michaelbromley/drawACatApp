@@ -39,7 +39,7 @@ angular.module( 'drawACat.cat', [
 /**
  * And of course we define a controller for our route.
  */
-    .controller( 'CatController', function CatController( $scope, $location, CONFIG, serializer, catPromise, Ball, emotion, ratingService, userOptions ) {
+    .controller( 'CatController', function CatController( $scope, $location, CONFIG, serializer, catPromise, Ball, emotion, ratingService, userOptions, audioPlayer ) {
         // TODO: refactor all those dependencies above into helper services
         $scope.embed = $location.search().embed;
         $scope.pageUrl = $location.absUrl();
@@ -76,6 +76,19 @@ angular.module( 'drawACat.cat', [
 
         $scope.addBall = function(e) {
             $scope.ball.push(new Ball(e.clientX, e.clientY));
+        };
+
+        $scope.audioSetting = userOptions.getAudioSetting();
+        $scope.toggleAudio = function() {
+            if ($scope.audioSetting === true) {
+                audioPlayer.setAudio(false);
+                $scope.audioSetting = false;
+                userOptions.setAudioSetting(false);
+            } else {
+                audioPlayer.setAudio(true);
+                $scope.audioSetting = true;
+                userOptions.setAudioSetting(true);
+            }
         };
 
         $scope.$on('$destroy', function() {
