@@ -62,7 +62,9 @@ angular.module('drawACat.cat.services')
                 var selectedFile = Math.floor(Math.random() * (filesCount));
 
                 if (fileArray[selectedFile].currentTime > 0.1 || fileArray[selectedFile].currentTime === 0) {
-                    fileArray[selectedFile].currentTime = 0;
+                    if (fileArray[selectedFile].duration) {
+                        fileArray[selectedFile].currentTime = 0;
+                    }
                     fileArray[selectedFile].volume = volume;
                     fileArray[selectedFile].play();
                 }
@@ -106,7 +108,9 @@ angular.module('drawACat.cat.services')
                     } else {
                         currentPurrSound.volume = 0;
                         currentPurrSound.pause();
-                        currentPurrSound.currentTime = 0;
+                        if (currentPurrSound.duration) {
+                            currentPurrSound.currentTime = 0;
+                        }
                         purrIsFadingInOrOut = false;
                     }
                 }
@@ -141,7 +145,9 @@ angular.module('drawACat.cat.services')
                     angular.forEach(soundCollection, function(soundArray) {
                         angular.forEach(soundArray, function(sound) {
                             sound.pause();
-                            sound.currentTime = 0;
+                            if (sound.duration) {
+                                sound.currentTime = 0;
+                            }
                         });
                     });
                 }
