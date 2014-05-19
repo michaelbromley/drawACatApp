@@ -7,7 +7,7 @@ RewriteRule (.*) http://www.drawacat.net/$1 [R=301,L]
 
 # allow facebook & twitter crawler to work by redirecting it to a server-rendered static version on the page
 RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit/[0-9]|Twitterbot)
-RewriteRule cat/(.*) http://www.drawacat.net/api/staticPage.php/$1 [L]
+RewriteRule cat/(.*) http://www.drawacat.net/api/staticPage.php/$1 [P]
 
 # Required to allow direct-linking of pages so they can be processed by Angular
 
