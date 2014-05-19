@@ -1,30 +1,29 @@
-<div class="hero-bar">
-    <a href="#!/cat/new" class="btn btn-default draw-button">Draw a cat!</a>
-</div>
-<div class="container">
-
-
-
-    <div class="filter-controls row">
-        <div class="col-sm-6">
-            <tag-selector></tag-selector>
-        </div>
-        <div class="col-sm-6 sort-row">
-            <ul class="sort-mode">
-                <li ng-class="{ active : predicate === 'trendingScore' }"><a href="" ng-click="predicate = 'trendingScore'">Trending</a></li>
-                <li ng-class="{ active : predicate === 'created' }"><a href="" ng-click="predicate = 'created'">Newest</a></li>
-                <li ng-class="{ active : predicate === 'rating' }"><a href="" ng-click="predicate = 'rating'">Top Rated</a></li>
-            </ul>
-        </div>
+<div class="cat-list-container">
+    <div class="hero-bar">
+        <a href="#!/cat/new" class="btn btn-default draw-button">Draw a cat!</a>
     </div>
-
-    <div class="row">
-        <div class="col-xs-12 text-center">
-            <dac-preview-panel class="panel-container" cat="cat" dir-paginate="cat in cats | byTag: tagsArray |  orderBy: predicate:true | itemsPerPage: 15" current-page="currentPage"></dac-preview-panel>
-            <div id="overlay" ng-click="closeOverlay()"></div>
+    <div class="container">
+        <div class="filter-controls row">
+            <div class="col-sm-6">
+                <tag-selector></tag-selector>
+            </div>
+            <div class="col-sm-6 sort-row">
+                <ul class="sort-mode">
+                    <li ng-class="{ active : predicate === 'trendingScore' }"><a href="" ng-click="predicate = 'trendingScore'">Trending</a></li>
+                    <li ng-class="{ active : predicate === 'created' }"><a href="" ng-click="predicate = 'created'">Newest</a></li>
+                    <li ng-class="{ active : predicate === 'rating' }"><a href="" ng-click="predicate = 'rating'">Top Rated</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
-    <div class="row text-center ">
-        <dir-pagination-controls></dir-pagination-controls>
+
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                <dac-preview-panel class="panel-container" cat="cat" dir-paginate="cat in cats | byTag: tagsArray |  orderBy: predicate:true | itemsPerPage: 15" current-page="currentPage"></dac-preview-panel>
+                <div id="overlay" ng-click="closeOverlay()"></div>
+            </div>
+        </div>
+        <div class="row text-center ">
+            <dir-pagination-controls></dir-pagination-controls>
+        </div>
     </div>
 </div>
