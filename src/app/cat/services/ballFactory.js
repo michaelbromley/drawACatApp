@@ -11,6 +11,16 @@ angular.module('drawACat.cat.services')
                 radius: 34
             },
             {
+                src: 'assets/images/ball01.png',
+                radius: 34
+            },
+            {
+                // ball of wool
+                src: 'assets/images/ball02.png',
+                radius: 29,
+                massFactor: 0.7
+            },
+            {
                 // ball of wool
                 src: 'assets/images/ball02.png',
                 radius: 29,
@@ -23,12 +33,31 @@ angular.module('drawACat.cat.services')
                 sound: 'ball-bounce-pingpong-01.mp3'
             },
             {
+                // ping pong ball
+                src: 'assets/images/ball03.png',
+                radius: 25,
+                sound: 'ball-bounce-pingpong-01.mp3'
+            },
+            {
+                src: 'assets/images/ball04.png',
+                radius: 24
+            },
+            {
                 src: 'assets/images/ball04.png',
                 radius: 24
             },
             {
                 src: 'assets/images/ball05.png',
                 radius: 43
+            },
+            {
+                src: 'assets/images/ball05.png',
+                radius: 43
+            },
+            {
+                // juggling ball
+                src: 'assets/images/ball06.png',
+                radius: 36
             },
             {
                 // juggling ball
@@ -51,7 +80,11 @@ angular.module('drawACat.cat.services')
                 src: 'assets/images/ball09.png',
                 radius: 72,
                 sound: 'ball-bounce-football-01.mp3'
-
+            },
+            {
+                // baseball
+                src: 'assets/images/ball10.png',
+                radius: 33
             },
             {
                 // baseball
@@ -71,6 +104,12 @@ angular.module('drawACat.cat.services')
                 radius: 53,
                 massFactor: 2,
                 sound: 'ball-bounce-bowlingball-01.mp3'
+            },
+            {
+                // cricket ball
+                src: 'assets/images/ball13.png',
+                radius: 32,
+                massFactor: 1.3
             },
             {
                 // cricket ball
