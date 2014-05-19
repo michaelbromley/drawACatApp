@@ -74,6 +74,12 @@ angular.module('drawACat.draw', [
             drawHelper.reset();
         });
 
+        $scope.$on('$locationChangeStart', function(event) {
+            if (!confirm('Are you sure you want to leave this drawing without saving?')) {
+                event.preventDefault();
+            }
+        });
+
         function savePart() {
             var partName = $scope.currentStep;
             if (0 < $scope.lineCollection.count()) {
