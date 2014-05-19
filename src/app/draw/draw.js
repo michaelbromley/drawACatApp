@@ -33,6 +33,9 @@ angular.module('drawACat.draw', [
     })
 
     .controller('DrawController', function($scope, $filter, $state, primitives, drawHelper, serializer, datastore, catBuilder, thumbnailGenerator) {
+        $scope.help = {
+            show: true
+        };
         $scope.catParts = drawHelper.catParts;
         $scope.steps = drawHelper.partKeys;
         $scope.currentStep = drawHelper.getCurrentPartKey();

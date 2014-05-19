@@ -7,25 +7,6 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-xs-12">
-                <dac-info-panel>
-                    <h1>Draw A Cat</h1>
-                    <p>
-                        Draw your own cat using your mouse or finger! Each part of the cat is drawn separately so that it can come to life when you're done.
-                        Follow the instructions below, and use the blueprint as a guide.
-                    </p>
-                    <p>
-                        If your hand slips, you can undo the last line you drew by pressing the
-                        "undo" button in the top right of the canvas.
-                    </p>
-                    <p>
-                        When you've drawn all the parts, you'll be able to save your cat and share it with the world. Have fun!
-                        <br><br>
-                    </p>
-                </dac-info-panel>
-            </div>
-        </div>
     </div>
 </div>
 <div class="container">
@@ -38,6 +19,21 @@
             <button ng-click="showSaveDialog = true" ng-show="drawing.completed" class="save-button btn btn-lg">Save Cat!</button>
         </div>
     </div>
-
+    <dac-modal-dialog show="help.show">
+        <h1>Draw A Cat</h1>
+        <p>
+            Draw your own cat using your mouse or finger! Each part of the cat is drawn separately so that it can come to life when you're done.
+            Follow the instructions below, and use the blueprint as a guide.
+        </p>
+        <p>
+            If your hand slips, you can undo the last line you drew by pressing the
+            "undo" button in the top right of the canvas.
+        </p>
+        <p>
+            When you've drawn all the parts, you'll be able to save your cat and share it with the world. Have fun!
+            <br><br>
+        </p>
+        <button class="btn btn-primary" ng-click="help.show = false">Okay!</button>
+    </dac-modal-dialog>
     <dac-save-dialog show="showSaveDialog" submit="saveCat(formData)"></dac-save-dialog>
 </div>

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--suppress ALL -->
-<html ng-app="drawACat" ng-controller="AppController">
+<html ng-app="drawACat" ng-controller="AppController" ng-class="{ 'min-width' : isDrawState }">
 <head>
     <base href="/GitHub/drawACatApp/build/">
     <title ng-bind="metaData.pageTitle">Draw A Cat</title>
@@ -26,7 +26,7 @@
     <!-- compiled JavaScript --><% scripts.forEach( function ( file ) { %>
     <script type="text/javascript" src="<%= file %>"></script><% }); %>
 </head>
-<body ng-class="{ 'min-width' : isDrawState }">
+<body>
 
 <img src="assets/images/default-image.gif" ng-if="false" />
 <div ui-view="main" class="main"></div>
