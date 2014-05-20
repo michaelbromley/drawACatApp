@@ -7,13 +7,31 @@ angular.module('drawACat.draw.directives', [])
     .directive('dacCanvas', function($window, primitives, renderer, DRAW_GUIDE_IMAGES) {
 
         var getMousePositionFromEvent = function(event) {
-            var x = event.pageX - event.target.getBoundingClientRect().left;
-            var y = event.pageY - event.target.getBoundingClientRect().top;
+            var x = event.pageX - getOffsetLeft(event.target);
+            var y = event.pageY - getOffsetTop(event.target);
             return {
                 x: x,
                 y: y
             };
         };
+
+        function getOffsetTop(element) {
+            return getOffset(element, 'offsetTop');
+        }
+
+        function getOffsetLeft(element) {
+            return getOffset(element, 'offsetLeft');
+        }
+
+        function getOffset(element, property) {
+            var offset = 0;
+            do {
+                if (!isNaN(element[property])){
+                    offset += element[property];
+                }
+            } while(element = element.offsetParent);
+            return offset;
+        }
 
         return {
             restrict: 'E',
