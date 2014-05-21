@@ -49,6 +49,9 @@ angular.module( 'drawACat.cat', [
         $scope.cat.emotion.start();
         $scope.ball = [new Ball()];
         $scope.renderQuality = userOptions.getRenderQuality();
+        $scope.help = {
+            show: !userOptions.getHelpHasBeenSeen()
+        };
 
         // emit an event to update the page metadata
         var metaData = {
@@ -89,6 +92,11 @@ angular.module( 'drawACat.cat', [
                 $scope.audioSetting = true;
                 userOptions.setAudioSetting(true);
             }
+        };
+
+        $scope.dismissHelp = function() {
+            $scope.help.show = false;
+            userOptions.setHelpHasBeenSeen();
         };
 
         $scope.$on('$destroy', function() {
