@@ -2,7 +2,9 @@
 
 ### The world's #1 online digital cat-drawing community
 
-This is a side project I built to learn more about the Canvas API, and to get more familiar with the AngularJS
+### [www.drawacat.net](http://www.drawacat.net)
+
+This is a side-project I built to learn more about the Canvas API, and to get more familiar with the AngularJS
 framework.
 
 I've open-sourced the code in case anyone is interested to see how parts of it work. Disclaimer: I was learning
@@ -21,6 +23,6 @@ I had a lot of help in building this application in the form of open-source tool
  * [Freesound.org](http://www.freesound.org/) I used some sounds from here.
  * [Twisted Wave](https://twistedwave.com/online/)An amazing HTML5-based audio editor I used to snip the audio clips.
 
- ## License
+## License
 
 Creative Commons Attribution NonCommercial (CC-NC) (see LICENSE file)
