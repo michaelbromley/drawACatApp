@@ -28,7 +28,11 @@
 </head>
 <body>
 
-<img src="assets/images/default-image.gif" ng-if="false" />
+<div style="width: 100%; text-align: center; font-family: 'Comic Sans MS', cursive, sans-serif;" ng-if="false">
+    <h1>Meow! Loading, please wait!</h1>
+    <h3>Contact me at <a href="https://twitter.com/DrawACat" target="_blank">@DrawACat</a></h3>
+    <img src="assets/images/default-image.gif" />
+</div>
 <div ui-view="main" class="main"></div>
 
 <footer class="footer" ng-if="!embed">

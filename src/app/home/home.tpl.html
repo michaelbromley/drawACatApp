@@ -1,3 +1,17 @@
+<div class="header">
+    <div class="container">
+        <div class="row control-panel">
+            <div class="col-sm-4">
+                <div class="home-button">
+                    <a href="https://twitter.com/DrawACat" target="_blank">Follow @DrawACat</a>
+                </div>
+            </div>
+            <div class="col-sm-8 text-right">
+                    <a href=""><i class="icon-info"></i> About</a>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="cat-list-container">
     <div class="hero-bar">
         <a href="#!/cat/new" class="btn btn-default draw-button">Draw a cat!</a>
@@ -27,3 +41,12 @@
         </div>
     </div>
 </div>
+<dac-modal-dialog show="about.show">
+    <h1>About Draw A Cat</h1>
+    <p>
+
+    </p>
+    <div class="text-center">
+        <button class="btn btn-lg btn-default" ng-click="about.show = false">Close</button>
+    </div>
+</dac-modal-dialog>

@@ -16,7 +16,7 @@
         </div>
         <div class="col-xs-12 col-sm-3 col-md-5 col-lg-6">
             <dac-draw-instructions></dac-draw-instructions>
-            <button ng-click="showSaveDialog = true" ng-show="drawing.completed" class="save-button btn btn-lg">Save Cat!</button>
+                <button ng-click="showSaveDialog = true" ng-disabled="!drawing.completed" class="save-button btn btn-lg">Save Cat!</button>
         </div>
     </div>
     <dac-modal-dialog show="help.show">
@@ -33,7 +33,9 @@
             When you've drawn all the parts, you'll be able to save your cat and share it with the world. Have fun!
             <br><br>
         </p>
-        <button class="btn btn-primary" ng-click="help.show = false">Okay!</button>
+        <div class="text-center">
+            <button class="btn btn-lg btn-primary" ng-click="help.show = false">Let's Do It!</button>
+        </div>
     </dac-modal-dialog>
     <dac-save-dialog show="showSaveDialog" submit="saveCat(formData)"></dac-save-dialog>
 </div>
