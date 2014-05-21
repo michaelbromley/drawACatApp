@@ -1,1 +1,7 @@
+*.sw*
+*~
+build/
+bin/
+node_modules/
+vendor/
 api/db.php
