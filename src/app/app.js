@@ -28,7 +28,7 @@ angular.module( 'drawACat', [
         rafPolyfill.run();// polyfill the $window.requestAnimationFrame, cancelAnimationFrame methods
     })
 
-    .controller( 'AppController', function AppController ( $scope, $window, $state, $location, $anchorScroll ) {
+    .controller( 'AppController', function AppController ( $scope, $timeout, $window, $state, $location, $anchorScroll ) {
         $scope.embed = $location.search().embed;
 
         $scope.$on('$stateChangeSuccess', function(event, toState){
@@ -41,13 +41,16 @@ angular.module( 'drawACat', [
             } else {
                 $scope.isDrawState = false;
             }
-
-            // push event to google analytics
-            $window.ga('send', 'pageview', { page: $location.path() });
         });
 
         $scope.$on('metadata:updated', function(event, metaData) {
             $scope.metaData = metaData;
+            $timeout(function () {
+                // push event to google analytics. This is done in a $timeout
+                // so the current $digest loop has a chance to actually update the
+                // HTML with the correct page title etc.
+                $window.ga('send', 'pageview', { page: $location.path() });
+            });
         });
 
         $scope.scrollTo = function(id) {
