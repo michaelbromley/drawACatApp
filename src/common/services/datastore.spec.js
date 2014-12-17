@@ -2,7 +2,7 @@
  * Created by Michael on 13/03/14.
  */
 
-describe('datastore service', function() {
+xdescribe('datastore service', function() {
 
     var datastore;
     var $httpBackend;

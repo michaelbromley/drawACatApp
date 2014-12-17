@@ -13,15 +13,26 @@ use Slim\Slim;
 
 $app = new Slim();
 $db = getConnection();
+define("ITEMS_PER_PAGE", 15);
 
 
 /**
  * Define the routes of the API
  */
 $app->get('/cat/', function() use($app, $db) {
+	$req = $app->request();
+	$page = $req->get("page") != null ? $req->get("page") : 1;
+	$start = ($page - 1) * ITEMS_PER_PAGE;
+	$limit = ITEMS_PER_PAGE;
+
+	$sort = $req->get("sort") == "new" ? "created" : "rating";
+
+
 	$sql = "SELECT id, name, thumbnail, author, UNIX_TIMESTAMP(created) as created, rating
 			FROM cats
-			WHERE isPublic = '1'";
+			WHERE isPublic = '1'
+			ORDER BY $sort DESC
+			LIMIT $start, $limit";
 
 	try {
 		$stmt = $db->prepare($sql);
@@ -42,10 +53,22 @@ $app->get('/cat/', function() use($app, $db) {
 			array_push($result, $row);
 		}
 
+		// get total number of items in table
+		$sql = "SELECT COUNT(id) FROM cats";
+		$stmt = $db->prepare($sql);
+		$stmt->execute();
+		$totalItems = $stmt->fetchColumn(0);
+
+		// construct response object
+		$payload = array(
+			"totalCats" => $totalItems,
+			"result" => $result
+		);
+
 		$response = $app->response();
 		$response['Content-Type'] = 'application/json';
 		$response->status(200);
-		$response->body(json_encode($result));
+		$response->body(json_encode($payload));
 	} catch(PDOException $e) {
 		respondError($e->getMessage());
 	}

@@ -67,7 +67,8 @@ module.exports = {
             'vendor/angular-ui-router/release/angular-ui-router.js',
             'vendor/angular-ui-utils/modules/route/route.js',
             'vendor/angular-easyfb/angular-easyfb.js',
-            'vendor/hammerjs/hammer.js'
+            'vendor/hammerjs/hammer.js',
+            'vendor/angular-utils-pagination/dirPagination.js'
         ],
         css: [
         ],

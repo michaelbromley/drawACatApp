@@ -3,14 +3,14 @@ angular.module( 'drawACat.home', [
         'drawACat.home.filters',
         'drawACat.home.tagSelector',
         'drawACat.home.previewPanel',
-        'drawACat.home.pagination',
+        'angularUtils.directives.dirPagination',
         'ui.router'
     ])
 
 
-    .config(function config( $stateProvider ) {
+    .config(function config( $stateProvider  ) {
         $stateProvider.state( 'home', {
-            url: '/home',
+            url: '/home?page&sort',
             views: {
                 "main": {
                     controller: 'HomeController',
@@ -24,7 +24,7 @@ angular.module( 'drawACat.home', [
 /**
  * And of course we define a controller for our route.
  */
-    .controller( 'HomeController', function HomeController( $scope, $location, datastore ) {
+    .controller( 'HomeController', function HomeController( $scope, $location, $state, $stateParams, datastore ) {
 
         // emit an event to update the page metadata
         var metaData = {
@@ -35,14 +35,13 @@ angular.module( 'drawACat.home', [
         };
         $scope.$emit('metadata:updated', metaData);
 
-        datastore.listCats().success(function(data) {
-            $scope.cats = data;
-        });
+        $scope.sort = $stateParams.sort || "top";
+        $scope.currentPage = $stateParams.page || 1;
 
-        $scope.currentPage = 1;
+        getPage($scope.currentPage, $scope.sort);
 
         $scope.tags = [];
-        datastore.getTags().then(function(data) {
+        datastore.getTags().then(function (data) {
             $scope.tags = data.data;
         });
 
@@ -57,7 +56,6 @@ angular.module( 'drawACat.home', [
                 $scope.tagsArray = [];
             }
         });
-        $scope.predicate = "trendingScore";
 
         $scope.$watchCollection('tagsArray', function(tagsArray) {
             var search;
@@ -75,9 +73,31 @@ angular.module( 'drawACat.home', [
             }
         };
 
+        $scope.pageChanged = function(pageNumber) {
+            $state.transitionTo('home', {
+                page: pageNumber,
+                sort: $scope.sort
+            } );
+        };
+
+        $scope.sortBy = function(sort) {
+            $state.transitionTo('home', {
+                page: $scope.currentPage,
+                sort: sort
+            } );
+        };
+
         $scope.closeOverlay = function() {
             $scope.$broadcast('preview-click', true);
         };
+
+
+        function getPage(pageNumber, sort) {
+            datastore.listCats(pageNumber, sort).success(function(data) {
+                $scope.cats = data.result;
+                $scope.totalItems = data.totalCats;
+            });
+        }
     })
 
     .filter('startFrom', function() {

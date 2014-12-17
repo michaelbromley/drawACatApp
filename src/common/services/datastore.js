@@ -33,17 +33,28 @@ angular.module('drawACat.common.services')
                     cat: catInfo.cat
                 });
             },
-            listCats: function() {
+            listCats: function(page, sort) {
+                page = page || 1;
+                sort = sort || "top";
                 return $http.get(apiUrl + 'cat/', {
-                    transformResponse: function(data) {
-                        var cats = angular.fromJson(data);
-                        return cats.map(function(cat) {
+                    params: {
+                        page: page,
+                        sort: sort
+                    },
+                    cache: true,
+                    transformResponse: function(response) {
+
+                        var data = angular.fromJson(response);
+
+                        data.result = data.result.map(function(cat) {
                             cat.thumbnail = CONFIG.THUMBNAILS_URL + cat.thumbnail;
                             cat.created = cat.created + '000';
                             cat.rating = parseInt(cat.rating, 10);
                             cat.trendingScore = getTrendingScore(cat.rating, cat.created);
                             return cat;
                         });
+
+                        return data;
                     }
                 });
             },
