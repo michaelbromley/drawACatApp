@@ -11,7 +11,9 @@ angular.module('drawACat.home.tagSelector', [])
             link: function(scope, element, attrs) {
                 scope.keyHandler = function(e) {
                     if (e.keyCode === 13) {
-                        addTag();
+                        if (scope.tagsInput === '') {
+                            addTag();
+                        }
                     }
                 };
                 scope.removeTag = function(index) {

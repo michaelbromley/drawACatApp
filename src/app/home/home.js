@@ -46,24 +46,8 @@ angular.module( 'drawACat.home', [
 
         $scope.searchInput = "";
 
-       /* $scope.$watch(function() {
-            return $location.search().tags;
-        }, function(tags) {
-            if (tags) {
-                $scope.tagsArray = tags.split(' ');
-            } else {
-                $scope.tagsArray = [];
-            }
-        });*/
 
         $scope.$watchCollection('tagsArray', function(tagsArray) {
-            /*var search;
-            if (0 < tagsArray.length) {
-                search = tagsArray.join(' ');
-            } else {
-                search = null;
-            }
-            $location.search('tags', search);*/
             $scope.setTags(tagsArray);
         });
 
@@ -74,26 +58,15 @@ angular.module( 'drawACat.home', [
         };
 
         $scope.pageChanged = function(pageNumber) {
-            $state.transitionTo('home', {
-                page: pageNumber,
-                sort: $scope.sort,
-                tags: $scope.tagsArray.join(' ')
-            } );
+            updateQueryString({ page: pageNumber });
         };
 
         $scope.sortBy = function(sort) {
-            $state.transitionTo('home', {
-                page: $scope.currentPage,
-                sort: sort
-            } );
+            updateQueryString({ sort: sort });
         };
 
         $scope.setTags = function(tagsArray) {
-            $state.transitionTo('home', {
-                page: $scope.currentPage,
-                sort: $scope.sort,
-                tags: tagsArray.join(' ')
-            } );
+            updateQueryString({tags: tagsArray.join(' ')});
         };
 
         $scope.closeOverlay = function() {
@@ -102,10 +75,21 @@ angular.module( 'drawACat.home', [
 
         getPage($scope.currentPage, $scope.sort, $scope.tagsArray);
 
+        function updateQueryString(params) {
+            var options = {};
+            options.page = params.page || $scope.currentPage || null;
+            options.sort = params.sort || $scope.sort || null;
+            options.tags = params.tags || $scope.tagsArray.join(' ') || null;
+
+            $state.transitionTo('home', options);
+        }
+
         function getPage(pageNumber, sort, tagsArray) {
             datastore.listCats(pageNumber, sort, tagsArray).success(function(data) {
                 $scope.cats = data.result;
                 $scope.totalItems = data.totalCats;
+                $scope.pageLower = ($scope.currentPage - 1) * 15 + 1;
+                $scope.pageUpper = Math.min($scope.pageLower + 14, $scope.totalItems);
             });
         }
     })

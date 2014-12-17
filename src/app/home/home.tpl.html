@@ -1,6 +1,6 @@
 <div class="cat-list-container">
     <div class="hero-bar">
-        <a href="#!/cat/new" class="btn btn-default draw-button">Draw a cat!</a>
+        <a href="#!/cat/new" class="btn btn-default draw-button">Draw A Cat!</a>
     </div>
     <div class="container">
         <div class="filter-controls row">
@@ -17,17 +17,25 @@
 
         <div class="row">
             <div class="col-xs-12 text-center">
+
+                <div class="totals">
+                    Displaying {{ pageLower }} - {{ pageUpper }} of {{ totalItems }} cats
+                </div>
+
                 <dac-preview-panel class="panel-container" cat="cat"
                                    dir-paginate="cat in cats | itemsPerPage: 15"
                                    current-page="currentPage"
                                    total-items="totalItems"></dac-preview-panel>
                 <div id="overlay" ng-click="closeOverlay()"></div>
+
             </div>
         </div>
+
         <div class="row text-center ">
             <dir-pagination-controls template-url="home/directives/pagination.tpl.html"
                                      on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
         </div>
+
     </div>
 </div>
 <dac-modal-dialog show="about.show">
