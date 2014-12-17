@@ -6,3 +6,6 @@ node_modules/
 vendor/
 api/db.php
 api/thumbnails/
+.idea
+not_code
+src/assets-source
