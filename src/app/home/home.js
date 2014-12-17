@@ -10,7 +10,7 @@ angular.module( 'drawACat.home', [
 
     .config(function config( $stateProvider  ) {
         $stateProvider.state( 'home', {
-            url: '/home?page&sort',
+            url: '/home?page&sort&tags',
             views: {
                 "main": {
                     controller: 'HomeController',
@@ -37,8 +37,7 @@ angular.module( 'drawACat.home', [
 
         $scope.sort = $stateParams.sort || "top";
         $scope.currentPage = $stateParams.page || 1;
-
-        getPage($scope.currentPage, $scope.sort);
+        $scope.tagsArray = $stateParams.tags ? $stateParams.tags.split(' ') : [];
 
         $scope.tags = [];
         datastore.getTags().then(function (data) {
@@ -47,7 +46,7 @@ angular.module( 'drawACat.home', [
 
         $scope.searchInput = "";
 
-        $scope.$watch(function() {
+       /* $scope.$watch(function() {
             return $location.search().tags;
         }, function(tags) {
             if (tags) {
@@ -55,16 +54,17 @@ angular.module( 'drawACat.home', [
             } else {
                 $scope.tagsArray = [];
             }
-        });
+        });*/
 
         $scope.$watchCollection('tagsArray', function(tagsArray) {
-            var search;
+            /*var search;
             if (0 < tagsArray.length) {
                 search = tagsArray.join(' ');
             } else {
                 search = null;
             }
-            $location.search('tags', search);
+            $location.search('tags', search);*/
+            $scope.setTags(tagsArray);
         });
 
         $scope.tagLinkClicked = function(tag) {
@@ -76,7 +76,8 @@ angular.module( 'drawACat.home', [
         $scope.pageChanged = function(pageNumber) {
             $state.transitionTo('home', {
                 page: pageNumber,
-                sort: $scope.sort
+                sort: $scope.sort,
+                tags: $scope.tagsArray.join(' ')
             } );
         };
 
@@ -87,13 +88,22 @@ angular.module( 'drawACat.home', [
             } );
         };
 
+        $scope.setTags = function(tagsArray) {
+            $state.transitionTo('home', {
+                page: $scope.currentPage,
+                sort: $scope.sort,
+                tags: tagsArray.join(' ')
+            } );
+        };
+
         $scope.closeOverlay = function() {
             $scope.$broadcast('preview-click', true);
         };
 
+        getPage($scope.currentPage, $scope.sort, $scope.tagsArray);
 
-        function getPage(pageNumber, sort) {
-            datastore.listCats(pageNumber, sort).success(function(data) {
+        function getPage(pageNumber, sort, tagsArray) {
+            datastore.listCats(pageNumber, sort, tagsArray).success(function(data) {
                 $scope.cats = data.result;
                 $scope.totalItems = data.totalCats;
             });

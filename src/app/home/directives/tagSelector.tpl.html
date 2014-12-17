@@ -5,7 +5,7 @@
     <div class="input-container">
         <span class="tag-icon"><i class="icon-tags"></i></span>
         <input type="text" class="form-control" id="searchInput" ng-model="tagsInput"
-               dac-tagbox="tags" dac-tagtoken="" dac-on-tag-select="tagSelectedHandler()" placeholder="Search by tag" ng-keypress="keyHandler($event)">
+               dac-tagbox="tags" dac-tagtoken="" dac-on-tag-select="tagSelectedHandler()" placeholder="Search by tag" ng-keydown="keyHandler($event)">
     </div>
     <ul class="hashtags">
         <li ng-repeat="tag in tagsArray" class="tag">

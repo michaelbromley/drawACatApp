@@ -33,13 +33,16 @@ angular.module('drawACat.common.services')
                     cat: catInfo.cat
                 });
             },
-            listCats: function(page, sort) {
+            listCats: function(page, sort, tagsArray) {
                 page = page || 1;
                 sort = sort || "top";
+                var tags = tagsArray.join(' ');
+
                 return $http.get(apiUrl + 'cat/', {
                     params: {
                         page: page,
-                        sort: sort
+                        sort: sort,
+                        tags: tags
                     },
                     cache: true,
                     transformResponse: function(response) {
