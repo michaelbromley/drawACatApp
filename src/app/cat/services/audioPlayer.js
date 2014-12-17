@@ -9,6 +9,7 @@ angular.module('drawACat.cat.services')
         var isMuted = false;
         var currentPurrSound;
         var purrIsFadingInOrOut = false;
+        var audioFileCache = {};
 
         function init() {
             catSounds.excited = [
@@ -51,7 +52,6 @@ angular.module('drawACat.cat.services')
             var audio = new Audio();
             audio.src = audioFile;
             audio.loop = loop;
-            document.body.appendChild(audio);
             return audio;
         }
 
@@ -61,14 +61,44 @@ angular.module('drawACat.cat.services')
                 var filesCount = fileArray.length;
                 var selectedFile = Math.floor(Math.random() * (filesCount));
 
-                if (fileArray[selectedFile].currentTime > 0.1 || fileArray[selectedFile].currentTime === 0) {
-                    if (fileArray[selectedFile].duration) {
-                        fileArray[selectedFile].currentTime = 0;
-                    }
-                    fileArray[selectedFile].volume = volume;
-                    fileArray[selectedFile].play();
-                }
+                throttle(function() {
+                    cloneAndPlay(fileArray[selectedFile], volume);
+                }, fileArray.group, 300);
             }
+        }
+
+        var timer, canFire = [];
+        function throttle(fn, group, delay) {
+            if (typeof canFire[group] === 'undefined' || canFire[group]) {
+                fn();
+                canFire[group] = false;
+                timer = setTimeout(function () {
+                    canFire[group] = true;
+                }, delay);
+            }
+        }
+
+        function cloneAndPlay(audioElement, volume) {
+            var fileName = audioElement.src;
+            var availableAudioElement;
+
+            if (audioFileCache.hasOwnProperty(fileName)) {
+                angular.forEach(audioFileCache[fileName], function(audioElement) {
+                    if (audioElement.ended === true) {
+                        availableAudioElement = audioElement;
+                        return;
+                    }
+                });
+            } else {
+                audioFileCache[fileName] = [];
+            }
+
+            if (!availableAudioElement) {
+                availableAudioElement = loadAudioFile(fileName);
+                audioFileCache[fileName].push(availableAudioElement);
+            }
+            availableAudioElement.volume = volume;
+            availableAudioElement.play();
         }
 
         return {

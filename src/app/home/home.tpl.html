@@ -19,7 +19,8 @@
             <div class="col-xs-12 text-center">
 
                 <div class="totals">
-                    Displaying {{ pageLower }} - {{ pageUpper }} of {{ totalItems }} cats
+                    Showing <strong>{{ pageLower | number }}</strong> - <strong>{{ pageUpper | number }}</strong>
+                    of <strong>{{ totalItems | number }}</strong> cats
                 </div>
 
                 <dac-preview-panel class="panel-container" cat="cat"
