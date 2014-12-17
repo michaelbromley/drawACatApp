@@ -7,9 +7,6 @@
                 </div>
                 <div class="col-xs-9">
                     <ul class="button-bar">
-                        <li title="Comments">
-                            <dac-comments-link></dac-comments-link>
-                        </li>
                         <li title="Audio on/off">
                             <a href="" ng-click="toggleAudio()">
                                 <i class="icon-volume-medium" ng-show="audioSetting === true"></i>
@@ -87,21 +84,8 @@
     <dac-stage cat="cat" ball="ball" profile-data="profileData" dac-doubletap="addBall($event)"></dac-stage>
 </div>
 
-<div class="container" ng-if="!embed">
-    <dir-disqus disqus-shortname="drawacat"
-                disqus-identifier="{{ catData.id }}-{{ catData.name }}"
-                disqus-url="{{ pageUrl }}" id="comments">
-    </dir-disqus>
-</div>
-
 <dac-modal-dialog show="help.show">
-    <h1>Important Rules:</h1>
-    <ol>
-        <li>Cats like to be stroked on the head.</li>
-        <li>Balls can be thrown around all over the place.</li>
-        <li>New balls can be created by double-tapping anywhere.</li>
-        <li>If you like it, press <i class="icon-star"></i>, and share it!</li>
-    </ol>
+    <h1>Double-click for more balls!</h1>
     <div class="text-center">
         <button class="btn btn-lg btn-primary" ng-click="dismissHelp()">Got It!</button>
     </div>
