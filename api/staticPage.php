@@ -38,9 +38,9 @@ $app->get('/:id/:name', function($id, $name) use($app, $db) {
 $app->run();
 
 function makePageTemplate($data, $name) {
-    $pageUrl = "http://www.drawacat.net/cat/".$data["id"]."/".$name;
+    $pageUrl = "https://www.drawacat.net/cat/".$data["id"]."/".$name;
     $description = !empty($data["description"]) ? $data["description"] : "Come and play with ".$data["name"]."!";
-    $imgUrl = "http://www.drawacat.net/api/thumbnails/".$data["thumbnail"].".gif";
+    $imgUrl = "https://www.drawacat.net/api/thumbnails/".$data["thumbnail"].".gif";
     ?>
     <!DOCTYPE html>
     <html>
@@ -57,7 +57,7 @@ function makePageTemplate($data, $name) {
         <meta name="twitter:title" content="<?php echo $data["name"]; ?>">
         <meta name="twitter:description" content="<?php echo $description; ?>">
         <meta name="twitter:url" content="<?php echo $pageUrl; ?>">
-        <meta name="twitter:domain" content="http://www.drawacat.net">
+        <meta name="twitter:domain" content="https://www.drawacat.net">
         <meta name="twitter:image:src" content="<?php echo $imgUrl; ?>">
         <meta property="og:title" content="<?php echo $data["name"]; ?>">
         <meta property="og:type" content="website">
