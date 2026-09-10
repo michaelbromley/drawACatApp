@@ -13,6 +13,8 @@ use Slim\Slim;
 
 $app = new Slim();
 $db = getConnection();
+// PHP 8.1+ returns native ints from PDO; keep the string behaviour the frontend expects
+$db->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
 define("ITEMS_PER_PAGE", 15);
 
 
@@ -77,6 +79,7 @@ $app->get('/cat/:id', function($id) use($app, $db) {
 		$stmt->bindParam("id", $id);
 		$stmt->execute();
 		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+		if ($result === false) { $result = array("data" => null); }
 		$dataDecoded = json_decode($result['data']);
 		$result['data'] = $dataDecoded;
 
