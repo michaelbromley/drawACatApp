@@ -15,6 +15,7 @@ use Slim\Slim;
 
 $app = new Slim();
 $db = getConnection();
+$db->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
 
 $app->get('/:id/:name', function($id, $name) use($app, $db) {
     $sql = "SELECT * FROM cats WHERE id = :id";
@@ -24,6 +25,7 @@ $app->get('/:id/:name', function($id, $name) use($app, $db) {
         $stmt->bindParam("id", $id);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result === false) { $result = array("data" => null); }
         $dataDecoded = json_decode($result['data']);
         $result['data'] = $dataDecoded;
 
